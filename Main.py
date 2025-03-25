@@ -678,7 +678,7 @@ if password == st.secrets["acceso"]["clave"]:
 
     elif menu == "Mapa de sucursales":
         st.header("🗺️ Mapa de sucursales")
-
+    
         # Cargar los datos
         sucursales_df = pd.read_csv("Sucursales_transformado.csv")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
         ventas_df = pd.read_csv("Venta_transformado.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
@@ -688,8 +688,11 @@ if password == st.secrets["acceso"]["clave"]:
         # Limpiar los nombres de las columnas para eliminar espacios adicionales
         sucursales_df.columns = sucursales_df.columns.str.strip()
         empleados_df.columns = empleados_df.columns.str.strip()
-   
         
+        # Verificar que las columnas necesarias existen
+        st.write("Empleados DataFrame columns: ", empleados_df.columns)
+        st.write("Ventas DataFrame columns: ", ventas_df.columns)
+    
         # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
@@ -710,38 +713,39 @@ if password == st.secrets["acceso"]["clave"]:
         st.subheader("Empleados por Sucursal")
         empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count()
         st.bar_chart(empleados_por_sucursal)
-    
+        
         # Filtrar por sucursal seleccionada (para mostrar los empleados y ventas de esa sucursal)
         if sucursal_seleccionada != "Todas":
             ventas_df = ventas_df[ventas_df["IdSucursal"] == sucursal_seleccionada]  # Cambio aquí: usar IdSucursal
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-    
+        
         # Mostrar los empleados de la sucursal seleccionada
         st.subheader("Empleados de la Sucursal")
         empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
         st.write(empleados_sucursal[['Nombre', 'Apellido']])
-    
-        # **Nueva caja de selección para los empleados de la sucursal seleccionada**
+        
+        # Nueva caja de selección para los empleados de la sucursal seleccionada
         empleado_seleccionado = st.selectbox("Selecciona un empleado", empleados_sucursal['Nombre'].unique())
-    
+        
         # Filtrar las ventas de ese empleado desde 2015
         st.subheader("Ventas de los empleados desde 2015")
         
         # Filtrar las ventas desde 2015
         ventas_df['Fecha'] = pd.to_datetime(ventas_df['Fecha'], errors='coerce')
         ventas_desde_2015 = ventas_df[ventas_df['Fecha'] >= '2015-01-01']
-    
-        # Relacionar empleados con ventas (usando 'IdEmpleado')
-        ventas_desde_2015 = ventas_desde_2015.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
-                                                    left_on='IdEmpleado', right_on='ID_empleado', how='left')
-    
+        
+        # Verificar si ID_empleado existe en ventas_df
+        if 'IdEmpleado' in ventas_df.columns:
+            ventas_desde_2015 = ventas_desde_2015.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
+                                                        left_on='IdEmpleado', right_on='ID_empleado', how='left')
+        
         # Filtrar solo las ventas del empleado seleccionado en la sucursal seleccionada
         ventas_desde_2015_sucursal = ventas_desde_2015[(ventas_desde_2015['Sucursal'] == sucursal_seleccionada) & 
                                                       (ventas_desde_2015['Nombre'] == empleado_seleccionado)]
         
-        # Mostrar las ventas de ese empleado
+        # Verificar si hay ventas para el empleado seleccionado
         st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_desde_2015_sucursal[['Nombre', 'Apellido', 'Precio']])
-    
+        
         # Agrupar las ventas por empleado
         ventas_por_empleado = ventas_desde_2015_sucursal.groupby(['ID_empleado', 'Nombre', 'Apellido'])['Precio'].sum().reset_index()
         
@@ -750,6 +754,7 @@ if password == st.secrets["acceso"]["clave"]:
         fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Precio', color='Apellido', 
                                      title=f"Ventas por {empleado_seleccionado} desde 2015")
         st.plotly_chart(fig_ventas_empleado)
+
         
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
