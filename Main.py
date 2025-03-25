@@ -708,8 +708,9 @@ if password == st.secrets["acceso"]["clave"]:
             productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
     
         # Gráfico de empleados
-        st.subheader("Empleados")
-        st.bar_chart(empleados_df.set_index("Sucursal")['Cantidad'])
+        st.subheader("Empleados por Sucursal")
+        empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count()
+        st.bar_chart(empleados_por_sucursal)
     
         # Gráfico de ventas históricas
         st.subheader("Histórico de Ventas")
