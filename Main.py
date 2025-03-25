@@ -590,8 +590,29 @@ if password == st.secrets["acceso"]["clave"]:
             ax2.tick_params(axis='y', labelcolor="darkblue")
         
             st.pyplot(fig)
-
-
+            
+        elif analisis_opcion == "📊 Proveedor con mayor volumen de compra":
+            st.markdown("### 📊 Proveedor con mayor volumen de compra")
+            st.markdown("🔎 ¿Qué muestra el gráfico?\n- Permite identificar cuáles proveedores concentran mayor cantidad de productos adquiridos.\n- Ayuda a tomar decisiones sobre negociación, dependencia o diversificación de proveedores.\n\n💡 Ideal para compras estratégicas y análisis de riesgo.")
+        
+            df_compras = pd.read_csv("Compra_transformada.csv")
+            df_proveedores = pd.read_csv("Proveedores_transformado.csv")
+        
+            # Agrupar por proveedor
+            proveedor_resumen = df_compras.groupby("IdProveedor")["Cantidad"].sum().reset_index()
+            proveedor_resumen = proveedor_resumen.merge(df_proveedores, left_on="IdProveedor", right_on="ID", how="left")
+            proveedor_resumen = proveedor_resumen.sort_values(by="Cantidad", ascending=False).head(10)
+        
+            # Gráfico
+            fig, ax = plt.subplots(figsize=(10, 5))
+            sns.barplot(data=proveedor_resumen, x="Nombre", y="Cantidad", ax=ax, palette="magma")
+            ax.set_title("Top 10 proveedores por volumen de compra")
+            ax.set_ylabel("Cantidad total de productos comprados")
+            ax.set_xlabel("Proveedor")
+            ax.tick_params(axis='x', rotation=45)
+            st.pyplot(fig)
+        
+        
 
 
     elif menu == "Modelos de ML":
