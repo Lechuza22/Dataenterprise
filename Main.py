@@ -703,7 +703,7 @@ if password == st.secrets["acceso"]["clave"]:
         
         # Filtrar por sucursal seleccionada
         if sucursal_seleccionada != "Todas":
-            ventas_df = ventas_df[ventas_df["Sucursal"] == sucursal_seleccionada]
+            ventas_df = ventas_df[ventas_df["IdSucursal"] == sucursal_seleccionada]
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
         
         # Gráfico de empleados
