@@ -532,21 +532,21 @@ if password == st.secrets["acceso"]["clave"]:
             df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
             df_canal = pd.read_csv("CanalDeVenta_Tranfor.csv")
         
-            # Preparar columnas para merge
+            # Asegurar formatos consistentes
             df_ventas["IdCanal"] = df_ventas["IdCanal"].astype(str).str.strip()
             df_canal["CODIGO"] = df_canal["CODIGO"].astype(str).str.strip()
         
-            # Merge para obtener nombre de canal y precio
+            # Merge para obtener nombre de canal y precio real
             df_ventas = df_ventas.merge(df_canal, left_on="IdCanal", right_on="CODIGO", how="left")
-            df_ventas = df_ventas.merge(df_productos[["ID_PRODUCTO", "Precio"]], left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
+            df_ventas = df_ventas.merge(df_productos[["ID_PRODUCTO", "Precio"]].rename(columns={"Precio": "PrecioUnitario"}), left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
         
-            # Agrupar por canal
+            # Agrupamos por canal
             canal_resumen = df_ventas.groupby("DESCRIPCION").agg({
-                "IdVenta": "count",      # Cantidad de ventas
-                "Precio": "sum"          # Monto total estimado
+                "IdVenta": "count",
+                "PrecioUnitario": "sum"
             }).reset_index().rename(columns={
                 "IdVenta": "Total_Vendido",
-                "Precio": "Monto_Total"
+                "PrecioUnitario": "Monto_Total"
             })
         
             # Visualización combinada
@@ -558,7 +558,7 @@ if password == st.secrets["acceso"]["clave"]:
             ax1.tick_params(axis='y', labelcolor="skyblue")
             plt.xticks(rotation=30)
         
-            # Eje secundario con línea de monto
+            # Eje secundario para monto total
             ax2 = ax1.twinx()
             sns.lineplot(data=canal_resumen, x="DESCRIPCION", y="Monto_Total", ax=ax2, color="darkblue", marker="o")
             ax2.set_ylabel("Monto total ($)", color="darkblue")
