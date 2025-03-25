@@ -681,16 +681,16 @@ if password == st.secrets["acceso"]["clave"]:
         st.header("🗺️ Mapa de sucursales")
     
         # Cargar los datos
-        sucursales_df = pd.read_csv("Sucursales_transformado.csv")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
-        ventas_df = pd.read_csv("Venta_transformado.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
-        empleados_df = pd.read_csv("Empleados_transformados.csv")  # Columnas: Sucursal, Cantidad
-        productos_df = pd.read_csv("PRODUCTOS_transformado.csv")  # Columnas: Producto, Ventas
+        sucursales_df = pd.read_csv("Sucursales_transformado.csv")
+        ventas_df = pd.read_csv("Venta_transformado.csv")
+        empleados_df = pd.read_csv("Empleados_transformados.csv")
+        productos_df = pd.read_csv("PRODUCTOS_transformado.csv")
         
         # Limpiar los nombres de las columnas para eliminar espacios adicionales
         sucursales_df.columns = sucursales_df.columns.str.strip()
         empleados_df.columns = empleados_df.columns.str.strip()
-        
-           # Selector de sucursales
+    
+        # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
@@ -706,23 +706,21 @@ if password == st.secrets["acceso"]["clave"]:
         
         st_folium(m, width=700, height=500)
     
-        # Gráfico de empleados por sucursal (sin depender de la sucursal seleccionada)
+        # Gráfico de empleados por sucursal
         st.subheader("Empleados por Sucursal")
         empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count()
         st.bar_chart(empleados_por_sucursal)
         
-        # Filtrar por sucursal seleccionada (para mostrar los empleados y ventas de esa sucursal)
+        # Filtrar por sucursal seleccionada
         if sucursal_seleccionada != "Todas":
-            ventas_df = ventas_df[ventas_df["IdSucursal"] == sucursal_seleccionada]  # Cambio aquí: usar IdSucursal
+            ventas_df = ventas_df[ventas_df["IdSucursal"] == sucursal_seleccionada]
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-    
+        
         # Mostrar los empleados de la sucursal seleccionada
         st.subheader("Empleados de la Sucursal")
         empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-        empleados_sucursal_names = empleados_sucursal[['Nombre', 'Apellido']]
-    
-        st.write(empleados_sucursal_names)
-    
+        st.write(empleados_sucursal[['Nombre', 'Apellido']])
+        
         # Nueva caja de selección para los empleados de la sucursal seleccionada
         empleado_seleccionado = st.selectbox("Selecciona un empleado", empleados_sucursal['Nombre'].unique())
         
@@ -732,13 +730,13 @@ if password == st.secrets["acceso"]["clave"]:
         # Filtrar las ventas desde 2015
         ventas_df['Fecha'] = pd.to_datetime(ventas_df['Fecha'], errors='coerce')
         ventas_desde_2015 = ventas_df[ventas_df['Fecha'] >= '2015-01-01']
-        
+    
         # Multiplicar el precio por la cantidad para obtener el total de la venta
         ventas_desde_2015['Ventas_totales'] = ventas_desde_2015['Precio'] * ventas_desde_2015['Cantidad']
         
         # Sumar las ventas totales por ID_empleado
         ventas_anuales = ventas_desde_2015.groupby('IdEmpleado')['Ventas_totales'].sum().reset_index()
-        
+    
         # Relacionar empleados con ventas (usando 'IdEmpleado')
         ventas_con_empleados = ventas_anuales.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
                                                     left_on='IdEmpleado', right_on='ID_empleado', how='left')
@@ -746,7 +744,10 @@ if password == st.secrets["acceso"]["clave"]:
         # Filtrar solo las ventas del empleado seleccionado en la sucursal seleccionada
         ventas_con_empleados_sucursal = ventas_con_empleados[(ventas_con_empleados['Sucursal'] == sucursal_seleccionada) & 
                                                             (ventas_con_empleados['Nombre'] == empleado_seleccionado)]
-        
+    
+        # Verificar los datos filtrados
+        st.write("Datos de ventas filtrados:", ventas_con_empleados_sucursal)
+    
         # Mostrar las ventas de ese empleado
         st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_con_empleados_sucursal[['Nombre', 'Apellido', 'Ventas_totales']])
         
