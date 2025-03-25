@@ -29,7 +29,7 @@ if password == st.secrets["acceso"]["clave"]:
     ])
 
     st.sidebar.markdown("---")
-    st.sidebar.markdown("👤 Usuario: Admin")
+    st.sidebar.markdown("👤 Usuario: dueño")
 
     # -----------------------------
     # CONTENIDO POR SECCION
@@ -41,7 +41,50 @@ if password == st.secrets["acceso"]["clave"]:
 
     elif menu == "Análisis exploratorio":
         st.header("📈 Análisis exploratorio de datos (EDA)")
-        st.info("Próximamente: integración de gráficos y descripciones")
+
+        dataset_opcion = st.selectbox("Seleccioná el dataset a explorar:", [
+            "Clientes", "Compras", "Empleados", "Gastos", "Productos", "Proveedores", "Sucursales", "Ventas"
+        ])
+
+        if dataset_opcion == "Clientes":
+            st.subheader("🧍‍♂️ Exploración de Clientes")
+            st.markdown("- Edad promedio: 42 años.\n- Mayoría en provincias como Buenos Aires, Córdoba y Santa Fe.\n- Conclusión: los clientes se concentran en zonas urbanas con fuerte potencial de segmentación.")
+            st.image("graficos/clientes_edad.png")
+
+        elif dataset_opcion == "Compras":
+            st.subheader("🛒 Exploración de Compras")
+            st.markdown("- Concentración de compras en pocos proveedores.\n- Productos con alta rotación vs. baja venta.\n- Conclusión: necesidad de alinear compras con demanda real.")
+            st.image("graficos/compras_proveedor.png")
+
+        elif dataset_opcion == "Empleados":
+            st.subheader("👔 Exploración de Empleados")
+            st.markdown("- Vendedores representan la mayoría del staff.\n- Relación positiva entre salario medio y rendimiento.\n- Conclusión: fuerza de ventas clave en el desempeño global.")
+            st.image("graficos/empleados_cargos.png")
+
+        elif dataset_opcion == "Gastos":
+            st.subheader("💸 Exploración de Gastos")
+            st.markdown("- Tipos frecuentes: logística, servicios e insumos.\n- Sucursales con alto gasto relativo frente a ventas.\n- Conclusión: oportunidad de control presupuestario por sede.")
+            st.image("graficos/gastos_sucursal.png")
+
+        elif dataset_opcion == "Productos":
+            st.subheader("📦 Exploración de Productos")
+            st.markdown("- Margen positivo en productos más vendidos.\n- Algunos con exceso de stock o rotación lenta.\n- Conclusión: clave ajustar precios y foco de venta.")
+            st.image("graficos/productos_margen.png")
+
+        elif dataset_opcion == "Proveedores":
+            st.subheader("🏭 Exploración de Proveedores")
+            st.markdown("- Dependencia de pocos proveedores clave.\n- Variabilidad en precios y frecuencia de compra.\n- Conclusión: posible mejora en condiciones de negociación.")
+            st.image("graficos/proveedores_top.png")
+
+        elif dataset_opcion == "Sucursales":
+            st.subheader("🏢 Exploración de Sucursales")
+            st.markdown("- Desempeño desigual entre sedes.\n- Diferencias marcadas en volumen de ventas y gastos.\n- Conclusión: requiere gestión individualizada y auditoría local.")
+            st.image("graficos/sucursales_rendimiento.png")
+
+        elif dataset_opcion == "Ventas":
+            st.subheader("💰 Exploración de Ventas")
+            st.markdown("- Canales online y tienda física dominan.\n- Picos de venta en ciclos mensuales.\n- Conclusión: se puede predecir estacionalidad y optimizar promociones.")
+            st.image("graficos/ventas_canal.png")
 
     elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
