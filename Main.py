@@ -729,7 +729,7 @@ if password == st.secrets["acceso"]["clave"]:
         ventas_desde_2015 = ventas_df[ventas_df['Fecha'] >= '2015-01-01']
     
         # Relacionar empleados con ventas (usando 'IdEmpleado')
-        ventas_desde_2015 = ventas_desde_2015.merge(empleados_df[['ID_empleado', 'Sucursal']], left_on='IdEmpleado', right_on='ID_empleado', how='left')
+        ventas_desde_2015 = ventas_desde_2015.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], left_on='IdEmpleado', right_on='ID_empleado', how='left')
     
         # Filtrar solo las ventas del empleado en la sucursal seleccionada
         ventas_desde_2015_sucursal = ventas_desde_2015[ventas_desde_2015['Sucursal'] == sucursal_seleccionada]
