@@ -136,11 +136,6 @@ if password == st.secrets["acceso"]["clave"]:
             ax4.set_title("Heatmap de correlaciones - Compras")
             st.pyplot(fig4)
 
-            # Matriz de frecuencia Producto vs Proveedor
-            st.markdown("### 🧾 Matriz Producto vs Proveedor")
-            matriz = pd.crosstab(df_compras['IdProducto'], df_compras['IdProveedor'])
-            st.dataframe(matriz.head(10))
-
             # Visualización bivariada: IdProducto vs Cantidad
             st.markdown("### 📊 Relación entre Producto y Cantidad Comprada")
             fig3, ax3 = plt.subplots(figsize=(10, 4))
@@ -150,8 +145,6 @@ if password == st.secrets["acceso"]["clave"]:
             ax3.set_title("Distribución de cantidades por producto (Top 10)")
             st.pyplot(fig3)
 
-
-
             # Estadísticas descriptivas
             st.subheader("📋 Estadísticas descriptivas")
             st.dataframe(df_compras.describe())
@@ -159,8 +152,37 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Empleados":
             st.subheader("👔 Exploración de Empleados")
-            st.markdown("- Vendedores representan la mayoría del staff.\n- Relación positiva entre salario medio y rendimiento.\n- Conclusión: fuerza de ventas clave en el desempeño global.")
-            st.image("graficos/empleados_cargos.png")
+            st.markdown("✅ Conclusiones preliminares del dataset Empleados:\n- El salario más frecuente es $32.000, y la mayoría de empleados cobra entre $15.000 y $36.000.\n- El rol de vendedor domina la estructura laboral (más del 60% del total).\n- El sector más numeroso es ventas, seguido de administración y logística.\n- Los salarios más altos se encuentran en administración y sistemas.\n- Las sucursales están bastante equilibradas, con una leve concentración en morón, caseros y cabildo.")
+        
+            df_empleados = pd.read_csv("Empleados_transformados.csv")
+        
+            # Histograma de salarios
+            st.markdown("### 💵 Distribución de Salarios")
+            fig, ax = plt.subplots()
+            sns.histplot(df_empleados["Salario"], bins=30, kde=True, ax=ax, color="lightgreen")
+            ax.set_title("Distribución de salarios")
+            st.pyplot(fig)
+        
+            # Empleados por cargo
+            st.markdown("### 👷‍♂️ Distribución por Cargo")
+            fig2, ax2 = plt.subplots()
+            df_empleados["Cargo"].value_counts().plot(kind="bar", ax=ax2, color="steelblue")
+            ax2.set_title("Cantidad de empleados por cargo")
+            ax2.set_ylabel("Cantidad")
+            st.pyplot(fig2)
+        
+            # Boxplot salario por cargo
+            st.markdown("### 📊 Salario por Cargo")
+            fig3, ax3 = plt.subplots(figsize=(10, 5))
+            sns.boxplot(data=df_empleados, x="Cargo", y="Salario", ax=ax3, palette="pastel")
+            ax3.set_title("Distribución de salario por cargo")
+            ax3.tick_params(axis='x', rotation=45)
+            st.pyplot(fig3)
+        
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_empleados.describe())
+
 
         elif dataset_opcion == "Gastos":
             st.subheader("💸 Exploración de Gastos")
