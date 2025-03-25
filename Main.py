@@ -734,17 +734,16 @@ if password == st.secrets["acceso"]["clave"]:
         # Filtrar solo las ventas del empleado en la sucursal seleccionada
         ventas_desde_2015_sucursal = ventas_desde_2015[ventas_desde_2015['Sucursal'] == sucursal_seleccionada]
         
-        # Agrupar las ventas por empleado
-        ventas_por_empleado = ventas_desde_2015_sucursal.groupby(['ID_empleado', 'Nombre', 'Apellido'])['Precio'].sum().reset_index()
+        # Filtrar y agrupar las ventas por empleado
+        ventas_por_empleado = ventas_desde_2015_sucursal.groupby(['IdEmpleado', 'Nombre', 'Apellido'])['Precio'].sum().reset_index()
         
-        # Mostrar las ventas por empleado
-        st.write(ventas_por_empleado[['Nombre', 'Apellido', 'Precio']])
-    
+        # Mostrar las ventas por empleado en una tabla
+        st.write("Ventas por Empleado desde 2015", ventas_por_empleado)
+        
         # Graficar las ventas de cada empleado
-        st.subheader("Gráfico comparativo de ventas por empleado")
         fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Precio', color='Apellido', title="Ventas por Empleado desde 2015")
         st.plotly_chart(fig_ventas_empleado)
-    
+        
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
         st.info("Próximamente: descarga de reportes, gráficos y predicciones")
