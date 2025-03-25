@@ -406,42 +406,60 @@ if password == st.secrets["acceso"]["clave"]:
             st.dataframe(df_ventas.describe())
 
 
-     elif menu == "Análisis cruzado":
+        elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
 
         analisis_opcion = st.selectbox("Seleccioná el análisis cruzado a visualizar:", [
-    "Productos más vendidos vs. más comprados",
-    "Sucursales con más ventas vs. más gastos",
-    "Relación entre salario de empleados y volumen de ventas",
-    "Perfil de cliente vs. tipo de producto vendido",
-    "Canal de venta vs. volumen/monto de ventas",
-    "Tipo de gasto más frecuente por sucursal",
-    "Proveedor con mayor volumen de compra",
-    "Comparar precios de compra vs. venta por producto (margen)"
-                "💡 Comparar precios de compra vs. venta por producto (margen)"
-                ])
-         
-        if analisis_opcion == "Clientes vs Compras":
-            st.markdown("### 🧍‍♂️📦 Análisis cruzado: Clientes vs Compras")
+            "🛍️ Productos más vendidos vs. más comprados",
+            "📍 Sucursales con más ventas vs. más gastos",
+            "💸 Relación entre salario de empleados y volumen de ventas",
+            "👥 Perfil de cliente vs. tipo de producto vendido",
+            "🛒 Canal de venta vs. volumen/monto de ventas",
+            "🔁 Tipo de gasto más frecuente por sucursal",
+            "📊 Proveedor con mayor volumen de compra",
+            "💡 Comparar precios de compra vs. venta por producto (margen)"
+        ])
+
+        if analisis_opcion == "🛍️ Productos más vendidos vs. más comprados":
+            st.markdown("### 🛍️ Productos más vendidos vs. más comprados")
             st.markdown("🔎 ¿Qué muestra el gráfico?\n- Comparación directa de la cantidad vendida vs. la cantidad comprada por producto.\n- Podés ver claramente si hay productos:\n    - Con más ventas que compras → posible falta de stock o desabastecimiento.\n    - Con más compras que ventas → posible exceso de stock o baja rotación.")
-        
-            df_clientes = pd.read_csv("Clientes_transformados.csv")
+
+            df_ventas = pd.read_csv("Venta_transformado.csv")
             df_compras = pd.read_csv("Compra_transformada.csv")
-        
-            # Agrupamos cantidad de compras por cliente
-            compras_por_cliente = df_compras.groupby("ID")["Cantidad"].sum().reset_index()
-            compras_por_cliente.columns = ["ID", "Cantidad_Comprada"]
-        
-            # Merge con clientes
-            df_merged = df_clientes.merge(compras_por_cliente, on="ID", how="left").fillna(0)
-        
-            # Gráfico de dispersión Edad vs Cantidad Comprada
-            fig, ax = plt.subplots()
-            sns.scatterplot(data=df_merged, x="Edad", y="Cantidad_Comprada", ax=ax)
-            ax.set_title("Relación entre edad del cliente y cantidad de productos comprados")
-            ax.set_xlabel("Edad del cliente")
-            ax.set_ylabel("Cantidad comprada")
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+
+            # Agrupamos ventas y compras por producto
+            ventas = df_ventas["IdProducto"].value_counts().reset_index()
+            ventas.columns = ["IdProducto", "Cantidad_Vendida"]
+
+            compras = df_compras["IdProducto"].value_counts().reset_index()
+            compras.columns = ["IdProducto", "Cantidad_Comprada"]
+
+            # Merge y agregamos nombres
+            df_merge = ventas.merge(compras, on="IdProducto", how="outer").fillna(0)
+            df_merge = df_merge.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
+
+            # Top 10 productos por ventas
+            top = df_merge.sort_values(by="Cantidad_Vendida", ascending=False).head(10)
+
+            # Gráfico comparativo
+            st.markdown("### 📊 Comparación de productos más vendidos y comprados")
+            fig, ax = plt.subplots(figsize=(10, 6))
+            bar_width = 0.4
+            x = range(len(top))
+
+            ax.bar(x, top["Cantidad_Vendida"], width=bar_width, label="Vendidos", color="blue")
+            ax.bar([i + bar_width for i in x], top["Cantidad_Comprada"], width=bar_width, label="Comprados", color="orange")
+            ax.set_xticks([i + bar_width/2 for i in x])
+            ax.set_xticklabels(top["Concepto"], rotation=45, ha="right")
+            ax.set_ylabel("Cantidad")
+            ax.set_title("Productos más vendidos vs. más comprados")
+            ax.legend()
             st.pyplot(fig)
+
+        else:
+            st.info(f"🔎 Seleccionaste: {analisis_opcion}. Visualización disponible próximamente.")
+
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
