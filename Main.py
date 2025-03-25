@@ -77,7 +77,7 @@ if password == st.secrets["acceso"]["clave"]:
             ax2.set_xlabel("Cantidad de clientes")
             st.pyplot(fig2)
 
-          # Mapa geográfico de clientes (si hay coordenadas)
+            # Mapa geográfico de clientes (si hay coordenadas)
             if "X" in df_clientes.columns and "Y" in df_clientes.columns:
                 st.markdown("### 🌍 Mapa de distribución geográfica")
                 mapa = folium.Map(location=[df_clientes["Y"].mean(), df_clientes["X"].mean()], zoom_start=5)
@@ -346,19 +346,11 @@ if password == st.secrets["acceso"]["clave"]:
             st.pyplot(fig2)
         
             # Mapa de sucursales
-             if "Latitud" in df_sucursales.columns and "Longitud" in df_sucursales.columns:
-                    st.markdown("### 🌍 Mapa de distribución geográfica de sucursales")
-                    mapa = folium.Map(location=[df_sucursales["Latitud"].mean(), df_sucursales["Longitud"].mean()], zoom_start=5)
-                    for _, row in df_sucursales.iterrows():
-                        folium.CircleMarker(
-                            location=[row["Latitud"], row["Longitud"]],
-                            radius=4,
-                            color='purple',
-                            fill=True,
-                            fill_opacity=0.6,
-                            popup=row["Sucursal"]
-                        ).add_to(mapa)
-                    st_folium(mapa, width=700, height=400)
+            st.markdown("### 🌍 Mapa geográfico de sucursales")
+            mapa = folium.Map(location=[df_sucursales["Latitud"].mean(), df_sucursales["Longitud"].mean()], zoom_start=5)
+            for _, row in df_sucursales.iterrows():
+                folium.Marker(location=[row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(mapa)
+            st_folium(mapa, width=700, height=400)
 
         elif dataset_opcion == "Ventas":
             st.subheader("💰 Exploración de Ventas")
@@ -376,7 +368,7 @@ if password == st.secrets["acceso"]["clave"]:
             ax1.set_title("Ventas mensuales")
             st.pyplot(fig1)
         
-            # Ventas por canal
+          # Ventas por canal
             st.markdown("### 🛍️ Ventas por canal")
             fig2, ax2 = plt.subplots()
             canales = {1: "Tienda Física", 2: "Online", 3: "Mayorista", 4: "Otros"}
