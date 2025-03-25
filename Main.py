@@ -522,7 +522,32 @@ if password == st.secrets["acceso"]["clave"]:
             sns.barplot(data=emp_data, x="Nombre", y="Ventas", ax=ax2, palette="viridis")
             ax2.set_title("Comparación de volumen de ventas entre empleados")
             st.pyplot(fig2)
-            
+
+        elif analisis_opcion == "👥 Perfil de cliente vs. tipo de producto vendido":
+            st.markdown("### 👥 Perfil de cliente vs. tipo de producto vendido")
+            st.markdown("🔎 ¿Qué revela el gráfico?\n- Analiza qué tipo de productos prefieren distintos perfiles de clientes según edad.\n- Permite identificar patrones de consumo, segmentaciones de marketing y oportunidades de fidelización.\n\n💡 Ideal para definir campañas específicas para cada grupo etario.")
+        
+            df_clientes = pd.read_csv("Clientes_transformados.csv")
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+        
+            # Merge para cruzar cliente + venta + producto
+            df_ventas = df_ventas.merge(df_clientes, left_on="IdCliente", right_on="ID", how="left")
+            df_ventas = df_ventas.merge(df_productos[["ID_PRODUCTO", "Tipo"]], left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
+        
+            # Crear grupos etarios
+            df_ventas.dropna(subset=["Edad", "Tipo"], inplace=True)
+            df_ventas["Edad_grupo"] = pd.cut(df_ventas["Edad"], bins=[0, 20, 35, 50, 100], labels=["≤20", "21-35", "36-50", ">50"])
+        
+            # Gráfico
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.countplot(data=df_ventas, x="Tipo", hue="Edad_grupo", ax=ax)
+            ax.set_title("Tipo de producto vendido según grupo etario del cliente")
+            ax.set_xlabel("Tipo de producto")
+            ax.set_ylabel("Cantidad de ventas")
+            ax.tick_params(axis='x', rotation=45)
+            st.pyplot(fig)
+        
         elif analisis_opcion == "🛒 Canal de venta vs. volumen/monto de ventas":
             st.markdown("### 🛒 Canal de venta vs. volumen/monto de ventas")
             st.markdown("🔎 ¿Qué revela el gráfico?\n- Compara el volumen y la distribución de ventas por canal.\n- Permite identificar cuál canal tiene mayor actividad o ingresos.\n\n💡 Útil para ajustar estrategias comerciales y reforzar canales más rentables.")
