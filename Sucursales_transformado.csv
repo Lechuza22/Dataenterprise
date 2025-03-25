@@ -1,0 +1,32 @@
+ID,Sucursal,Direccion,Localidad,Provincia,Latitud,Longitud
+1,cabildo,av. cabildo 1342,ciudad de buenos aires,ciudad de buenos aires,-34.567806,-58.449572
+2,palermo 1,guatemala 5701,caba,caba,-34.579035,-58.433566
+3,palermo 2,gral. lucio norberto mansilla 2668,caba,c debuenos aires,-34.595966,-58.40515
+4,corrientes,av. corrientes 2352,ciudad de buenos aires,bs as,-34.604685,-58.398764
+5,almagro,venezuela 3650,capital,bs.as.,-34.617308,-58.416179
+6,caballito,av. rivadavia 4708,capital federal,ciudad de buenos aires,-34.616303,-58.431849
+7,flores,av. rivadavia 5746,capfed,buenos aires,-34.622868,-58.446449
+8,alberdi,av. juan bautista alberdi 1634,cap. fed.,buenos aires,-34.627306,-58.451498
+9,deposito,pedernera 530,cap.   federal,buenos aires,-34.635134,-58.461513
+10,velez,av. juan bautista justo 7738,cdad de buenos aires,ciudad de buenos aires,-34.631257,-58.498063
+11,vicente lopez,av. maipú 829,vicente lópez,buenos aires,-34.530103,-58.480066
+12,san isidro,av. sta fe 2552,martínez,b. aires,-34.494402,-58.497951
+13,caseros,justo josé de urquiza 4770,caseros,b.aires,-34.605948,-58.563319
+14,moron,salta 250,moron,buenos aires,-34.645896,-58.621149
+15,castelar,sta rosa 1845,castelar,provincia de buenos aires,-34.639304,-58.655671
+16,san justo,av. dr. ignacio arieta 3451,san justo,buenos aires,-34.681389,-58.556919
+17,lanus,pres. tte. gral. juan domingo perón 3270,lanus,prov de bs as.,-34.669805,-58.411312
+18,avellaneda,av. bartolomé mitre 612,avellaneda,buenos aires,-34.66106,-58.366515
+19,quilmes,peatonal rivadavia 185,quilmes,pcia bs as,-34.722253,-58.257576
+20,la plata,calle 48 974,la plata,pcia bs as,-34.920777,-57.958889
+21,mdq1,san martín 2544,mar del plata,buenos aires,-37.999691,-57.54639
+22,mdq2,belgrano 2847,mar del plata,buenos aires,-37.999763,-57.550577
+23,rosario1,av. pellegrini 1138,rosario,santa fe,-32.95703,-60.641354
+24,rosario2,rueda 6349,rosario,santa fe,-32.962748,-60.707629
+25,córdoba centro,av colón 251,córdoba,córdoba,-31.412747,-64.186458
+26,córdoba quiroz,av duarte quirós 2910,coroba,córdoba,-31.407538,-64.221738
+27,cerro de las rosas,av. rafael núñez 4764,cordoba,cordoba,-31.361254,-64.237817
+28,tucumán,av. sarmiento 525,san miguel de tucumán,tucumán,-26.818045,-65.204071
+29,mendoza1,gutiérrez 349,mendoza,mendoza,-32.887531,-68.843308
+30,mendoza2,av. colón 255,mendoza,mendoza,-32.894292,-68.843802
+31,bariloche,mitre 252,san carlos de bariloche,río negro,-41.133828,-71.306365

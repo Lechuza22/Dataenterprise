@@ -1,0 +1,268 @@
+ID_empleado,Apellido,Nombre,Sucursal,Sector,Cargo,Salario
+1968,burgos,jeronimo,caseros,administración,administrativo,32000.0
+1674,villegas,estefania,caseros,administración,vendedor,32000.0
+1516,fernandez,guillermo,caseros,administración,vendedor,45000.0
+1330,ramirez,eliana,caseros,administración,vendedor,32000.0
+1657,carmona,jose,caseros,administración,vendedor,32000.0
+1573,de santis,marcela,caseros,administración,aux. administrativo,15000.0
+1658,franco,daniela,caseros,administración,vendedor,32000.0
+1078,cortes,rafael,caseros,diseño,administrativo,42000.0
+1695,berrio,camilo,cabildo,diseño,vendedor,32000.0
+1285,arias,francisco,cabildo,diseño,vendedor,32000.0
+1284,merizalde,antonio,cabildo,diseño,vendedor,32000.0
+1517,restrepo,karen,cabildo,diseño,aux. administrativo,15000.0
+1674,lemus,david,cabildo,diseño,vendedor,32000.0
+1056,santana,javier,cabildo,comunicación,administrativo,56000.0
+1977,saldarriaga,virginia,cabildo,comunicación,vendedor,42000.0
+1725,posada,sergio,cabildo,comunicación,vendedor,56000.0
+1675,zea,jorge,cabildo,comunicación,vendedor,65000.0
+1968,diaz,mariana,cabildo,comunicación,vendedor,32000.0
+1723,giraldo,esteban,cabildo,ventas,aux. administrativo,13500.0
+1076,idarraga,jorge,moron,ventas,aux. administrativo,12000.0
+1816,simanca,alejandro,moron,ventas,aux. administrativo,16000.0
+1154,pulgarin,angelica,moron,ventas,administrativo,41000.0
+1294,aguirre,brenda,moron,ventas,vendedor,32000.0
+1428,tamayo,gloria,moron,ventas,vendedor,32000.0
+1814,carmona,andrea,moron,ventas,vendedor,32000.0
+1978,diaz,lucero,moron,ventas,vendedor,32000.0
+1531,alzate,angela,moron,ventas,técnico,28000.0
+1931,arango,felipe,moron,administración,administrativo,25600.0
+1932,garces,elena,moron,administración,administrativo,24000.0
+1291,uribe,carmen,moron,administración,aux. administrativo,13500.0
+1530,ospina,daniel,moron,administración,vendedor,14600.0
+1152,peláez,alberto,moron,administración,vendedor,13500.0
+1079,perez,elena,palermo 1,administración,vendedor,13500.0
+1676,carmona,sebastian,palermo 1,administración,vendedor,15000.0
+1290,cifuentes,oscar,palermo 1,administración,vendedor,13500.0
+1961,jaramillo,santiago,palermo 1,administración,vendedor,13500.0
+1675,melano,luis,palermo 1,administración,vendedor,13500.0
+1368,mendez,josé,palermo 1,administración,vendedor,12800.0
+1153,ramirez,tomas,palermo 1,administración,técnico,13500.0
+1960,girando,felipe,palermo 1,administración,aux. administrativo,13500.0
+1908,diez,patricia,palermo 1,administración,administrativo,56000.0
+1011,sierra,luisa,castelar,administración,vendedor,27000.0
+1359,vallejo,sara,castelar,diseño,vendedor,23000.0
+1724,guerrero,alexandra,castelar,diseño,vendedor,23000.0
+1923,guerra,lisa,castelar,diseño,vendedor,23000.0
+1794,rodríguez,ana maria,castelar,diseño,vendedor,23000.0
+1558,marulanda,sofia,castelar,diseño,vendedor,23000.0
+1949,palacio,paula,castelar,diseño,vendedor,41000.0
+1311,bermudez,jesus,castelar,diseño,vendedor,38000.0
+1906,toledo,roberta,castelar,diseño,aux. administrativo,13500.0
+1656,arango,tatiana,castelar,diseño,administrativo,25000.0
+1907,acevedo,melina,castelar,diseño,administrativo,26000.0
+1724,cock,cristina,palermo 2,diseño,administrativo,29600.0
+1301,casadiegos,manuela,palermo 2,diseño,aux. administrativo,13500.0
+1292,salamanca,isabel,palermo 2,diseño,administrativo,43500.0
+1167,arango,juan,palermo 2,diseño,administrativo,56000.0
+1950,granda,luisa,palermo 2,diseño,vendedor,49000.0
+1792,arango,monica,palermo 2,diseño,técnico,20000.0
+1977,arroyave,federico,palermo 2,diseño,técnico,13000.0
+1067,lemos,dalia,palermo 2,diseño,técnico,11000.0
+1976,jaramillo,ana,palermo 2,ventas,aux. administrativo,13500.0
+1168,lema,maria,palermo 2,ventas,aux. administrativo,13500.0
+1815,caro,diana,palermo 2,ventas,administrativo,56000.0
+1068,vergara,amalia,palermo 2,ventas,vendedor,32000.0
+1012,duque,julian,palermo 2,ventas,vendedor,24000.0
+1301,muñoz,maritza,corrientes,ventas,vendedor,32000.0
+1556,peláez,andrés,corrientes,ventas,vendedor,32000.0
+1933,sanchez,miguel,corrientes,ventas,vendedor,32000.0
+1333,cano,carolina,corrientes,ventas,vendedor,32000.0
+1510,marquez,jessica,corrientes,ventas,vendedor,48000.0
+1574,rico,samuel,corrientes,ventas,vendedor,32000.0
+1360,mendez,gustavo,corrientes,ventas,vendedor,40000.0
+1293,jimenez,karina,corrientes,ventas,técnico,17000.0
+1329,osorio,julieth,almagro,ventas,vendedor,35000.0
+1572,villamizar,lina,almagro,ventas,vendedor,36000.0
+1300,gomez,carlos,almagro,ventas,administrativo,23000.0
+1557,gracía,simón,almagro,ventas,aux. administrativo,13900.0
+1169,castro,monica,almagro,ventas,administrativo,57000.0
+1758,uribe,melisa,almagro,ventas,técnico,19000.0
+1310,florez,alejandra,almagro,ventas,técnico,13500.0
+1041,gutierrez,amalia,almagro,ventas,vendedor,49000.0
+1361,medina,raquel,caballito,ventas,vendedor,29400.0
+1793,betancur,gonzalo,caballito,administración,vendedor,13500.0
+1725,marquez,isabella,caballito,administración,administrativo,56000.0
+1969,molina,karla,caballito,administración,aux. técnico,9800.0
+1962,rodriguez,hilda,caballito,administración,vendedor,29000.0
+1967,hincapie,victoria,caballito,administración,vendedor,46000.0
+1426,rojas,pablo,caballito,administración,vendedor,56000.0
+1509,serna,pamela,caballito,ventas,aux. administrativo,13500.0
+1673,zapata,stepania,san justo,ventas,vendedor,13500.0
+1352,toro,manuel,san justo,ventas,vendedor,19800.0
+1922,henao,barbara,san justo,ventas,vendedor,21000.0
+1518,vasquez,leonardo,san justo,ventas,vendedor,26000.0
+1331,castrillón,juliana,san justo,ventas,vendedor,31000.0
+1303,lopez,dinara,san justo,ventas,administrativo,56000.0
+1302,mota,elisa,san justo,ventas,vendedor,38000.0
+1334,perez,alicia,san justo,ventas,aux. administrativo,13500.0
+1975,posada,carlos,flores,derecho,vendedor,32000.0
+1759,arango,mauricio,flores,derecho,vendedor,47000.0
+1055,hoyos,adriana,flores,derecho,vendedor,32000.0
+1054,suarez,miguel,flores,derecho,vendedor,41000.0
+1075,aristizabal,natalia,flores,derecho,vendedor,32000.0
+1966,dominguez,camila,flores,derecho,vendedor,39000.0
+1354,ruiz,susana,flores,derecho,administrativo,32000.0
+1696,higuita,cathy,flores,derecho,vendedor,32000.0
+1299,osorio,catalina,flores,derecho,vendedor,32000.0
+1529,gomez,mariana,flores,publicidad,vendedor,32000.0
+1080,bustos,jacobo,flores,publicidad,vendedor,37000.0
+1353,rodas,gabriel,flores,publicidad,vendedor,36000.0
+1369,cano,sandra,flores,publicidad,administrativo,42000.0
+1370,diaz,evelyn,alberdi,publicidad,vendedor,36000.0
+1677,hernandez,juan,alberdi,publicidad,vendedor,37000.0
+1427,jaramillo,david,alberdi,publicidad,vendedor,34000.0
+2806,duque,jeronimo,alberdi,administración,administrativo,32000.0
+2731,muñoz,estefania,alberdi,administración,vendedor,32000.0
+2024,peláez,guillermo,alberdi,administración,vendedor,45000.0
+2630,sanchez,eliana,alberdi,administración,vendedor,32000.0
+2486,cano,jose,deposito,administración,vendedor,32000.0
+2988,marquez,marcela,deposito,administración,aux. administrativo,15000.0
+2768,rico,daniela,deposito,administración,vendedor,32000.0
+2212,mendez,rafael,deposito,diseño,administrativo,42000.0
+2075,jimenez,camilo,deposito,diseño,vendedor,32000.0
+2779,osorio,francisco,velez,diseño,vendedor,32000.0
+2468,zerra,antonio,velez,diseño,vendedor,32000.0
+2762,gomez,karen,velez,diseño,aux. administrativo,15000.0
+2351,gracía,david,velez,diseño,vendedor,32000.0
+2557,castro,javier,velez,comunicación,administrativo,56000.0
+2508,peppe,santiago,velez,comunicación,vendedor,42000.0
+2411,hoyos,luis,velez,comunicación,vendedor,56000.0
+2120,suarez,josé,velez,comunicación,vendedor,65000.0
+2157,arias,tomas,velez,comunicación,vendedor,32000.0
+2580,dominguez,felipe,vicente lopez,ventas,aux. administrativo,13500.0
+2097,ruiz,patricia,vicente lopez,ventas,aux. administrativo,12000.0
+2243,pailos,luisa,vicente lopez,ventas,aux. administrativo,16000.0
+2467,osorio,sara,vicente lopez,ventas,administrativo,41000.0
+2063,gomez,alejandra,vicente lopez,ventas,vendedor,32000.0
+2059,bustos,lisa,vicente lopez,ventas,vendedor,32000.0
+2784,rodas,ana maria,vicente lopez,ventas,vendedor,32000.0
+2532,cano,sofia,vicente lopez,ventas,vendedor,32000.0
+2337,diaz,paula,vicente lopez,ventas,técnico,28000.0
+2191,hernandez,jesus,vicente lopez,administración,administrativo,25600.0
+2869,jaramillo,hernán,san isidro,administración,administrativo,24000.0
+2896,vasquez,carmen,san isidro,administración,aux. administrativo,13500.0
+2427,castrillón,daniel,san isidro,administración,vendedor,14600.0
+2786,lopez,alberto,san isidro,administración,vendedor,13500.0
+2614,mota,elena,san isidro,administración,vendedor,13500.0
+2599,perez,sebastian,san isidro,administración,vendedor,15000.0
+2589,posada,oscar,san isidro,administración,vendedor,13500.0
+3917,burgos,julian,lanus,administración,vendedor,13500.0
+3172,villegas,marisa,lanus,administración,vendedor,13500.0
+3607,fernandez,andrés,lanus,administración,vendedor,12800.0
+3728,ramirez,miguel,lanus,administración,técnico,13500.0
+3619,carmona,carolina,lanus,administración,aux. administrativo,13500.0
+3681,de santis,jessica,lanus,administración,administrativo,56000.0
+3111,franco,samuel,lanus,administración,vendedor,27000.0
+3558,cortes,gustavo,lanus,diseño,vendedor,23000.0
+3167,berrio,karina,lanus,diseño,vendedor,23000.0
+3712,arias,julieta,avellaneda,diseño,vendedor,23000.0
+3502,merizalde,lina,avellaneda,diseño,vendedor,23000.0
+3481,restrepo,carlos,avellaneda,diseño,vendedor,23000.0
+3664,lemus,simón,avellaneda,diseño,vendedor,41000.0
+3859,santana,monica,avellaneda,diseño,vendedor,38000.0
+3421,saldarriaga,melisa,avellaneda,diseño,aux. administrativo,13500.0
+3850,posada,alejandra,avellaneda,diseño,administrativo,25000.0
+3365,zea,amalia,quilmes,diseño,administrativo,26000.0
+3685,diaz,raquel,quilmes,diseño,administrativo,29600.0
+3390,giraldo,gonzalo,quilmes,diseño,aux. administrativo,13500.0
+3481,idarraga,santiago,quilmes,diseño,administrativo,43500.0
+3195,simanca,isabella,quilmes,diseño,administrativo,56000.0
+3250,pulgarin,carla,quilmes,diseño,vendedor,49000.0
+3496,aguirre,hilda,quilmes,diseño,técnico,20000.0
+3141,tamayo,victoria,la plata,diseño,técnico,13000.0
+3663,carmona,pablo,la plata,diseño,técnico,11000.0
+3485,diaz,pamela,la plata,ventas,aux. administrativo,13500.0
+3874,alzate,estafania,la plata,ventas,aux. administrativo,13500.0
+3800,arango,manuel,la plata,ventas,administrativo,56000.0
+3752,uribe,leonardo,la plata,ventas,vendedor,24000.0
+3082,ospina,juliana,la plata,ventas,vendedor,32000.0
+3186,peláez,diana,la plata,ventas,vendedor,32000.0
+3300,perez,elisa,mdq1,ventas,vendedor,32000.0
+3363,carmona,alicia,mdq1,ventas,vendedor,32000.0
+3099,cifuentes,carlos,mdq1,ventas,vendedor,48000.0
+3303,jaramillo,mauricio,mdq1,ventas,vendedor,32000.0
+3339,melano,adriana,mdq1,ventas,vendedor,40000.0
+3849,mendez,miguel,mdq1,ventas,técnico,17000.0
+3766,ramirez,natalia,mdq1,ventas,vendedor,35000.0
+3576,girando,camila,mdq2,ventas,vendedor,36000.0
+3430,diez,susana,mdq2,ventas,administrativo,23000.0
+3071,sierra,cathy,mdq2,ventas,aux. administrativo,13900.0
+3842,vallejo,catalina,mdq2,ventas,administrativo,57000.0
+3979,guerrero,mariana,mdq2,ventas,técnico,19000.0
+3622,guerra,jacobo,mdq2,ventas,técnico,13500.0
+3643,rodríguez,gabriel,mdq2,ventas,vendedor,49000.0
+3876,marulanda,sandra,rosario1,ventas,vendedor,29400.0
+3504,palacio,evelyn,rosario1,administración,vendedor,13500.0
+3708,bermudez,juan,rosario1,administración,aux. administrativo,13500.0
+3700,toledo,david,rosario1,administración,administrativo,56000.0
+3810,diez,santiago,rosario1,administración,aux. técnico,9800.0
+3166,sierra,luis,rosario1,administración,vendedor,29000.0
+3412,vallejo,josé,rosario1,administración,vendedor,46000.0
+3346,guerrero,tomas,rosario1,administración,vendedor,56000.0
+3119,guerra,felipe,rosario1,ventas,aux. administrativo,13500.0
+3537,rodríguez,patricia,rosario1,ventas,vendedor,13500.0
+3603,marulanda,luisa,rosario1,ventas,vendedor,19800.0
+3054,palacio,sara,rosario1,ventas,vendedor,21000.0
+3751,bermudez,alejandra,rosario2,ventas,vendedor,26000.0
+3855,toledo,lisa,rosario2,ventas,vendedor,31000.0
+3743,arango,ana maria,rosario2,ventas,administrativo,56000.0
+3919,acevedo,sofia,rosario2,ventas,vendedor,38000.0
+3144,cock,paula,rosario2,ventas,aux. administrativo,13500.0
+3595,casadiegos,jesus,rosario2,derecho,vendedor,32000.0
+3816,salamanca,hernán,rosario2,derecho,vendedor,47000.0
+3433,arango,carmen,rosario2,derecho,vendedor,32000.0
+3603,granda,daniel,rosario2,derecho,vendedor,41000.0
+3047,arango,alberto,rosario2,derecho,vendedor,32000.0
+3478,arroyave,elena,córdoba centro,derecho,vendedor,39000.0
+3905,lemos,sebastian,córdoba centro,derecho,administrativo,32000.0
+3287,jaramillo,oscar,córdoba centro,derecho,vendedor,32000.0
+3916,lema,julian,córdoba centro,derecho,vendedor,32000.0
+3622,caro,marisa,córdoba centro,publicidad,vendedor,32000.0
+3950,vergara,andrés,córdoba centro,publicidad,vendedor,37000.0
+3599,duque,miguel,córdoba centro,publicidad,vendedor,36000.0
+3875,muñoz,carolina,córdoba centro,publicidad,administrativo,42000.0
+3110,peláez,jessica,córdoba centro,publicidad,vendedor,36000.0
+3728,sanchez,samuel,córdoba centro,publicidad,vendedor,37000.0
+3455,cano,gustavo,cordoba quiroz,publicidad,vendedor,34000.0
+3144,marquez,karina,cordoba quiroz,administración,administrativo,32000.0
+3032,rico,julieta,cordoba quiroz,administración,vendedor,32000.0
+3193,mendez,lina,cordoba quiroz,administración,vendedor,45000.0
+3812,jimenez,carlos,cordoba quiroz,administración,vendedor,32000.0
+3118,osorio,simón,cordoba quiroz,administración,vendedor,32000.0
+3975,villamizar,monica,cordoba quiroz,administración,aux. administrativo,15000.0
+3886,gomez,melisa,cordoba quiroz,administración,vendedor,32000.0
+3714,gracía,alejandra,cordoba quiroz,diseño,administrativo,42000.0
+3822,castro,amalia,cordoba quiroz,diseño,vendedor,32000.0
+3875,uribe,raquel,cordoba quiroz,diseño,vendedor,32000.0
+3230,florez,gonzalo,cordoba quiroz,diseño,vendedor,32000.0
+3671,gutierrez,santiago,cordoba quiroz,diseño,aux. administrativo,15000.0
+3929,medina,isabella,cerro de las rosas,diseño,vendedor,32000.0
+3175,betancur,carla,cerro de las rosas,comunicación,administrativo,56000.0
+3562,betancurt,hilda,cerro de las rosas,comunicación,vendedor,42000.0
+3504,marquez,victoria,cerro de las rosas,comunicación,vendedor,56000.0
+3796,molina,pablo,cerro de las rosas,comunicación,vendedor,65000.0
+3588,rodriguez,pamela,cerro de las rosas,comunicación,vendedor,32000.0
+3667,hincapie,estafania,cerro de las rosas,ventas,aux. administrativo,13500.0
+3578,rojas,manuel,mendoza 1,ventas,aux. administrativo,12000.0
+3076,serna,barbara,mendoza 1,ventas,aux. administrativo,16000.0
+3877,zapata,leonardo,mendoza 1,ventas,administrativo,41000.0
+3022,toro,juliana,mendoza 1,ventas,vendedor,32000.0
+3875,henao,dinora,mendoza 1,ventas,vendedor,32000.0
+3371,vasquez,elisa,mendoza 1,ventas,vendedor,32000.0
+3836,castrillón,alicia,mendoza 1,ventas,vendedor,32000.0
+3561,lopez,carlos,mendoza 1,ventas,técnico,28000.0
+3212,mota,mauricio,mendoza 1,administración,administrativo,25600.0
+3773,perez,adriana,mendoza 2,administración,administrativo,24000.0
+3864,posada,miguel,mendoza 2,administración,aux. administrativo,13500.0
+3346,arango,natalia,mendoza 2,administración,vendedor,14600.0
+3600,hoyos,camila,mendoza 2,administración,vendedor,13500.0
+3429,suarez,susana,mendoza 2,administración,vendedor,13500.0
+3734,aristizabal,catalina,mendoza 2,administración,vendedor,15000.0
+3249,dominguez,catalina,mendoza 2,administración,vendedor,13500.0
+3613,ruiz,mariana,bariloche,administración,vendedor,13500.0
+3043,higuita,jacobo,bariloche,administración,vendedor,13500.0
+3205,osorio,gabriel,bariloche,administración,vendedor,12800.0
+3545,gomez,sandra,bariloche,administración,técnico,13500.0
+3842,bustos,evelyn,bariloche,administración,aux. administrativo,13500.0
+3032,rodas,juan,bariloche,administración,administrativo,56000.0

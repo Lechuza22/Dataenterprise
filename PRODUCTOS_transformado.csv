@@ -1,0 +1,292 @@
+ID_PRODUCTO,Concepto,Tipo,Precio
+42737,epson copyfax 2000,impresión,1658.0
+42754,mot asrock h110m-hds s1151 s/vga,informatica,1237.5
+42755,mot asrock a58m-vg3+ amd fm2+ r2.0,informatica,1079.3200000000002
+42756,mot ecs kam1-i am1,informatica,638.6600000000001
+42757,mot asrock b150m-hds s1151 s/vga,informatica,1784.42
+42758,mot asrock b85m s1150 b85m-pro4,informatica,1819.18
+42759,mot asrock fm2a88m pro3+ amd fm2+,informatica,1800.48
+42760,mot asrock n68-gs4 am3+ fx r2.0,informatica,1637.24
+42761,mot msi a68hm-e33 amd fm2+ v2,informatica,1384.46
+42762,mot msi b150m b150m gaming pro s1151,informatica,2106.06
+42763,mot msi h110m-gaming s1151,informatica,2118.38
+42764,mot msi h110m-pro-vh-plus s1151,informatica,1385.78
+42765,mot msi h110m-pro-vhl s1151 s/p,informatica,1938.42
+42766,mot msi z270 gaming m7 s1151,informatica,7011.62
+42767,mot msi z270 z270-a pro s1151,informatica,3485.68
+42768,mot msi b250m pro-vh s1151,informatica,1923.68
+42769,mot supermicro c7b250-cb-ml s1151,informatica,3039.08
+42770,hd 4tb w.digital purple sata3 64mb,informatica,3597.22
+42771,hd 2tb seagate 5400 sata 7mm notebook,informatica,2554.2
+42772,hd 6tb w.digital purple sata3 64mb,informatica,6569.86
+42773,hd 8tb w.digital purple sata 128mb,informatica,8703.64
+42774,hd ssd 512gb intel sata3 2.5,informatica,6048.9
+42775,hd ssd 256gb intel sata3 2.5 m.2,informatica,3206.06
+42776,hd ssd 120gb sandisk sata 2.5,informatica,1423.4
+42777,hd 2tb seagate 5400 sata 7mm notebook 128mb,informatica,2557.5
+42778,hd 3tb w.digital sata3 5400 64mb,informatica,2807.6400000000003
+42779,gab qnap ts-431 nas,informatica,9555.04
+42780,hd 5tb seagate ext usb 3.0 black backup plus,informatica,4028.86
+42781,hd 2tb seagate ext usb 3.0 black backup plus,informatica,2098.8
+42782,hd 4tb seagate ext usb 3.0 black backup plus,informatica,3373.92
+42783,hd 2tb seagate ext usb 3.0 silver backup plus,informatica,2452.34
+42784,hd 1tb seagate ext usb 3.0 silver backup plus,informatica,1748.78
+42785,hd 1tb ext w.digital usb 3.0 elements,informatica,1597.42
+42786,mem usb 64gb kingston data 3.1,informatica,795.74
+42787,mem ddr4 4gb 2133mhz mushkin pc,informatica,1366.42
+42788,mem usb 32gb kingston 3.0,informatica,421.96
+42789,mem usb 16gb kingston data 3.1,informatica,218.02
+42790,mem usb 64gb kingston data 3.1,informatica,762.96
+42791,mem sd micro 16gb kingston clase 10 45mb,informatica,258.28000000000003
+42792,mem sd micro 32gb kingston clase 10 45mb,informatica,479.82
+42793,mem sd micro 64gb kingston clase 10 45mb,informatica,871.86
+42794,mem sd micro 16gb sony clase 10,informatica,305.36
+42795,mem sd micro 32gb sony clase 10,informatica,543.1800000000001
+42796,mem sd micro 32gb sandisk clase 10,informatica,457.82
+42797,mem ddr4 16gb 2400mhz mushkin blackline,informatica,4845.5
+42798,mem ddr3 8gb 1600mhz mushkin essentials pc,informatica,1556.28
+42799,mem ddr3 8gb 1600mhz mushkin essentials notebook,informatica,1536.04
+42800,mem ddr3 8gb 1600mhz mushkin silverline,informatica,1642.74
+42801,mem ddr4 8gb 2400mhz mushkin blackline,informatica,2802.8
+42802,producto1,informatica,0.0
+42803,producto2,informatica,244444442.0
+42804,producto3,informatica,244444442.0
+42805,producto4,informatica,244444442.0
+42806,producto5,informatica,0.0
+42807,producto6,informatica,0.0
+42808,producto7,informatica,244444442.0
+42809,producto8,informatica,0.0
+42810,cd dvdrw 12x lg bluray sata,grabacion,1282.8200000000002
+42811,cd dvdrw 8x pioneer bluray sata usb black,grabacion,2559.92
+42812,cd dvd+-rw 24x lg sata black,grabacion,376.64
+42813,cd dvd+-rw 24x samsung sata black,grabacion,377.96
+42814,cd dvd+-rw 24x samsung sata black,grabacion,369.82
+42815,cd dvd+-rw8x lite-on ext,grabacion,599.5
+42816,gab rio toro gaming cr480,gabinetes,1254.88
+42817,gab sentey g18-1356-sf+fuente bxp500-ls,gabinetes,813.12
+42818,gab rio toro compacto cr1080,gabinetes,1907.62
+42819,gab atx game pro kit 600 k05b,gabinetes,860.42
+42820,gab game pro g7 s/fuente,gabinetes,652.74
+42821,gab game pro g1 s/fuente,gabinetes,653.62
+42822,gab atx game pro kit 600 q1b,gabinetes,816.86
+42823,gab atx game pro kit 600 7002b,gabinetes,904.42
+42824,gab taiding 0918bb s/fuente,gabinetes,584.76
+42825,gab taiding f100 s/fuente,gabinetes,554.1800000000001
+42826,gab taiding f200 s/fuente,gabinetes,537.24
+42827,gab taiding 0802bb s/fuente,gabinetes,512.38
+42828,gab atx game pro kit 600 g7b,gabinetes,906.18
+42829,gab atx game pro kit 600 g1b,gabinetes,906.18
+42830,gab taiding f300 negro s/fuente,gabinetes,486.42
+42831,gab taiding m800-a negro s/fuente,gabinetes,369.6
+42832,parlante jbl go black bluetooth,audio,818.8399999999999
+42833,parlante jbl go blue bluetooth,audio,819.06
+42834,parlante jbl go gray bluetooth,audio,818.8399999999999
+42835,parlante jbl go orange bluetooth,audio,818.8399999999999
+42836,parlante jbl go red bluetooth,audio,823.24
+42837,parlante stay-on so-101 bluetooth/ waterproof,audio,430.32
+42838,parlante stay-on so-102 bluetooth/ waterproof,audio,897.38
+42839,parlante kingta so-101 bluetooth/ waterproof red,audio,353.32
+42840,parlante kingta so-101 bluetooth/ waterproof green,audio,353.32
+42841,parlante kingta so-101 bluetooth/ waterproof black,audio,353.32
+42842,parlante kingta so-101 bluetooth/ waterproof blue,audio,353.32
+42843,parlante kingta so-102 bluetooth/ waterproof celeste,audio,684.2
+42844,parlante jbl clip2 gray bluetooth,audio,1810.38
+42845,parlante jbl go teal bluetooth,audio,823.24
+42846,parlante jbl flip 4 white bluetooth,audio,2846.58
+42847,parlante jbl flip 4 gray bluetooth,audio,2846.58
+42848,gabinete gamer xd345,gaming,1588.0
+42849,gabinete gamer xd346,gaming,1542.0
+42850,aire comprimido blowing 450gr.,limpieza,279.0
+42851,alcohol isotronix 360gr.,limpieza,137.0
+42852,apoya muñecas con gel fellowes 91825,limpieza,152.0
+42853,apoya muñecas fellowes i-spire,limpieza,727.0
+42854,atril 4en1 fellowes i-spire 94735,limpieza,1115.0
+42855,base para notebook fellowes goriser 80304,bases,1130.0
+42856,base para notebook overtech ns-68 azul,bases,481.0
+42857,base para notebook overtech ns-68 negro,bases,542.0
+42858,base para notebook overtech ns-68 rojo,bases,505.0
+42859,base para notebook overtech ns-70,bases,610.0
+42860,base para notebook overtech ns-75 azul,bases,587.0
+42861,base para notebook overtech ns-75 negro,bases,542.0
+42862,base para notebook overtech ns-75 rojo,bases,512.0
+42863,base para tablet fellowes i-spire 94735,bases,398.0
+42864,botella brother amarillo bt5001y,impresión,199.0
+42865,botella brother cyan bt5001c,impresión,199.0
+42866,botella brother magenta bt5001m,impresión,199.0
+42867,botella brother negro bt6001bk,impresión,199.0
+42868,botella epson amarillo t664420,impresión,199.0
+42869,botella epson amarillo t673420,impresión,199.0
+42870,candado para notebook nisuta ns-prono,impresión,178.0
+42871,cartucho brother amarillo lc105y,impresión,560.0
+42872,cartucho brother amarillo lc3019y,impresión,560.0
+42873,cartucho brother cyan lc105c,impresión,560.0
+42874,cartucho brother cyan lc3019c,impresión,560.0
+42875,cartucho brother magenta lc105m,impresión,560.0
+42876,cartucho brother magenta lc3019m,impresión,560.0
+42877,cartucho brother magenta lc60m,impresión,560.0
+42878,cartucho brother negro lc109bk,impresión,560.0
+42879,cartucho brother negro lc3019bk,impresión,560.0
+42880,cartucho epson amarillo t63420,impresión,560.0
+42881,cartucho hp tricolor cc656a #901,impresión,498.0
+42882,cartucho hp tricolor ch562h #122,impresión,498.0
+42883,cartucho hp tricolor ch564h #122xl,impresión,498.0
+42884,cartucho hp tricolor cn691a #675,impresión,498.0
+42885,cartucho hp tricolor f6v28al #664,impresión,498.0
+42886,cartucho orink/epson negro t1351,impresión,498.0
+42887,cartucho orink/epson negro t1361,impresión,498.0
+42888,cartucho orink/epson negro t1381,impresión,498.0
+42889,cinta para impresora fullmark f737bk,impresión,515.0
+42890,cinta para impresora fullmark n179pe,impresión,515.0
+42891,cinta para impresora fullmark n477bk,impresión,515.0
+42892,cinta para impresora fullmark n478bk,impresión,515.0
+42893,cinta para impresora fullmark n533bk,impresión,515.0
+42894,cinta para impresora fullmark n617bk,impresión,515.0
+42895,cinta para impresora fullmark n636bk,impresión,515.0
+42896,cinta para impresora fullmark n639bk,impresión,515.0
+42897,cinta para impresora fullmark n655bk,impresión,515.0
+42898,cinta para impresora fullmark n880bk,impresión,515.0
+42899,compitt kit kcel,varios,199.0
+42900,compitt kit kleen screen,varios,245.0
+42901,contact tronix eco x 419ml.,varios,196.0
+42902,dvd+r verbatim 95059,grabacion,258.0
+42903,dvd+rw verbatim 94834 x30,grabacion,269.0
+42904,dvd-r banana 16x 4.7gb x50,grabacion,135.0
+42905,dvd-r verbatim 95093,grabacion,456.0
+42906,dvd-rw verbatim 95179 x30,grabacion,321.0
+42907,funda para disco rigido case logic bcc-2,estucheria,456.0
+42908,funda para netbook case logic laps-111,estucheria,1478.0
+42909,funda para notebook case logic huxs-115 azul,estucheria,1500.0
+42910,funda para notebook case logic huxs-115 negro,estucheria,1502.0
+42911,funda para notebook case logic ibrs-114 acai,estucheria,1789.0
+42912,funda para notebook case logic ibrs-114 negro,estucheria,1654.0
+42913,funda para notebook case logic ibrs-115 bordo,estucheria,1357.0
+42914,funda para notebook case logic ibrs-115 negro,estucheria,1489.0
+42915,funda para notebook case logic lods-115 grafito,estucheria,1765.0
+42916,funda para notebook case logic lods-115 petroleo,estucheria,1356.0
+42917,funda para notebook hp crosshatch 15.6,estucheria,1351.35
+42918,funda para tablet case logic ceue-1107,estucheria,789.0
+42919,funda para tablet case logic ceue-1108 indigo,estucheria,654.0
+42920,funda para tablet case logic ceue-1108 parchment,estucheria,789.0
+42921,funda para tablet case logic ceue-1110,estucheria,756.0
+42922,funda para tablet case logic qts-207 purpura,estucheria,741.0
+42923,funda para tablet case logic tneo-108 negro,estucheria,753.0
+42924,funda para tablet case logic tneo-110 negra,estucheria,625.0
+42925,funda para tablet case logic ts-108,estucheria,3.0
+42926,grasa siliconada lubex d silver x 5cc,limpieza,79.0
+42927,grasa siliconada lubex d x 10cc.,limpieza,91.0
+42928,identificador de cables nisuta,varios,123.0
+42929,kit de limpieza brillvex lcd,limpieza,321.0
+42930,limpiador brillvex 400gr.,limpieza,156.0
+42931,limpiador brillvex lcd 115gr.,limpieza,324.0
+42932,luz led usb nisuta metal,varios,156.0
+42933,mochila hp active backpack 15.6 azul/rojo,estucheria,1154.0
+42934,mochila hp active backpack 15.6 gris,estucheria,1789.0
+42935,mochila notebook biwo b73202,estucheria,2456.0
+42936,mochila notebook biwo extra b73201,estucheria,3549.0
+42937,mochila notebook biwo extra b73203,estucheria,2458.0
+42938,mochila notebook case logic bpca-115,estucheria,2679.0
+42939,mochila notebook case logic bpca-315 carbide,estucheria,2915.0
+42940,mochila notebook case logic bpca-315 lime green,estucheria,2162.0
+42941,mochila notebook case logic bpca-315 playa,estucheria,2971.0
+42942,mochila notebook case logic ibir-115 anthracite,estucheria,2749.0
+42943,mochila notebook case logic ibir-115 black,estucheria,2190.0
+42944,mochila notebook case logic ibir-115 petrol green,estucheria,3686.0
+42945,mochila notebook case logic ibir-115 verde,estucheria,3210.0
+42946,mochila notebook case logic lari-114 azul hudson,estucheria,2173.0
+42947,mochila notebook case logic lari-114 petrol green,estucheria,2974.0
+42948,mochila notebook case logic lari-115 azul hudson,estucheria,2786.0
+42949,mochila notebook case logic lari-115 petrol green,estucheria,2015.0
+42950,mochila notebook case logic prev-217 negro,estucheria,2603.0
+42951,mochila notebook case logic vnb-217 negro,estucheria,3043.0
+42952,mochila notebook case logic wmbp-115 acai,estucheria,3978.0
+42953,mochila notebook case logic wmbp-115 anthracite,estucheria,3620.0
+42954,mochila notebook case logic wmbp-115 black,estucheria,2554.0
+42955,mochila notebook case logic wmbp-115 brick,estucheria,2366.0
+42956,mochila notebook case logic wmbp-115 ginkgo,estucheria,2093.0
+42957,mochila notebook case logic wmbp-115 midnight,estucheria,2789.0
+42958,mochila notebook case logic wmbp-115 racing,estucheria,3763.0
+42959,mochila notebook hp explorer gris,estucheria,4141.0
+42960,mochila notebook hp odyssey negro,estucheria,4125.0
+42961,mochila notebook hp odyssey negro/rojo,estucheria,2867.0
+42962,mochila notebook samsonite foxtrot dark black grey,estucheria,2241.0
+42963,mochila notebook samsonite gemini graphite black,estucheria,2355.0
+42964,mochila notebook samsonite gemini heather grey,estucheria,2824.0
+42965,mochila notebook samsonite gemini midway navy,estucheria,2281.0
+42966,mochila notebook samsonite gemini purple,estucheria,3415.0
+42967,mochila notebook samsonite titan black,estucheria,3365.0
+42968,mochila notebook samsonite titan burgundy,estucheria,3445.0
+42969,mochila notebook samsonite titan charcoal,estucheria,3839.0
+42970,mochila notebook samsonite titan dark grey,estucheria,3001.0
+42971,mochila notebook samsonite titan marine blue,estucheria,2762.0
+42972,morral para netbook case logic ula-110 purpura,estucheria,2741.0
+42973,pad mouse kingston hyperx fury pro,varios,123.0
+42974,pad para mouse fellowes 59339,varios,214.0
+42975,pad para mouse fellowes con gel 91812,varios,215.0
+42976,pad para mouse genius gx control p100,varios,216.0
+42977,pad para mouse logitech g240,varios,111.0
+42978,pad para mouse logitech g440,varios,112.0
+42979,pad para mouse triplekit con gel negro,varios,113.0
+42980,pad para mouse triplekit negro,varios,114.0
+42981,precintos nisuta 100mm x 100,varios,52.0
+42982,protector para tablet noga ng-fun,varios,13.0
+42983,soporte para tablet overtech ov-t2030,bases,354.0
+42984,soporte para tablet overtech ov-t301,bases,258.0
+42985,tambor de imagen brother dr-1060,impresión,1456.0
+42986,tambor de imagen brother dr-311cl,impresión,354.0
+42987,toner brother amarillo tn-221,impresión,456.0
+42988,toner brother cyan tn-221,impresión,598.0
+42989,toner brother magenta tn-221,impresión,413.0
+42990,toner brother negro tn-1060,impresión,353.0
+42991,toner brother negro tn-221,impresión,438.0
+42992,toner brother negro tn-2370,impresión,570.0
+42993,toner brother negro tn-410,impresión,507.0
+42994,toner canon amarillo 131,impresión,579.0
+42995,toner canon cyan 131,impresión,364.0
+42996,toner canon magenta 131,impresión,518.0
+42997,toner canon negro 131h,impresión,485.0
+42998,toner hp negro cf217a,impresión,529.0
+42999,toner hp negro cf226a,impresión,547.0
+43000,toner hp negro cf280a,impresión,374.0
+43001,toner hp negro cf283a,impresión,625.0
+43002,toner hp negro cf283ad dual pack,impresión,414.0
+43003,toner hp negro cf410x,impresión,442.0
+43004,toner hp negro q2612a,impresión,373.0
+43005,toner hp negro q6000a,impresión,421.0
+43006,toner hp negro q7553a,impresión,519.0
+43007,toner magna/hp negro 2612a,impresión,407.0
+43008,toner magna/hp negro 283a,impresión,389.0
+43009,toner magna/hp negro 435/436/285a,impresión,563.0
+43010,toner magna/hp negro 7553/5949,impresión,387.0
+43011,toner powertec/hp negro 505/280a,impresión,387.0
+43012,toner samsung amarillo clt-y404s,impresión,510.0
+43013,toner samsung amarillo clt-y406s,impresión,354.0
+43014,toner samsung cyan clt-c404s,impresión,502.0
+43015,toner samsung cyan clt-c406s,impresión,483.0
+43016,toner samsung magenta clt-m404s,impresión,454.0
+43017,toner samsung magenta clt-m406s,impresión,358.0
+43018,toner samsung magenta clt-m407s,impresión,437.0
+43019,toner samsung magenta clt-m409s,impresión,413.0
+43020,toner samsung negro clt-k404s,impresión,562.0
+43021,toner samsung negro clt-k406s,impresión,435.0
+43022,toner samsung negro mlt-d101s,impresión,422.0
+43023,toner samsung negro mlt-d103l,impresión,643.0
+43024,toner samsung negro mlt-d104s,impresión,508.0
+43025,toner samsung negro mlt-d108s,impresión,550.0
+43026,toner samsung negro mlt-d111s,impresión,530.0
+43027,toner samsung negro mlt-d115l,impresión,461.0
+43028,valija notebook case logic anc-316,estucheria,942.0
+43029,valija notebook case logic aua-314 negro,estucheria,1094.0
+43030,valija notebook case logic aua-316,estucheria,1175.0
+43031,valija notebook case logic brya-113 negro,estucheria,1191.0
+43032,valija notebook case logic bryb-115 negro,estucheria,953.0
+43033,valija notebook case logic huxa-114 azul,estucheria,1182.0
+43034,valija notebook case logic huxa-114 negra,estucheria,1004.0
+43035,valija notebook case logic huxa-115 azul,estucheria,1159.0
+43036,valija notebook case logic int-114 anthracite,estucheria,744.0
+43037,valija notebook case logic int-114 negro,estucheria,1137.0
+43038,valija notebook case logic int-115 ion,estucheria,1163.0
+43039,valija notebook case logic int-115 negro,estucheria,815.0
+43040,valija notebook case logic loda-115 dress blue,estucheria,757.0
+43041,valija notebook case logic loda-115 graphite,estucheria,779.0
+43042,valija notebook case logic loda-115 petrol green,estucheria,1121.0
+43043,valija notebook case logic vnai-215 negro,estucheria,1159.0
