@@ -77,13 +77,13 @@ if password == st.secrets["acceso"]["clave"]:
             ax2.set_xlabel("Cantidad de clientes")
             st.pyplot(fig2)
 
-            # Mapa geográfico de clientes (si hay coordenadas)
-            if "X" in df_clientes.columns and "Y" in df_clientes.columns:
+           # Mapa geográfico de clientes (si hay coordenadas)
+            if "Latitud" in df_clientes.columns and "Longitud" in df_clientes.columns:
                 st.markdown("### 🌍 Mapa de distribución geográfica")
-                mapa = folium.Map(location=[df_clientes["Y"].mean(), df_clientes["X"].mean()], zoom_start=5)
+                mapa = folium.Map(location=[df_clientes["Latitud"].mean(), df_clientes["Longitud"].mean()], zoom_start=5)
                 for _, row in df_clientes.iterrows():
                     folium.CircleMarker(
-                        location=[row["Y"], row["X"]],
+                        location=[row["Latitud"], row["Longitud"]],
                         radius=2,
                         color='blue',
                         fill=True,
@@ -368,43 +368,6 @@ if password == st.secrets["acceso"]["clave"]:
             ax1.set_title("Ventas mensuales")
             st.pyplot(fig1)
         
-        # Ventas por canal
-            st.markdown("### 🛍️ Ventas por canal")
-            fig2, ax2 = plt.subplots()
-            canales = {1: "Tienda Física", 2: "Online", 3: "Mayorista", 4: "Otros"}
-            df_ventas["Canal"] = df_ventas["IdCanal"].map(canales)
-            df_ventas["Canal"].value_counts().plot(kind="bar", ax=ax2, color="skyblue")
-            ax2.set_title("Cantidad de ventas por canal (con nombres)")
-            st.pyplot(fig2)
-        
-            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
-
-            if "Latitud" in df_sucursales.columns and "Longitud" in df_sucursales.columns:
-
-        elif dataset_opcion == "Ventas":
-            st.subheader("💰 Exploración de Ventas")
-            st.markdown("✅ Conclusiones del análisis del dataset Ventas:
-- El volumen de ventas es muy alto (más de 46.000 registros).
-- La mayoría de las ventas son de 1 a 3 unidades, con pocos casos mayores a 10.
-- Las ventas diarias son constantes, con picos estacionales.
-- Los productos más vendidos incluyen:
-    - Periféricos (mouse pads)
-    - Estuchería (mochilas y fundas)
-    - Insumos (cartuchos, limpiadores)
-- Hay una coherencia importante con los productos más comprados, lo que sugiere buena planificación de stock.")
-
-            df_ventas = pd.read_csv("Venta_transformado.csv")
-            df_ventas["Fecha"] = pd.to_datetime(df_ventas["Fecha"])
-
-            # Ventas mensuales
-            st.markdown("### 📅 Ventas mensuales")
-            ventas_mensuales = df_ventas.groupby(df_ventas["Fecha"].dt.to_period("M")).size()
-            ventas_mensuales.index = ventas_mensuales.index.to_timestamp()
-            fig1, ax1 = plt.subplots()
-            ventas_mensuales.plot(ax=ax1, color="green")
-            ax1.set_title("Ventas mensuales")
-            st.pyplot(fig1)
-
             # Ventas por canal
             st.markdown("### 🛍️ Ventas por canal")
             fig2, ax2 = plt.subplots()
@@ -423,24 +386,25 @@ if password == st.secrets["acceso"]["clave"]:
             df_ventas["Sucursal"].value_counts().plot(kind="bar", ax=ax3, color="orange")
             ax3.set_title("Ventas por sucursal (con nombre)")
             st.pyplot(fig3)
-
-            # Estadísticas descriptivas
-            st.subheader("📋 Estadísticas descriptivas")
-            st.dataframe(df_ventas.describe())
-
+            
             # Top productos más vendidos (con nombre)
             st.markdown("### 🏆 Top 10 productos más vendidos (por nombre)")
             df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
             top_ventas = df_ventas["IdProducto"].value_counts().head(10).reset_index()
             top_ventas.columns = ["IdProducto", "Total"]
             top_ventas = top_ventas.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
-
+            
             fig, ax = plt.subplots()
             sns.barplot(data=top_ventas, x="Total", y="Concepto", ax=ax, palette="Blues_d")
             ax.set_title("Productos más vendidos (por nombre)")
             ax.set_xlabel("Cantidad vendida")
             ax.set_ylabel("Producto")
             st.pyplot(fig)
+
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_ventas.describe())
+
 
     elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
@@ -460,6 +424,3 @@ if password == st.secrets["acceso"]["clave"]:
 
 else:
     st.warning("🔒 Ingresá la clave correcta para acceder a la app")
-
-
-    
