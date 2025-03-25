@@ -6,7 +6,7 @@ import seaborn.objects as so
 import folium
 from streamlit_folium import st_folium
 import plotly.express as px
-from datetime import datetime
+
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
