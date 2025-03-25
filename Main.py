@@ -368,11 +368,13 @@ if password == st.secrets["acceso"]["clave"]:
             ax1.set_title("Ventas mensuales")
             st.pyplot(fig1)
         
-            # Ventas por canal
+        # Ventas por canal
             st.markdown("### 🛍️ Ventas por canal")
             fig2, ax2 = plt.subplots()
-            df_ventas["IdCanal"].value_counts().plot(kind="bar", ax=ax2, color="skyblue")
-            ax2.set_title("Cantidad de ventas por canal")
+            canales = {1: "Tienda Física", 2: "Online", 3: "Mayorista", 4: "Otros"}
+            df_ventas["Canal"] = df_ventas["IdCanal"].map(canales)
+            df_ventas["Canal"].value_counts().plot(kind="bar", ax=ax2, color="skyblue")
+            ax2.set_title("Cantidad de ventas por canal (con nombres)")
             st.pyplot(fig2)
         
             # Ventas por sucursal
@@ -395,7 +397,6 @@ if password == st.secrets["acceso"]["clave"]:
             ax.set_xlabel("Cantidad vendida")
             ax.set_ylabel("Producto")
             st.pyplot(fig)
-
             
             # Estadísticas descriptivas
             st.subheader("📋 Estadísticas descriptivas")
