@@ -690,7 +690,7 @@ if password == st.secrets["acceso"]["clave"]:
         empleados_df.columns = empleados_df.columns.str.strip()
    
         
-       # Selector de sucursales
+        # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
@@ -721,7 +721,10 @@ if password == st.secrets["acceso"]["clave"]:
         empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
         st.write(empleados_sucursal[['Nombre', 'Apellido']])
     
-        # Mostrar las ventas de los empleados desde 2015
+        # **Nueva caja de selección para los empleados de la sucursal seleccionada**
+        empleado_seleccionado = st.selectbox("Selecciona un empleado", empleados_sucursal['Nombre'].unique())
+    
+        # Filtrar las ventas de ese empleado desde 2015
         st.subheader("Ventas de los empleados desde 2015")
         
         # Filtrar las ventas desde 2015
@@ -732,18 +735,20 @@ if password == st.secrets["acceso"]["clave"]:
         ventas_desde_2015 = ventas_desde_2015.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
                                                     left_on='IdEmpleado', right_on='ID_empleado', how='left')
     
-        # Filtrar solo las ventas del empleado en la sucursal seleccionada
-        ventas_desde_2015_sucursal = ventas_desde_2015[ventas_desde_2015['Sucursal'] == sucursal_seleccionada]
+        # Filtrar solo las ventas del empleado seleccionado en la sucursal seleccionada
+        ventas_desde_2015_sucursal = ventas_desde_2015[(ventas_desde_2015['Sucursal'] == sucursal_seleccionada) & 
+                                                      (ventas_desde_2015['Nombre'] == empleado_seleccionado)]
         
+        # Mostrar las ventas de ese empleado
+        st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_desde_2015_sucursal[['Nombre', 'Apellido', 'Precio']])
+    
         # Agrupar las ventas por empleado
         ventas_por_empleado = ventas_desde_2015_sucursal.groupby(['ID_empleado', 'Nombre', 'Apellido'])['Precio'].sum().reset_index()
         
-        # Mostrar las ventas por empleado
-        st.write("Ventas por Empleado desde 2015", ventas_por_empleado)
-    
         # Graficar las ventas de cada empleado
-        st.subheader("Gráfico comparativo de ventas por empleado")
-        fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Precio', color='Apellido', title="Ventas por Empleado desde 2015")
+        st.subheader(f"Gráfico comparativo de ventas de {empleado_seleccionado}")
+        fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Precio', color='Apellido', 
+                                     title=f"Ventas por {empleado_seleccionado} desde 2015")
         st.plotly_chart(fig_ventas_empleado)
         
     elif menu == "Descargas":
