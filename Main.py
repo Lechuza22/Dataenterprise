@@ -690,7 +690,7 @@ if password == st.secrets["acceso"]["clave"]:
         empleados_df.columns = empleados_df.columns.str.strip()
    
         
-        # Selector de sucursales
+       # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
@@ -715,7 +715,6 @@ if password == st.secrets["acceso"]["clave"]:
         if sucursal_seleccionada != "Todas":
             ventas_df = ventas_df[ventas_df["IdSucursal"] == sucursal_seleccionada]  # Cambio aquí: usar IdSucursal
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-            productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
     
         # Mostrar los empleados de la sucursal seleccionada
         st.subheader("Empleados de la Sucursal")
