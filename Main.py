@@ -105,8 +105,35 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Compras":
             st.subheader("🛒 Exploración de Compras")
-            st.markdown("- Concentración de compras en pocos proveedores.\n- Productos con alta rotación vs. baja venta.\n- Conclusión: necesidad de alinear compras con demanda real.")
-            st.image("graficos/compras_proveedor.png")
+            st.markdown("- Concentración de compras en pocos proveedores.
+- Productos con alta rotación vs. baja venta.
+- Conclusión: necesidad de alinear compras con demanda real.")
+
+            df_compras = pd.read_csv("Compra_transformada.csv")
+
+            # Histograma de cantidad de compras
+            st.markdown("### 📦 Distribución de cantidad por compra")
+            fig, ax = plt.subplots(figsize=(8, 4))
+            sns.histplot(df_compras["Cantidad"], bins=30, kde=True, ax=ax, color="orange")
+            ax.set_title("Distribución de cantidades por compra")
+            ax.set_xlabel("Cantidad")
+            ax.set_ylabel("Frecuencia")
+            st.pyplot(fig)
+
+            # Top 10 productos más comprados
+            st.markdown("### 🥇 Top 10 productos más comprados")
+            top_productos = df_compras["IdProducto"].value_counts().head(10)
+            fig2, ax2 = plt.subplots()
+            top_productos.plot(kind="bar", ax=ax2, color="green")
+            ax2.set_title("Top 10 productos por frecuencia de compra")
+            ax2.set_xlabel("IdProducto")
+            ax2.set_ylabel("Número de compras")
+            st.pyplot(fig2)
+
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_compras.describe())
+
 
         elif dataset_opcion == "Empleados":
             st.subheader("👔 Exploración de Empleados")
