@@ -49,7 +49,7 @@ if password == st.secrets["acceso"]["clave"]:
             "Clientes", "Compras", "Empleados", "Gastos", "Productos", "Proveedores", "Sucursales", "Ventas"
         ])
 
-         if dataset_opcion == "Clientes":
+        if dataset_opcion == "Clientes":
             st.subheader("🧍‍♂️ Exploración de Clientes")
             st.markdown("- Edad promedio: 42 años.\n- Mayoría en provincias como Buenos Aires, Córdoba y Santa Fe.\n- Conclusión: los clientes se concentran en zonas urbanas con fuerte potencial de segmentación.")
 
