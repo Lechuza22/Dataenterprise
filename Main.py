@@ -684,6 +684,7 @@ if password == st.secrets["acceso"]["clave"]:
         ventas_df = pd.read_csv("Venta_transformado.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
         empleados_df = pd.read_csv("Empleados_transformados.csv")  # Columnas: Sucursal, Cantidad
         productos_df = pd.read_csv("PRODUCTOS_transformado.csv")  # Columnas: Producto, Ventas
+        
         # Limpiar los nombres de las columnas para eliminar espacios adicionales
         sucursales_df.columns = sucursales_df.columns.str.strip()
         empleados_df.columns = empleados_df.columns.str.strip()
@@ -705,33 +706,16 @@ if password == st.secrets["acceso"]["clave"]:
         
         st_folium(m, width=700, height=500)
     
-        # Filtrar por sucursal seleccionada
-        if sucursal_seleccionada != "Todas":
-            ventas_df = ventas_df[ventas_df["Sucursal"] == sucursal_seleccionada]
-            empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-            productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
-    
-        # Gráfico de empleados
+        # Gráfico de empleados por sucursal (sin depender de la sucursal seleccionada)
         st.subheader("Empleados por Sucursal")
         empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count()
         st.bar_chart(empleados_por_sucursal)
     
-        # Mostrar los empleados de la sucursal seleccionada
-        st.subheader("Empleados de la Sucursal")
-        empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-        st.write(empleados_sucursal[['Nombre', 'Apellido']])
-    
-        # Mostrar las ventas de los empleados en el último año
-        st.subheader("Ventas de los empleados en el último año")
-        
-        # Filtrar las ventas por el último año
-        ventas_df['Fecha'] = pd.to_datetime(ventas_df['Fecha'], errors='coerce')
-        last_year = datetime.now() - pd.DateOffset(years=1)
-        ventas_ultimo_ano = ventas_df[ventas_df['Fecha'] >= last_year]
-    
-        # Relacionar empleados con ventas (suponiendo que cada venta tiene un campo 'ID_empleado' o algo equivalente)
-        # Aquí estamos simulando que 'ventas_df' tiene una columna 'ID_empleado' para asociar ventas con empleados.
-        ventas_ultimo_ano = ventas_ultimo_ano.merge(empleados_df[['ID_empleado', 'Sucursal']], on='Sucursal', how='left')
+        # Filtrar por sucursal seleccionada (para mostrar los empleados y ventas de esa sucursal)
+        if sucursal_seleccionada != "Todas":
+            ventas_df = ventas_df[ventas_df["Sucursal"] == sucursal_seleccionada]
+            empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
+            productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
     
         # Filtrar solo las ventas del empleado en la sucursal seleccionada
         ventas_ultimo_ano_sucursal = ventas_ultimo_ano[ventas_ultimo_ano['Sucursal'] == sucursal_seleccionada]
