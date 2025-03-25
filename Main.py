@@ -406,7 +406,7 @@ if password == st.secrets["acceso"]["clave"]:
             st.dataframe(df_ventas.describe())
 
 
-        elif menu == "Análisis cruzado":
+    elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
 
         analisis_opcion = st.selectbox("Seleccioná el análisis cruzado a visualizar:", [
@@ -459,6 +459,7 @@ if password == st.secrets["acceso"]["clave"]:
 
         else:
             st.info(f"🔎 Seleccionaste: {analisis_opcion}. Visualización disponible próximamente.")
+
 
 
     elif menu == "Modelos de ML":
