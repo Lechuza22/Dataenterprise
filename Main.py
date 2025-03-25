@@ -6,6 +6,7 @@ import seaborn.objects as so
 import folium
 from streamlit_folium import st_folium
 import plotly.express as px
+from datatime import datatime
 
 # -----------------------------
 # CONFIGURACION INICIAL
@@ -689,7 +690,7 @@ if password == st.secrets["acceso"]["clave"]:
         sucursales_df.columns = sucursales_df.columns.str.strip()
         empleados_df.columns = empleados_df.columns.str.strip()
         
-        # Selector de sucursales
+           # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
@@ -718,8 +719,10 @@ if password == st.secrets["acceso"]["clave"]:
         # Mostrar los empleados de la sucursal seleccionada
         st.subheader("Empleados de la Sucursal")
         empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-        st.write(empleados_sucursal[['Nombre', 'Apellido']])
-        
+        empleados_sucursal_names = empleados_sucursal[['Nombre', 'Apellido']]
+    
+        st.write(empleados_sucursal_names)
+    
         # Nueva caja de selección para los empleados de la sucursal seleccionada
         empleado_seleccionado = st.selectbox("Selecciona un empleado", empleados_sucursal['Nombre'].unique())
         
