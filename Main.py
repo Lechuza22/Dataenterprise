@@ -522,6 +522,40 @@ if password == st.secrets["acceso"]["clave"]:
             sns.barplot(data=emp_data, x="Nombre", y="Ventas", ax=ax2, palette="viridis")
             ax2.set_title("Comparación de volumen de ventas entre empleados")
             st.pyplot(fig2)
+        elif analisis_opcion == "🛒 Canal de venta vs. volumen/monto de ventas":
+            st.markdown("### 🛒 Canal de venta vs. volumen/monto de ventas")
+            st.markdown("🔎 ¿Qué revela el gráfico?\n- Compara el volumen y el monto de ventas por canal.\n- Permite identificar cuál canal tiene mayor actividad o ingresos.\n\n💡 Útil para ajustar estrategias comerciales y reforzar canales más rentables.")
+        
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+        
+            # Asignar nombres a los canales
+            canales = {1: "Tienda Física", 2: "Online", 3: "Mayorista", 4: "Otros"}
+            df_ventas["Canal"] = df_ventas["IdCanal"].map(canales)
+        
+            # Merge con productos para obtener el precio
+            df_ventas = df_ventas.merge(df_productos[["ID_PRODUCTO", "Precio"]], left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
+            df_ventas["Monto"] = df_ventas["Precio"]
+        
+            # Volumen de ventas por canal
+            st.markdown("#### 📦 Cantidad de ventas por canal")
+            ventas_canal = df_ventas["Canal"].value_counts().reset_index()
+            ventas_canal.columns = ["Canal", "Cantidad"]
+        
+            fig1, ax1 = plt.subplots()
+            sns.barplot(data=ventas_canal, x="Canal", y="Cantidad", ax=ax1, palette="Set2")
+            ax1.set_title("Cantidad de ventas por canal")
+            st.pyplot(fig1)
+        
+            # Monto real por canal
+            st.markdown("#### 💰 Monto total de ventas por canal (con precio real)")
+            monto_canal = df_ventas.groupby("Canal")["Monto"].sum().reset_index()
+        
+            fig2, ax2 = plt.subplots()
+            sns.barplot(data=monto_canal, x="Canal", y="Monto", ax=ax2, palette="Set1")
+            ax2.set_title("Monto total por canal")
+            ax2.set_ylabel("Monto en $")
+            st.pyplot(fig2)
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
