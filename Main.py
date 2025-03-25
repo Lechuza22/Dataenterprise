@@ -377,12 +377,90 @@ if password == st.secrets["acceso"]["clave"]:
             ax2.set_title("Cantidad de ventas por canal (con nombres)")
             st.pyplot(fig2)
         
+            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
+
+            if "Latitud" in df_sucursales.columns and "Longitud" in df_sucursales.columns:
+
+        elif dataset_opcion == "Ventas":
+            st.subheader("💰 Exploración de Ventas")
+            st.markdown("✅ Conclusiones del análisis del dataset Ventas:
+- El volumen de ventas es muy alto (más de 46.000 registros).
+- La mayoría de las ventas son de 1 a 3 unidades, con pocos casos mayores a 10.
+- Las ventas diarias son constantes, con picos estacionales.
+- Los productos más vendidos incluyen:
+    - Periféricos (mouse pads)
+    - Estuchería (mochilas y fundas)
+    - Insumos (cartuchos, limpiadores)
+- Hay una coherencia importante con los productos más comprados, lo que sugiere buena planificación de stock.")
+
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_ventas["Fecha"] = pd.to_datetime(df_ventas["Fecha"])
+
+            # Ventas mensuales
+            st.markdown("### 📅 Ventas mensuales")
+            ventas_mensuales = df_ventas.groupby(df_ventas["Fecha"].dt.to_period("M")).size()
+            ventas_mensuales.index = ventas_mensuales.index.to_timestamp()
+            fig1, ax1 = plt.subplots()
+            ventas_mensuales.plot(ax=ax1, color="green")
+            ax1.set_title("Ventas mensuales")
+            st.pyplot(fig1)
+
+            # Ventas por canal
+            st.markdown("### 🛍️ Ventas por canal")
+            fig2, ax2 = plt.subplots()
+            canales = {1: "Tienda Física", 2: "Online", 3: "Mayorista", 4: "Otros"}
+            df_ventas["Canal"] = df_ventas["IdCanal"].map(canales)
+            df_ventas["Canal"].value_counts().plot(kind="bar", ax=ax2, color="skyblue")
+            ax2.set_title("Cantidad de ventas por canal (con nombres)")
+            st.pyplot(fig2)
+
             # Ventas por sucursal
             st.markdown("### 🏢 Ventas por sucursal")
             fig3, ax3 = plt.subplots()
-            df_ventas["IdSucursal"].value_counts().plot(kind="bar", ax=ax3, color="orange")
-            ax3.set_title("Ventas por sucursal")
+            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
+            sucursal_map = df_sucursales.set_index("ID")["Sucursal"].to_dict()
+            df_ventas["Sucursal"] = df_ventas["IdSucursal"].map(sucursal_map)
+            df_ventas["Sucursal"].value_counts().plot(kind="bar", ax=ax3, color="orange")
+            ax3.set_title("Ventas por sucursal (con nombre)")
             st.pyplot(fig3)
+
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_ventas.describe())
+
+            # Top productos más vendidos (con nombre)
+            st.markdown("### 🏆 Top 10 productos más vendidos (por nombre)")
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+            top_ventas = df_ventas["IdProducto"].value_counts().head(10).reset_index()
+            top_ventas.columns = ["IdProducto", "Total"]
+            top_ventas = top_ventas.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
+
+            fig, ax = plt.subplots()
+            sns.barplot(data=top_ventas, x="Total", y="Concepto", ax=ax, palette="Blues_d")
+            ax.set_title("Productos más vendidos (por nombre)")
+            ax.set_xlabel("Cantidad vendida")
+            ax.set_ylabel("Producto")
+            st.pyplot(fig)
+
+    elif menu == "Análisis cruzado":
+        st.header("🔀 Análisis cruzado entre áreas")
+        st.info("Próximamente: visualización de los 8 análisis clave")
+
+    elif menu == "Modelos de ML":
+        st.header("🤖 Modelos de Machine Learning")
+        st.info("Próximamente: predicción de ventas, segmentación, recomendaciones...")
+
+    elif menu == "Mapa de sucursales":
+        st.header("🗺️ Visualización geográfica")
+        st.info("Próximamente: integración del mapa interactivo de sucursales")
+
+    elif menu == "Descargas":
+        st.header("📥 Exportación de datos y resultados")
+        st.info("Próximamente: descarga de reportes, gráficos y predicciones")
+
+else:
+    st.warning("🔒 Ingresá la clave correcta para acceder a la app")
+
 
             # Top productos más vendidos (con nombre)
             st.markdown("### 🏆 Top 10 productos más vendidos (por nombre)")
