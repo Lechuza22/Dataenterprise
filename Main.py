@@ -126,6 +126,15 @@ if password == st.secrets["acceso"]["clave"]:
             ax2.set_ylabel("Número de compras")
             st.pyplot(fig2)
 
+            # Visualización bivariada: IdProducto vs Cantidad
+            st.markdown("### 📊 Relación entre Producto y Cantidad Comprada")
+            fig3, ax3 = plt.subplots(figsize=(10, 4))
+            top_ids = df_compras['IdProducto'].value_counts().head(10).index
+            sns.boxplot(data=df_compras[df_compras['IdProducto'].isin(top_ids)],
+                        x="IdProducto", y="Cantidad", ax=ax3, palette="pastel")
+            ax3.set_title("Distribución de cantidades por producto (Top 10)")
+            st.pyplot(fig3)
+
             # Estadísticas descriptivas
             st.subheader("📋 Estadísticas descriptivas")
             st.dataframe(df_compras.describe())
