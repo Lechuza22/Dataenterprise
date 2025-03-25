@@ -422,21 +422,24 @@ if password == st.secrets["acceso"]["clave"]:
         if analisis_opcion == "Clientes vs Compras":
             st.markdown("### 🧍‍♂️📦 Análisis cruzado: Clientes vs Compras")
             st.markdown("🔎 ¿Qué muestra el gráfico?\n- Comparación directa de la cantidad vendida vs. la cantidad comprada por producto.\n- Podés ver claramente si hay productos:\n    - Con más ventas que compras → posible falta de stock o desabastecimiento.\n    - Con más compras que ventas → posible exceso de stock o baja rotación.")
-    
+        
             df_clientes = pd.read_csv("Clientes_transformados.csv")
             df_compras = pd.read_csv("Compra_transformada.csv")
-    
-            # Simulación: supongamos que podemos asociar compras a clientes (si tuvieran IDCliente)
-            st.markdown("Este análisis simula la relación entre edad de los clientes y la cantidad de productos comprados, como ejemplo ilustrativo.")
-    
-            df_clientes_sample = df_clientes.copy()
-            df_clientes_sample["Cantidad_Compras"] = df_clientes_sample["Edad"].apply(lambda x: int(x % 5 + 1))  # mock de compras según edad
-    
+        
+            # Agrupamos cantidad de compras por cliente
+            compras_por_cliente = df_compras.groupby("IdCliente")["Cantidad"].sum().reset_index()
+            compras_por_cliente.columns = ["ID", "Cantidad_Comprada"]
+        
+            # Merge con clientes
+            df_merged = df_clientes.merge(compras_por_cliente, on="ID", how="left").fillna(0)
+        
+            # Gráfico de dispersión Edad vs Cantidad Comprada
             fig, ax = plt.subplots()
-            sns.scatterplot(data=df_clientes_sample, x="Edad", y="Cantidad_Compras", ax=ax)
-            ax.set_title("Relación simulada: Edad del cliente vs. Cantidad de compras")
+            sns.scatterplot(data=df_merged, x="Edad", y="Cantidad_Comprada", ax=ax)
+            ax.set_title("Relación entre edad del cliente y cantidad de productos comprados")
+            ax.set_xlabel("Edad")
+            ax.set_ylabel("Cantidad Comprada")
             st.pyplot(fig)
-        st.info(f"🔎 Seleccionaste: {analisis_opcion}. Visualización disponible próximamente.")
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
