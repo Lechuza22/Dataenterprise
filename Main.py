@@ -598,24 +598,35 @@ if password == st.secrets["acceso"]["clave"]:
             df_compras = pd.read_csv("Compra_transformada.csv")
             df_proveedores = pd.read_csv("Proveedores_transformado.csv")
 
-            # Asegurar tipo consistente
+           # Asegurar tipo consistente
             df_compras["IdProveedor"] = df_compras["IdProveedor"].astype(int)
             df_proveedores["IDProveedor"] = df_proveedores["IDProveedor"].astype(int)
             
-            # Agrupar por proveedor
-            proveedor_resumen = df_compras.groupby("IdProveedor")["Cantidad"].sum().reset_index()
-            proveedor_resumen = proveedor_resumen.merge(df_proveedores, left_on="IdProveedor", right_on="ID", how="left")
-            proveedor_resumen = proveedor_resumen.sort_values(by="Cantidad", ascending=False).head(10)
-        
-            # Gráfico
-            fig, ax = plt.subplots(figsize=(10, 5))
-            sns.barplot(data=proveedor_resumen, x="Nombre", y="Cantidad", ax=ax, palette="magma")
-            ax.set_title("Top 10 proveedores por volumen de compra")
-            ax.set_ylabel("Cantidad total de productos comprados")
-            ax.set_xlabel("Proveedor")
-            ax.tick_params(axis='x', rotation=45)
-            st.pyplot(fig)
-        
+            # Agrupar compras por proveedor
+            compras_por_proveedor = df_compras.groupby("IdProveedor").agg({
+                "Cantidad": "sum",
+                "Precio": "sum"
+            }).reset_index().rename(columns={"Cantidad": "Total_Comprado", "Precio": "Monto_Total"})
+            
+            # Unir con nombre del proveedor
+            compras_con_nombre = compras_por_proveedor.merge(
+                df_proveedores[["IDProveedor", "Nombre"]],
+                left_on="IdProveedor", right_on="IDProveedor", how="left"
+            )
+            
+            # Seleccionar top 10 por monto total
+            top_proveedores = compras_con_nombre.sort_values(by="Monto_Total", ascending=False).head(10)
+            
+            # Visualización
+            plt.figure(figsize=(12, 6))
+            sns.barplot(data=top_proveedores, x="Nombre", y="Monto_Total", palette="viridis")
+            plt.title("Top 10 proveedores por monto total de compras")
+            plt.ylabel("Monto total comprado ($)")
+            plt.xlabel("Proveedor")
+            plt.xticks(rotation=45, ha="right")
+            plt.tight_layout()
+            plt.show()
+                    
         
 
 
