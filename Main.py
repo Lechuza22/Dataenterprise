@@ -256,8 +256,38 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Productos":
             st.subheader("📦 Exploración de Productos")
-            st.markdown("- Margen positivo en productos más vendidos.\n- Algunos con exceso de stock o rotación lenta.\n- Conclusión: clave ajustar precios y foco de venta.")
-            st.image("graficos/productos_margen.png")
+            st.markdown("✅ Conclusiones del análisis del dataset PRODUCTOS_transformado.csv + Compras:\n- Catálogo con 291 productos únicos; destacan impresión e informática.\n- 10 tipos de producto; revisar duplicados por concepto.\n- Precios entre $400 y $2000; algunos outliers elevan el promedio.\n- Producto más caro real: NAS QNAP ($9555). Más barato: funda para tablet ($3).\n- Top comprados: valijas, cartuchos, mouse pad, etc.\n- Alta rotación de insumos sugiere operación comercial o institucional.\n- Posible análisis futuro de rentabilidad y rotación con datos de ventas.")
+        
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+            df_compras = pd.read_csv("Compra_transformada.csv")
+        
+            # Histograma de precios
+            st.markdown("### 💰 Distribución de precios (con outliers)")
+            fig1, ax1 = plt.subplots()
+            sns.histplot(df_productos["Precio"], bins=50, ax=ax1, color="skyblue")
+            ax1.set_title("Distribución de precios de productos")
+            st.pyplot(fig1)
+        
+            # Top 10 tipos de producto
+            st.markdown("### 🧾 Tipos de productos más frecuentes")
+            fig2, ax2 = plt.subplots()
+            df_productos["Tipo"].value_counts().head(10).plot(kind="bar", ax=ax2, color="orchid")
+            ax2.set_title("Top tipos de producto")
+            st.pyplot(fig2)
+        
+            # Top productos más comprados
+            st.markdown("### 🥇 Productos más comprados (Top 10)")
+            top_ids = df_compras["IdProducto"].value_counts().head(10)
+            fig3, ax3 = plt.subplots()
+            top_ids.plot(kind="bar", ax=ax3, color="lightgreen")
+            ax3.set_title("Top productos más comprados")
+            ax3.set_xlabel("IdProducto")
+            st.pyplot(fig3)
+        
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas de precios")
+            st.dataframe(df_productos.describe())
+
 
         elif dataset_opcion == "Proveedores":
             st.subheader("🏭 Exploración de Proveedores")
