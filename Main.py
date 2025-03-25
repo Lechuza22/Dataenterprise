@@ -437,8 +437,8 @@ if password == st.secrets["acceso"]["clave"]:
             fig, ax = plt.subplots()
             sns.scatterplot(data=df_merged, x="Edad", y="Cantidad_Comprada", ax=ax)
             ax.set_title("Relación entre edad del cliente y cantidad de productos comprados")
-            ax.set_xlabel("Edad")
-            ax.set_ylabel("Cantidad Comprada")
+            ax.set_xlabel("Edad del cliente")
+            ax.set_ylabel("Cantidad comprada")
             st.pyplot(fig)
 
     elif menu == "Modelos de ML":
