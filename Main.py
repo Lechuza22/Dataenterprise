@@ -105,7 +105,7 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Compras":
             st.subheader("🛒 Exploración de Compras")
-            st.markdown("✅ Conclusiones preliminares del análisis de Compras:- El volumen principal de compras se concentra en productos de bajo a mediano precio (menos de $1200).\n-Se compran en promedio 9 unidades por operación, con pocas compras mayores a 25 unidades..\n- Proveedor 8, seguido de 12 y 7, domina en volumen de compras..\n- No hay relación directa entre Precio y Cantidad, lo que sugiere que el tipo de producto define el patrón más que el monto.\n- Existen outliers en precios que podrían representar productos premium, errores de carga o compras especiales.")
+            st.markdown("✅ Conclusiones preliminares del análisis de Compras: - El volumen principal de compras se concentra en productos de bajo a mediano precio (menos de $1200).\n-Se compran en promedio 9 unidades por operación, con pocas compras mayores a 25 unidades..\n- Proveedor 8, seguido de 12 y 7, domina en volumen de compras..\n- No hay relación directa entre Precio y Cantidad, lo que sugiere que el tipo de producto define el patrón más que el monto.\n- Existen outliers en precios que podrían representar productos premium, errores de carga o compras especiales.")
           
             df_compras = pd.read_csv("Compra_transformada.csv")
 
