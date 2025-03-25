@@ -717,6 +717,23 @@ if password == st.secrets["acceso"]["clave"]:
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
             productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
     
+        # Mostrar los empleados de la sucursal seleccionada
+        st.subheader("Empleados de la Sucursal")
+        empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
+        st.write(empleados_sucursal[['Nombre', 'Apellido']])
+    
+        # Mostrar las ventas de los empleados en el último año
+        st.subheader("Ventas de los empleados en el último año")
+        
+        # Filtrar las ventas por el último año
+        ventas_df['Fecha'] = pd.to_datetime(ventas_df['Fecha'], errors='coerce')
+        last_year = datetime.now() - pd.DateOffset(years=1)
+        ventas_ultimo_ano = ventas_df[ventas_df['Fecha'] >= last_year]
+    
+        # Relacionar empleados con ventas (suponiendo que cada venta tiene un campo 'ID_empleado' o algo equivalente)
+        # Aquí estamos simulando que 'ventas_df' tiene una columna 'ID_empleado' para asociar ventas con empleados.
+        ventas_ultimo_ano = ventas_ultimo_ano.merge(empleados_df[['ID_empleado', 'Sucursal']], on='Sucursal', how='left')
+    
         # Filtrar solo las ventas del empleado en la sucursal seleccionada
         ventas_ultimo_ano_sucursal = ventas_ultimo_ano[ventas_ultimo_ano['Sucursal'] == sucursal_seleccionada]
         
@@ -725,6 +742,11 @@ if password == st.secrets["acceso"]["clave"]:
         
         # Mostrar las ventas por empleado
         st.write(ventas_por_empleado[['Nombre', 'Apellido', 'Ventas']])
+    
+        # Graficar las ventas de cada empleado
+        st.subheader("Gráfico comparativo de ventas por empleado")
+        fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Ventas', color='Apellido', title="Ventas por Empleado en el Último Año")
+        st.plotly_chart(fig_ventas_empleado)
     
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
