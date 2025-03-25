@@ -598,11 +598,10 @@ if password == st.secrets["acceso"]["clave"]:
             df_compras = pd.read_csv("Compra_transformada.csv")
             df_proveedores = pd.read_csv("Proveedores_transformado.csv")
 
-            # Asegurar tipos
-            df_gastos["IdTipoGasto"] = df_gastos["IdTipoGasto"].astype(int)
-            df_tipos_gasto["IdTipoGasto"] = df_tipos_gasto["IdTipoGasto"].astype(int)
-            df_gastos["IdSucursal"] = df_gastos["IdSucursal"].astype(int)
-            df_sucursales["ID"] = df_sucursales["ID"].astype(int)
+            # Asegurar tipo consistente
+            df_compras["IdProveedor"] = df_compras["IdProveedor"].astype(int)
+            df_proveedores["IDProveedor"] = df_proveedores["IDProveedor"].astype(int)
+            
             # Agrupar por proveedor
             proveedor_resumen = df_compras.groupby("IdProveedor")["Cantidad"].sum().reset_index()
             proveedor_resumen = proveedor_resumen.merge(df_proveedores, left_on="IdProveedor", right_on="ID", how="left")
