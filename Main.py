@@ -679,59 +679,67 @@ if password == st.secrets["acceso"]["clave"]:
 
     elif menu == "Mapa de sucursales":
         st.header("🗺️ Mapa de sucursales")
-        
-        # Carga de datos de sucursales
-        sucursales_df = pd.read_csv("sucursales.csv")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
-        
+    
+        # Cargar los datos
+        sucursales_df = pd.read_csv("Sucursales_transformado.csv")
+        ventas_df = pd.read_csv("Venta_transformado.csv")
+        empleados_df = pd.read_csv("Empleados_transformados.csv")
+        productos_df = pd.read_csv("PRODUCTOS_transformado.csv")
+    
+        # Limpiar columnas
+        sucursales_df.columns = sucursales_df.columns.str.strip()
+        empleados_df.columns = empleados_df.columns.str.strip()
+        ventas_df.columns = ventas_df.columns.str.strip()
+    
         # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
-        
-        # Creación del mapa
-        m = folium.Map(location=[sucursales_df["Latitud"].mean(), sucursales_df["Longitud"].mean()], zoom_start=5)
-        
-        # Filtrado de sucursales
+    
+        # Crear mapa base
+        mapa = folium.Map(location=[sucursales_df["Latitud"].mean(), sucursales_df["Longitud"].mean()], zoom_start=5)
+    
         if sucursal_seleccionada == "Todas":
             for _, row in sucursales_df.iterrows():
-                folium.Marker([row["Latitud"], row["Longitud"],], popup=row["Sucursal"]).add_to(m)
+                folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(mapa)
         else:
             row = sucursales_df[sucursales_df["Sucursal"] == sucursal_seleccionada].iloc[0]
-            folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(m)
-        
-        st_folium(m, width=700, height=500)
-        
-        # Carga de datos de ventas y empleados (ejemplo)
-        ventas_df = pd.read_csv("ventas.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
-        empleados_df = pd.read_csv("empleados.csv")  # Columnas: Sucursal, Cantidad
-        
-        # Filtrar por sucursal seleccionada
+            folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(mapa)
+    
+        st_folium(mapa, width=700, height=500)
+    
+        # Empleados por sucursal
+        st.subheader("👔 Empleados por sucursal")
+        empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count().reset_index()
+        st.bar_chart(empleados_por_sucursal.set_index("Sucursal"))
+    
         if sucursal_seleccionada != "Todas":
-            ventas_df = ventas_df[ventas_df["Sucursal"] == sucursal_seleccionada]
-            empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-        
-        # Gráfico de empleados
-        st.subheader("Empleados")
-        st.bar_chart(empleados_df.set_index("Sucursal")['Cantidad'])
-        
-        # Gráfico de ventas históricas
-        st.subheader("Histórico de Ventas")
-        ventas_historicas = ventas_df.groupby("Fecha")["Ventas"].sum().reset_index()
-        fig_ventas = px.line(ventas_historicas, x="Fecha", y="Ventas", title="Histórico de Ventas")
-        st.plotly_chart(fig_ventas)
-        
-        # Productos más vendidos
-        st.subheader("Productos más vendidos")
-        top_productos = ventas_df["Producto"].value_counts().head(5)
-        st.bar_chart(top_productos)
-        
-        # Mejor cliente
-        st.subheader("Mejor Cliente")
-        mejor_cliente = ventas_df.groupby("Cliente")["Ventas"].sum().idxmax()
-        st.write(f"El mejor cliente es: {mejor_cliente}")
-        
-        # Canal de ventas más eficiente
-        st.subheader("Canal de Ventas Más Eficiente")
-        canal_eficiente = ventas_df.groupby("Canal")["Ventas"].sum().idxmax()
-        st.write(f"El canal de ventas más eficiente es: {canal_eficiente}")
+            st.subheader(f"👥 Empleados en {sucursal_seleccionada}")
+            empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
+            st.dataframe(empleados_sucursal[["Nombre", "Apellido", "Cargo"]])
+    
+            if not empleados_sucursal.empty:
+                empleado_seleccionado = st.selectbox("Selecciona un empleado", empleados_sucursal["Nombre"].unique())
+    
+                # Procesamiento de ventas
+                ventas_df["Fecha"] = pd.to_datetime(ventas_df["Fecha"], errors="coerce")
+                ventas_df = ventas_df[ventas_df["Fecha"] >= "2015-01-01"]
+                ventas_df["Ventas_totales"] = ventas_df["Precio"] * ventas_df["Cantidad"]
+    
+                # Agrupación de ventas por empleado
+                resumen_ventas = ventas_df.groupby("IdEmpleado")["Ventas_totales"].sum().reset_index()
+                resumen_ventas = resumen_ventas.merge(empleados_df, left_on="IdEmpleado", right_on="ID_empleado", how="left")
+    
+                ventas_filtradas = resumen_ventas[
+                    (resumen_ventas["Sucursal"] == sucursal_seleccionada) &
+                    (resumen_ventas["Nombre"] == empleado_seleccionado)
+                ]
+    
+                st.subheader(f"📈 Ventas de {empleado_seleccionado} desde 2015")
+                st.write(ventas_filtradas[["Nombre", "Apellido", "Ventas_totales"]])
+    
+                # Gráfico
+                fig = px.bar(ventas_filtradas, x="Nombre", y="Ventas_totales", color="Sucursal",
+                             title=f"Ventas de {empleado_seleccionado} en {sucursal_seleccionada}")
+                st.plotly_chart(fig)
         
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
