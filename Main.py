@@ -406,19 +406,19 @@ if password == st.secrets["acceso"]["clave"]:
             st.dataframe(df_ventas.describe())
 
 
-    elif menu == "Análisis cruzado":
+     elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
 
         analisis_opcion = st.selectbox("Seleccioná el análisis cruzado a visualizar:", [
-            "Clientes vs Compras",
-            "Ventas vs Empleados",
-            "Ventas vs Productos",
-            "Gastos vs Sucursales",
-            "Compras vs Proveedores",
-            "Ventas vs Canal",
-            "Empleados vs Sucursal",
-            "Ventas vs Rentabilidad"
-        ])
+            "🛍️ Productos más vendidos vs. más comprados",
+            "📍 Sucursales con más ventas vs. más gastos",
+            "💸 Relación entre salario de empleados y volumen de ventas",
+            "👥 Perfil de cliente vs. tipo de producto vendido",
+            "🛒 Canal de venta vs. volumen/monto de ventas",
+            "🔁 Tipo de gasto más frecuente por sucursal",
+            "📊 Proveedor con mayor volumen de compra",
+            "💡 Comparar precios de compra vs. venta por producto (margen)"
+                ])
         if analisis_opcion == "Clientes vs Compras":
             st.markdown("### 🧍‍♂️📦 Análisis cruzado: Clientes vs Compras")
             st.markdown("🔎 ¿Qué muestra el gráfico?\n- Comparación directa de la cantidad vendida vs. la cantidad comprada por producto.\n- Podés ver claramente si hay productos:\n    - Con más ventas que compras → posible falta de stock o desabastecimiento.\n    - Con más compras que ventas → posible exceso de stock o baja rotación.")
