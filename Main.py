@@ -78,7 +78,7 @@ if password == st.secrets["acceso"]["clave"]:
             st.pyplot(fig2)
 
             # Mapa geográfico de clientes (si hay coordenadas)
-            if "Latitud" in df_clientes.columns and "Longitud" in df_clientes.columns:
+            if "X" in df_clientes.columns and "Y" in df_clientes.columns:
                 st.markdown("### 🌍 Mapa de distribución geográfica")
                 mapa = folium.Map(location=[df_clientes["Y"].mean(), df_clientes["X"].mean()], zoom_start=5)
                 for _, row in df_clientes.iterrows():
