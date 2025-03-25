@@ -420,6 +420,7 @@ if password == st.secrets["acceso"]["clave"]:
     "💡 Comparar precios de compra vs. venta por producto (margen)"
                 "💡 Comparar precios de compra vs. venta por producto (margen)"
                 ])
+         
         if analisis_opcion == "Clientes vs Compras":
             st.markdown("### 🧍‍♂️📦 Análisis cruzado: Clientes vs Compras")
             st.markdown("🔎 ¿Qué muestra el gráfico?\n- Comparación directa de la cantidad vendida vs. la cantidad comprada por producto.\n- Podés ver claramente si hay productos:\n    - Con más ventas que compras → posible falta de stock o desabastecimiento.\n    - Con más compras que ventas → posible exceso de stock o baja rotación.")
