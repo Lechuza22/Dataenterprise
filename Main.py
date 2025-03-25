@@ -638,8 +638,39 @@ if password == st.secrets["acceso"]["clave"]:
                 labels={"DESCRIPCION": "Canal de Venta", "Mes": "Fecha", "Cantidad": "Cantidad de Ventas"},
             )
             st.plotly_chart(fig, use_container_width=True)
-                
-                
+
+        elif analisis_opcion == "💡 Comparar precios de compra vs. venta por producto (margen)":
+            st.markdown("### 💡 Comparar precios de compra vs. venta por producto (margen)")
+            st.markdown("🔎 ¿Qué muestra el gráfico?\n- Compara el precio promedio de compra y venta de cada producto.\n- Muestra el margen estimado por unidad.\n\n💡 Muy útil para análisis de rentabilidad por producto y toma de decisiones comerciales.")
+        
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_compras = pd.read_csv("Compra_transformada.csv")
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+        
+            # Precio promedio de compra por producto
+            compras_prom = df_compras.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO")
+            compra_por_prod = compras_prom.groupby("IdProducto")["Precio"].mean().reset_index(name="Precio_Compra")
+        
+            # Precio promedio de venta por producto
+            ventas_prom = df_ventas.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO")
+            venta_por_prod = ventas_prom.groupby("IdProducto")["Precio"].mean().reset_index(name="Precio_Venta")
+        
+            # Merge de ambos
+            comparacion = compra_por_prod.merge(venta_por_prod, on="IdProducto")
+            comparacion = comparacion.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
+            comparacion["Margen"] = comparacion["Precio_Venta"] - comparacion["Precio_Compra"]
+            comparacion = comparacion.sort_values(by="Margen", ascending=False).head(10)
+        
+            # Gráfico
+            fig, ax = plt.subplots(figsize=(10, 6))
+            comparacion.set_index("Concepto")[["Precio_Compra", "Precio_Venta"]].plot(kind="bar", ax=ax)
+            ax.set_title("Comparación de precios de compra vs. venta (Top 10 por margen)")
+            ax.set_ylabel("Precio promedio por unidad")
+            ax.set_xlabel("Producto")
+            plt.xticks(rotation=45, ha="right")
+            st.pyplot(fig)
+        
+                        
 
 
     elif menu == "Modelos de ML":
