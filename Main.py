@@ -639,7 +639,7 @@ if password == st.secrets["acceso"]["clave"]:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-        elif analisis_opcion == "💡 Comparar precios de compra vs. venta por producto (margen)":
+      elif analisis_opcion == "💡 Comparar precios de compra vs. venta por producto (margen)":
             st.markdown("### 💡 Comparar precios de compra vs. venta por producto (margen)")
             st.markdown("🔎 ¿Qué muestra el gráfico?\n- Compara el precio promedio de compra y venta de cada producto.\n- Muestra el margen estimado por unidad.\n\n💡 Muy útil para análisis de rentabilidad por producto y toma de decisiones comerciales.")
         
@@ -648,12 +648,10 @@ if password == st.secrets["acceso"]["clave"]:
             df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
         
             # Precio promedio de compra por producto
-            compras_prom = df_compras.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO")
-            compra_por_prod = compras_prom.groupby("IdProducto")["Precio"].mean().reset_index(name="Precio_Compra")
+            compra_por_prod = df_compras.groupby("IdProducto")["Precio"].mean().reset_index(name="Precio_Compra")
         
             # Precio promedio de venta por producto
-            ventas_prom = df_ventas.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO")
-            venta_por_prod = ventas_prom.groupby("IdProducto")["Precio"].mean().reset_index(name="Precio_Venta")
+            venta_por_prod = df_ventas.groupby("IdProducto")["Precio"].mean().reset_index(name="Precio_Venta")
         
             # Merge de ambos
             comparacion = compra_por_prod.merge(venta_por_prod, on="IdProducto")
@@ -669,7 +667,7 @@ if password == st.secrets["acceso"]["clave"]:
             ax.set_xlabel("Producto")
             plt.xticks(rotation=45, ha="right")
             st.pyplot(fig)
-        
+
                         
 
 
