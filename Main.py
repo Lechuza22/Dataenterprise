@@ -178,7 +178,28 @@ if password == st.secrets["acceso"]["clave"]:
             ax3.set_title("Distribución de salario por cargo")
             ax3.tick_params(axis='x', rotation=45)
             st.pyplot(fig3)
-        
+
+            # Gráfico de conteo por Sucursal
+            st.markdown("### 🏢 Empleados por Sucursal")
+            fig1, ax1 = plt.subplots()
+            df_empleados['Sucursal'].value_counts().plot(kind='bar', ax=ax1, color='lightblue')
+            ax1.set_title("Cantidad de empleados por sucursal")
+            st.pyplot(fig1)
+
+            # Gráfico de conteo por Sector
+            st.markdown("### 🗂️ Empleados por Sector")
+            fig2, ax2 = plt.subplots()
+            df_empleados['Sector'].value_counts().plot(kind='bar', ax=ax2, color='lightgreen')
+            ax2.set_title("Cantidad de empleados por sector")
+            st.pyplot(fig2)
+
+            # Gráfico de conteo por Cargo
+            st.markdown("### 👷‍♂️ Empleados por Cargo")
+            fig3, ax3 = plt.subplots()
+            df_empleados['Cargo'].value_counts().plot(kind='bar', ax=ax3, color='salmon')
+            ax3.set_title("Cantidad de empleados por cargo")
+            st.pyplot(fig3)
+           
             # Estadísticas descriptivas
             st.subheader("📋 Estadísticas descriptivas")
             st.dataframe(df_empleados.describe())
