@@ -83,7 +83,7 @@ if password == st.secrets["acceso"]["clave"]:
                 mapa = folium.Map(location=[df_clientes["X"].mean(), df_clientes["Y"].mean()], zoom_start=5)
                 for _, row in df_clientes.iterrows():
                     folium.CircleMarker(
-                        location=[row["Latitud"], row["Longitud"]],
+                        location=[row["X"], row["Y"]],
                         radius=2,
                         color='blue',
                         fill=True,
