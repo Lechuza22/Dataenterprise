@@ -104,11 +104,7 @@ if password == st.secrets["acceso"]["clave"]:
             st.dataframe(df_clientes.describe())
 
         elif dataset_opcion == "Compras":
-            st.subheader("🛒 Exploración de Compras")
-            st.markdown("- Concentración de compras en pocos proveedores.
-- Productos con alta rotación vs. baja venta.
-- Conclusión: necesidad de alinear compras con demanda real.")
-
+            
             df_compras = pd.read_csv("Compra_transformada.csv")
 
             # Histograma de cantidad de compras
