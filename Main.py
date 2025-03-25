@@ -532,23 +532,25 @@ if password == st.secrets["acceso"]["clave"]:
             df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
             df_canal = pd.read_csv("CanalDeVenta_Tranfor.csv")
         
-            # Asegurar tipos compatibles
+            # Preparar columnas para merge
             df_ventas["IdCanal"] = df_ventas["IdCanal"].astype(str).str.strip()
             df_canal["CODIGO"] = df_canal["CODIGO"].astype(str).str.strip()
         
-            # Merge: ventas + canal + productos (para precios)
+            # Merge para obtener nombre de canal y precio
             df_ventas = df_ventas.merge(df_canal, left_on="IdCanal", right_on="CODIGO", how="left")
             df_ventas = df_ventas.merge(df_productos[["ID_PRODUCTO", "Precio"]], left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
         
             # Agrupar por canal
             canal_resumen = df_ventas.groupby("DESCRIPCION").agg({
-                "IdVenta": "count",
-                "Precio": "sum"
-            }).reset_index().rename(columns={"IdVenta": "Total_Vendido", "Precio": "Monto_Total"})
+                "IdVenta": "count",      # Cantidad de ventas
+                "Precio": "sum"          # Monto total estimado
+            }).reset_index().rename(columns={
+                "IdVenta": "Total_Vendido",
+                "Precio": "Monto_Total"
+            })
         
             # Visualización combinada
             fig, ax1 = plt.subplots(figsize=(10, 6))
-        
             sns.barplot(data=canal_resumen, x="DESCRIPCION", y="Total_Vendido", ax=ax1, color="skyblue")
             ax1.set_ylabel("Cantidad de ventas", color="skyblue")
             ax1.set_xlabel("Canal de venta")
@@ -556,14 +558,14 @@ if password == st.secrets["acceso"]["clave"]:
             ax1.tick_params(axis='y', labelcolor="skyblue")
             plt.xticks(rotation=30)
         
-            # Eje secundario para monto total
+            # Eje secundario con línea de monto
             ax2 = ax1.twinx()
-            sns.lineplot(data=canal_resumen, x="DESCRIPCION", y="Monto_Total", ax=ax2, color="darkblue", marker="o", label="Monto Total ($)")
+            sns.lineplot(data=canal_resumen, x="DESCRIPCION", y="Monto_Total", ax=ax2, color="darkblue", marker="o")
             ax2.set_ylabel("Monto total ($)", color="darkblue")
             ax2.tick_params(axis='y', labelcolor="darkblue")
         
-            plt.tight_layout()
             st.pyplot(fig)
+
 
 
 
