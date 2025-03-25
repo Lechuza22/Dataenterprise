@@ -741,14 +741,14 @@ if password == st.secrets["acceso"]["clave"]:
         # Mostrar las ventas de ese empleado
         st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_desde_2015_sucursal[['Nombre', 'Apellido', 'Precio']])
         
-        # Agrupar las ventas por empleado
-        ventas_por_empleado = ventas_desde_2015_sucursal.groupby(['ID_empleado', 'Nombre', 'Apellido'])['Precio'].sum().reset_index()
+        # Agrupar las ventas por sucursal y calcular la media de ventas por empleado
+        ventas_por_sucursal = ventas_desde_2015_sucursal.groupby(['Sucursal', 'Nombre'])['Precio'].mean().reset_index()
         
-        # Graficar las ventas de cada empleado
-        st.subheader(f"Gráfico comparativo de ventas de {empleado_seleccionado}")
-        fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Precio', color='Apellido', 
-                                     title=f"Ventas por {empleado_seleccionado} desde 2015")
-        st.plotly_chart(fig_ventas_empleado)
+        # Graficar la media de ventas por empleado en cada sucursal
+        st.subheader(f"Media de ventas de {empleado_seleccionado} en la sucursal")
+        fig_ventas_sucursal = px.bar(ventas_por_sucursal, x='Nombre', y='Precio', color='Sucursal', 
+                                     title=f"Media de ventas por empleado en la sucursal {sucursal_seleccionada}")
+        st.plotly_chart(fig_ventas_sucursal)
 
         
     elif menu == "Descargas":
