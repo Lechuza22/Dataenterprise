@@ -678,9 +678,6 @@ if password == st.secrets["acceso"]["clave"]:
     elif menu == "Mapa de sucursales":
         st.header("🗺️ Mapa de sucursales")
         
-        # Carga de datos de sucursales
-        sucursales_df = pd.read_csv("Sucursales_transformado.csv")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
-        
         # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
@@ -690,50 +687,47 @@ if password == st.secrets["acceso"]["clave"]:
         # Filtrado de sucursales
         if sucursal_seleccionada == "Todas":
             for _, row in sucursales_df.iterrows():
-                folium.Marker([row["Latitud"], row["Longitud"],], popup=row["Sucursal"]).add_to(m)
+                folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(m)
         else:
             row = sucursales_df[sucursales_df["Sucursal"] == sucursal_seleccionada].iloc[0]
             folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(m)
         
         st_folium(m, width=700, height=500)
-        
-        # Carga de datos de ventas y empleados (ejemplo)
-        ventas_df = pd.read_csv("Venta_transformado.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
-        empleados_df = pd.read_csv("Empleados_transformados.csv")  # Columnas: Sucursal, Cantidad
-        
+    
         # Filtrar por sucursal seleccionada
         if sucursal_seleccionada != "Todas":
-            ventas_df = ventas_df[ventas_df["IdSucursal"] == sucursal_seleccionada]
+            ventas_df = ventas_df[ventas_df["Sucursal"] == sucursal_seleccionada]
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
-        
+            productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
+    
         # Gráfico de empleados
         st.subheader("Empleados")
         st.bar_chart(empleados_df.set_index("Sucursal")['Cantidad'])
-        
+    
         # Gráfico de ventas históricas
         st.subheader("Histórico de Ventas")
         ventas_historicas = ventas_df.groupby("Fecha")["Ventas"].sum().reset_index()
         fig_ventas = px.line(ventas_historicas, x="Fecha", y="Ventas", title="Histórico de Ventas")
         st.plotly_chart(fig_ventas)
-        
+    
         # Productos más vendidos
         st.subheader("Productos más vendidos")
         top_productos = ventas_df["Producto"].value_counts().head(5)
         st.bar_chart(top_productos)
-        
+    
         # Mejor cliente
         st.subheader("Mejor Cliente")
         mejor_cliente = ventas_df.groupby("Cliente")["Ventas"].sum().idxmax()
         st.write(f"El mejor cliente es: {mejor_cliente}")
-        
+    
         # Canal de ventas más eficiente
         st.subheader("Canal de Ventas Más Eficiente")
         canal_eficiente = ventas_df.groupby("Canal")["Ventas"].sum().idxmax()
         st.write(f"El canal de ventas más eficiente es: {canal_eficiente}")
-
-    elif menu == "Descargas":
-        st.header("📥 Exportación de datos y resultados")
-        st.info("Próximamente: descarga de reportes, gráficos y predicciones")
+    
+        elif menu == "Descargas":
+            st.header("📥 Exportación de datos y resultados")
+            st.info("Próximamente: descarga de reportes, gráficos y predicciones")
 
 else:
     st.warning("🔒 Ingresá la clave correcta para acceder a la app")
