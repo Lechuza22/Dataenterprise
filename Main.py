@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import seaborn.objects as so
+import folium
+from streamlit_folium import st_folium
 
 # -----------------------------
 # CONFIGURACION INICIAL
@@ -56,12 +59,45 @@ if password == st.secrets["acceso"]["clave"]:
             df_clientes = pd.read_csv("Clientes_transformados.csv")
 
             # Histograma de edades
+            st.markdown("### 📊 Distribución de edades")
             fig, ax = plt.subplots(figsize=(8, 4))
             sns.histplot(df_clientes["Edad"], bins=20, kde=True, ax=ax, color="skyblue")
             ax.set_title("Distribución de edades de los clientes")
             ax.set_xlabel("Edad")
             ax.set_ylabel("Cantidad")
             st.pyplot(fig)
+
+            # Top 10 localidades
+            st.markdown("### 🏙️ Top 10 Localidades con más clientes")
+            top_localidades = df_clientes["Localidad"].value_counts().head(10)
+            fig2, ax2 = plt.subplots()
+            top_localidades.plot(kind="barh", ax=ax2, color="teal")
+            ax2.invert_yaxis()
+            ax2.set_title("Top 10 Localidades")
+            ax2.set_xlabel("Cantidad de clientes")
+            st.pyplot(fig2)
+
+            # Mapa geográfico de clientes (si hay coordenadas)
+            if "Latitud" in df_clientes.columns and "Longitud" in df_clientes.columns:
+                st.markdown("### 🌍 Mapa de distribución geográfica")
+                mapa = folium.Map(location=[df_clientes["Latitud"].mean(), df_clientes["Longitud"].mean()], zoom_start=5)
+                for _, row in df_clientes.iterrows():
+                    folium.CircleMarker(
+                        location=[row["Latitud"], row["Longitud"]],
+                        radius=2,
+                        color='blue',
+                        fill=True,
+                        fill_opacity=0.6
+                    ).add_to(mapa)
+                st_folium(mapa, width=700, height=400)
+
+            # Heatmap de correlaciones
+            st.markdown("### 🔥 Correlación entre variables numéricas")
+            corr = df_clientes.select_dtypes(include=['float64', 'int64']).corr()
+            fig3, ax3 = plt.subplots()
+            sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax3)
+            ax3.set_title("Heatmap de correlaciones")
+            st.pyplot(fig3)
 
             # Estadísticas descriptivas
             st.subheader("📋 Estadísticas descriptivas")
