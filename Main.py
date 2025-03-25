@@ -268,12 +268,21 @@ if password == st.secrets["acceso"]["clave"]:
             ax1.set_title("Distribución de precios de productos")
             st.pyplot(fig1)
         
-            # Top 10 tipos de producto
-            st.markdown("### 🧾 Tipos de productos más frecuentes")
-            fig2, ax2 = plt.subplots()
-            df_productos["Tipo"].value_counts().head(10).plot(kind="bar", ax=ax2, color="orchid")
-            ax2.set_title("Top tipos de producto")
-            st.pyplot(fig2)
+            # Productos más comprados con nombres
+            st.markdown("### 🏆 Top 10 productos más comprados (con nombre)")
+            top_ids = df_compras["IdProducto"].value_counts().head(10).reset_index()
+            top_ids.columns = ["IdProducto", "Total"]
+            
+            # Merge con productos para obtener nombres
+            top_nombres = top_ids.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
+            
+            fig, ax = plt.subplots()
+            sns.barplot(data=top_nombres, x="Total", y="Concepto", ax=ax, palette="Blues_d")
+            ax.set_title("Productos más comprados (por nombre)")
+            ax.set_xlabel("Cantidad comprada")
+            ax.set_ylabel("Producto")
+            st.pyplot(fig)
+
         
             # Top productos más comprados
             st.markdown("### 🥇 Productos más comprados (Top 10)")
