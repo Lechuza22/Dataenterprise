@@ -741,47 +741,24 @@ if password == st.secrets["acceso"]["clave"]:
                              title=f"Ventas de {empleado_seleccionado} en {sucursal_seleccionada}")
                 st.plotly_chart(fig)
     
-                # Gráfico de ventas históricas
-                st.subheader("Histórico de Ventas por empleado seleccionado")
+                        # Comparación de ventas totales por empleado
+                st.subheader("Comparación de ventas por empleado")
                 empleado_comparar = st.selectbox("Selecciona otro empleado para comparar", empleados_sucursal["Nombre"].unique())
-                
-                ventas_df["Fecha"] = pd.to_datetime(ventas_df["Fecha"], errors="coerce")
-                ventas_df = ventas_df[ventas_df["Fecha"] >= pd.Timestamp.now() - pd.DateOffset(years=5)]
-                ventas_df["Año"] = ventas_df["Fecha"].dt.year
+        
                 ventas_df["Ventas_totales"] = ventas_df["Precio"] * ventas_df["Cantidad"]
-                
+        
                 ventas_empleados = ventas_df.merge(empleados_df, left_on="IdEmpleado", right_on="ID_empleado", how="left")
                 ventas_filtradas = ventas_empleados[
                     (ventas_empleados["Sucursal"] == sucursal_seleccionada) &
                     (ventas_empleados["Nombre"].isin([empleado_seleccionado, empleado_comparar]))
                 ]
-                
-                ventas_por_anio = ventas_filtradas.groupby(["Año", "Nombre"])["Ventas_totales"].sum().reset_index()
-                
-                media_general = ventas_df.groupby("Año")["Ventas_totales"].mean().reset_index(name="MediaGeneral")
-                
-                fig = px.line(ventas_por_anio, x="Año", y="Ventas_totales", color="Nombre", markers=True,
-                              title=f"Histórico de ventas en {sucursal_seleccionada} por empleado")
-                
-                fig.add_scatter(x=media_general["Año"], y=media_general["MediaGeneral"], mode="lines+markers",
-                                name="Media General", line=dict(dash="dash", color="gray"))
-                
+        
+                resumen_comparativo = ventas_filtradas.groupby("Nombre")["Ventas_totales"].sum().reset_index()
+        
+                fig = px.bar(resumen_comparativo, x="Nombre", y="Ventas_totales", color="Nombre",
+                             title=f"Comparación de ventas totales en {sucursal_seleccionada}")
+        
                 st.plotly_chart(fig)
-                
-                # Productos más vendidos
-                st.subheader("📦 Productos más vendidos")
-                top_productos = ventas_df["Producto"].value_counts().head(5)
-                st.bar_chart(top_productos)
-                
-                # Mejor cliente
-                st.subheader("🏆 Mejor Cliente")
-                mejor_cliente = ventas_df.groupby("Cliente")["Ventas_totales"].sum().idxmax()
-                st.write(f"El mejor cliente es: {mejor_cliente}")
-                
-                # Canal de ventas más eficiente
-                st.subheader("📡 Canal de Ventas Más Eficiente")
-                canal_eficiente = ventas_df.groupby("Canal")["Ventas_totales"].sum().idxmax()
-                st.write(f"El canal de ventas más eficiente es: {canal_eficiente}")
 
         
     elif menu == "Descargas":
