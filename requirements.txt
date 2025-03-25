@@ -8,3 +8,11 @@ plotly
 folium
 streamlit-folium
 datetime 
+scikit-learn
+xgboost
+lightgbm
+statsmodels
+prophet
+tensorflow
+keras
+joblib
