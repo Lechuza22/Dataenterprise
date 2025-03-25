@@ -736,17 +736,18 @@ if password == st.secrets["acceso"]["clave"]:
                 st.subheader(f"📈 Ventas de {empleado_seleccionado} desde 2015")
                 st.write(ventas_filtradas[["Nombre", "Apellido", "Ventas_totales"]])
     
-               # Gráfico de ventas históricas
+                      # Gráfico de ventas históricas
                 st.subheader("Histórico de Ventas (últimos 5 años)")
                 ventas_df["Fecha"] = pd.to_datetime(ventas_df["Fecha"], errors="coerce")
                 ventas_df = ventas_df[ventas_df["Fecha"] >= pd.Timestamp.now() - pd.DateOffset(years=5)]
         
                 ventas_df["Año"] = ventas_df["Fecha"].dt.year
-                ventas_anuales = ventas_df.groupby("Año")["Ventas"].agg(["mean", "sum"]).reset_index()
+                ventas_df["Ventas_totales"] = ventas_df["Precio"] * ventas_df["Cantidad"]
+                ventas_anuales = ventas_df.groupby("Año")["Ventas_totales"].agg(["mean", "sum"]).reset_index()
         
                 fig_ventas = px.line(ventas_anuales, x="Año", y="mean", markers=True,
                                      title="Promedio anual de ventas por año",
-                                     labels={"mean": "Promedio de Ventas"})
+                                     labels={"mean": "Promedio de Ventas", "Año": "Año"})
                 st.plotly_chart(fig_ventas)
                 
                 # Productos más vendidos
