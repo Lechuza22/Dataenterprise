@@ -6,7 +6,7 @@ import seaborn.objects as so
 import folium
 from streamlit_folium import st_folium
 import plotly.express as px
-
+from datetime import datetime
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
@@ -685,13 +685,17 @@ if password == st.secrets["acceso"]["clave"]:
         empleados_df = pd.read_csv("Empleados_transformados.csv")  # Columnas: Sucursal, Cantidad
         productos_df = pd.read_csv("PRODUCTOS_transformado.csv")  # Columnas: Producto, Ventas
 
+        # Limpiar los nombres de las columnas para eliminar espacios adicionales
+        sucursales_df.columns = sucursales_df.columns.str.strip()
+        empleados_df.columns = empleados_df.columns.str.strip()
+           
         # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
         m = folium.Map(location=[sucursales_df["Latitud"].mean(), sucursales_df["Longitud"].mean()], zoom_start=5)
-        
-        # Filtrado de sucursales
+    
+    # Filtrado de sucursales
         if sucursal_seleccionada == "Todas":
             for _, row in sucursales_df.iterrows():
                 folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(m)
@@ -700,42 +704,50 @@ if password == st.secrets["acceso"]["clave"]:
             folium.Marker([row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(m)
         
         st_folium(m, width=700, height=500)
-    
+
         # Filtrar por sucursal seleccionada
         if sucursal_seleccionada != "Todas":
             ventas_df = ventas_df[ventas_df["Sucursal"] == sucursal_seleccionada]
             empleados_df = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
             productos_df = productos_df[productos_df["Sucursal"] == sucursal_seleccionada]
     
-        # Gráfico de empleados
-        st.subheader("Empleados por Sucursal")
-        empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count()
-        st.bar_chart(empleados_por_sucursal)
+            # Gráfico de empleados
+            st.subheader("Empleados por Sucursal")
+            empleados_por_sucursal = empleados_df.groupby("Sucursal")["ID_empleado"].count()
+            st.bar_chart(empleados_por_sucursal)
+        
+            # Mostrar los empleados de la sucursal seleccionada
+            st.subheader("Empleados de la Sucursal")
+            empleados_sucursal = empleados_df[empleados_df["Sucursal"] == sucursal_seleccionada]
+            st.write(empleados_sucursal[['Nombre', 'Apellido']])
+        
+            # Mostrar las ventas de los empleados en el último año
+            st.subheader("Ventas de los empleados en el último año")
+            
+            # Gráfico de ventas históricas
+            st.subheader("Histórico de Ventas")
+            ventas_historicas = ventas_df.groupby("Fecha")["Ventas"].sum().reset_index()
+            fig_ventas = px.line(ventas_historicas, x="Fecha", y="Ventas", title="Histórico de Ventas")
+            st.plotly_chart(fig_ventas)
+        
+            # Productos más vendidos
+            st.subheader("Productos más vendidos")
+            top_productos = ventas_df["Producto"].value_counts().head(5)
+            st.bar_chart(top_productos)
+        
+            # Mejor cliente
+            st.subheader("Mejor Cliente")
+            mejor_cliente = ventas_df.groupby("Cliente")["Ventas"].sum().idxmax()
+            st.write(f"El mejor cliente es: {mejor_cliente}")
+        
+            # Canal de ventas más eficiente
+            st.subheader("Canal de Ventas Más Eficiente")
+            canal_eficiente = ventas_df.groupby("Canal")["Ventas"].sum().idxmax()
+            st.write(f"El canal de ventas más eficiente es: {canal_eficiente}")
     
-        # Gráfico de ventas históricas
-        st.subheader("Histórico de Ventas")
-        ventas_historicas = ventas_df.groupby("Fecha")["Ventas"].sum().reset_index()
-        fig_ventas = px.line(ventas_historicas, x="Fecha", y="Ventas", title="Histórico de Ventas")
-        st.plotly_chart(fig_ventas)
-    
-        # Productos más vendidos
-        st.subheader("Productos más vendidos")
-        top_productos = ventas_df["Producto"].value_counts().head(5)
-        st.bar_chart(top_productos)
-    
-        # Mejor cliente
-        st.subheader("Mejor Cliente")
-        mejor_cliente = ventas_df.groupby("Cliente")["Ventas"].sum().idxmax()
-        st.write(f"El mejor cliente es: {mejor_cliente}")
-    
-        # Canal de ventas más eficiente
-        st.subheader("Canal de Ventas Más Eficiente")
-        canal_eficiente = ventas_df.groupby("Canal")["Ventas"].sum().idxmax()
-        st.write(f"El canal de ventas más eficiente es: {canal_eficiente}")
-    
-elif menu == "Descargas":
+    elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
         st.info("Próximamente: descarga de reportes, gráficos y predicciones")
 
-else:
-    st.warning("🔒 Ingresá la clave correcta para acceder a la app")
+    else:
+        st.warning("🔒 Ingresá la clave correcta para acceder a la app")
