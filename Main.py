@@ -243,11 +243,11 @@ if password == st.secrets["acceso"]["clave"]:
             st.pyplot(fig4)
             
             # Heatmap de correlación
-                st.markdown("### 🔥 Correlación entre variables numéricas")
-                fig5, ax5 = plt.subplots()
-                sns.heatmap(df_gastos.select_dtypes(include="number").corr(), annot=True, cmap="coolwarm", ax=ax5)
-                ax5.set_title("Matriz de correlaciones - Gastos")
-                st.pyplot(fig5)
+            st.markdown("### 🔥 Correlación entre variables numéricas")
+            fig5, ax5 = plt.subplots()
+            sns.heatmap(df_gastos.select_dtypes(include="number").corr(), annot=True, cmap="coolwarm", ax=ax5)
+            ax5.set_title("Matriz de correlaciones - Gastos")
+            st.pyplot(fig5)
             
             # Estadísticas
             st.subheader("📋 Estadísticas descriptivas")
