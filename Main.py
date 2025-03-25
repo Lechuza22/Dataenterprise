@@ -494,12 +494,7 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif analisis_opcion == "💸 Relación entre salario de empleados y volumen de ventas":
                 st.markdown("### 💸 Relación entre salario de empleados y volumen de ventas")
-                st.markdown("🔎 ¿Qué revela el gráfico?
-        - No hay una correlación directa fuerte entre salario y ventas generadas.
-        - Algunos empleados con salarios medios generan altas ventas, lo cual sugiere alto rendimiento.
-        - También hay empleados con salario alto y ventas bajas, lo cual puede indicar:
-            - Cargos administrativos
-            - Antigüedad o jerarquía sin tareas comerciales directas
+                st.markdown("🔎 ¿Qué revela el gráfico?.\n- No hay una correlación directa fuerte entre salario y ventas generadas.\n- Algunos empleados con salarios medios generan altas ventas, lo cual sugiere alto rendimiento.\n- También hay empleados con salario alto y ventas bajas, lo cual puede indicar o Cargos administrativos o Antigüedad o jerarquía sin tareas comerciales directas
         
         💡 Muy útil para evaluar productividad individual y tomar decisiones sobre incentivos o comisiones.")
         
