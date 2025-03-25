@@ -457,8 +457,40 @@ if password == st.secrets["acceso"]["clave"]:
             ax.legend()
             st.pyplot(fig)
 
-        else:
-            st.info(f"🔎 Seleccionaste: {analisis_opcion}. Visualización disponible próximamente.")
+        if analisis_opcion == "📍 Sucursales con más ventas vs. más gastos":
+            st.markdown("### 📍 Sucursales con más ventas vs. más gastos")
+            st.markdown("🔎 ¿Qué observamos?\n- Las sucursales con mayor volumen de ventas no siempre son las que más gastan.\n- Algunas sucursales tienen gastos elevados en proporción a sus ventas, lo que podría indicar:\n    - Ineficiencia operativa\n    - Costos fijos altos\n    - Gasto en infraestructura/logística no rentable\n\n💡 Ideal para analizar rentabilidad por punto de venta.")
+        
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_gastos = pd.read_csv("Gasto_transformado.csv")
+            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
+        
+            # Ventas por sucursal
+            ventas_sucursal = df_ventas.groupby("IdSucursal").size().reset_index(name="Ventas")
+        
+            # Gastos por sucursal
+            gastos_sucursal = df_gastos.groupby("IdSucursal")["Monto"].sum().reset_index(name="Gastos")
+        
+            # Merge con nombres de sucursales
+            df_merge = ventas_sucursal.merge(gastos_sucursal, on="IdSucursal")
+            sucursal_map = df_sucursales.set_index("ID")["Sucursal"].to_dict()
+            df_merge["Sucursal"] = df_merge["IdSucursal"].map(sucursal_map)
+        
+            df_top = df_merge.sort_values(by="Ventas", ascending=False).head(10)
+        
+            # Gráfico comparativo
+            fig, ax = plt.subplots(figsize=(10, 6))
+            bar_width = 0.4
+            x = range(len(df_top))
+        
+            ax.bar(x, df_top["Ventas"], width=bar_width, label="Ventas", color="blue")
+            ax.bar([i + bar_width for i in x], df_top["Gastos"], width=bar_width, label="Gastos", color="orange")
+            ax.set_xticks([i + bar_width/2 for i in x])
+            ax.set_xticklabels(df_top["Sucursal"], rotation=45, ha="right")
+            ax.set_ylabel("Cantidad")
+            ax.set_title("Top 10 sucursales con más ventas vs. más gastos")
+            ax.legend()
+            st.pyplot(fig)
 
 
 
