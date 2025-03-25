@@ -80,10 +80,10 @@ if password == st.secrets["acceso"]["clave"]:
             # Mapa geográfico de clientes (si hay coordenadas)
             if "Latitud" in df_clientes.columns and "Longitud" in df_clientes.columns:
                 st.markdown("### 🌍 Mapa de distribución geográfica")
-                mapa = folium.Map(location=[df_clientes["X"].mean(), df_clientes["Y"].mean()], zoom_start=5)
+                mapa = folium.Map(location=[df_clientes["Y"].mean(), df_clientes["X"].mean()], zoom_start=5)
                 for _, row in df_clientes.iterrows():
                     folium.CircleMarker(
-                        location=[row["X"], row["Y"]],
+                        location=[row["Y"], row["X"]],
                         radius=2,
                         color='blue',
                         fill=True,
