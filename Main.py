@@ -617,16 +617,14 @@ if password == st.secrets["acceso"]["clave"]:
             # Seleccionar top 10 por monto total
             top_proveedores = compras_con_nombre.sort_values(by="Monto_Total", ascending=False).head(10)
             
-            # Visualización
-            plt.figure(figsize=(12, 6))
-            sns.barplot(data=top_proveedores, x="Nombre", y="Monto_Total", palette="viridis")
-            plt.title("Top 10 proveedores por monto total de compras")
-            plt.ylabel("Monto total comprado ($)")
-            plt.xlabel("Proveedor")
-            plt.xticks(rotation=45, ha="right")
-            plt.tight_layout()
-            plt.show()
-                    
+              # Gráfico
+            fig, ax = plt.subplots(figsize=(10, 5))
+            sns.barplot(data=proveedor_resumen, x="Nombre", y="Cantidad", ax=ax, palette="magma")
+            ax.set_title("Top 10 proveedores por volumen de compra")
+            ax.set_ylabel("Cantidad total de productos comprados")
+            ax.set_xlabel("Proveedor")
+            ax.tick_params(axis='x', rotation=45)
+            st.pyplot(fig)
         
 
 
