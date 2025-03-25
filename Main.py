@@ -32,7 +32,7 @@ if password == st.secrets["acceso"]["clave"]:
         "Análisis exploratorio",
         "Análisis cruzado",
         "Modelos de ML",
-        "Mapa de sucursales",
+        "Mapa de sucursales y empleados",
         "Descargas"
     ])
 
@@ -677,8 +677,8 @@ if password == st.secrets["acceso"]["clave"]:
         st.info("Próximamente: predicción de ventas, segmentación, recomendaciones...")
 
 
-    elif menu == "Mapa de sucursales":
-        st.header("🗺️ Mapa de sucursales")
+    elif menu == "Mapa de sucursales y empleados":
+        st.header("🗺️ Mapa de sucursales y empleados")
     
         # Cargar los datos
         sucursales_df = pd.read_csv("Sucursales_transformado.csv")
@@ -741,7 +741,7 @@ if password == st.secrets["acceso"]["clave"]:
                              title=f"Ventas de {empleado_seleccionado} en {sucursal_seleccionada}")
                 st.plotly_chart(fig)
     
-                        # Comparación de ventas totales por empleado
+                # Comparación de ventas totales por empleado
                 st.subheader("Comparación de ventas por empleado")
                 empleado_comparar = st.selectbox("Selecciona otro empleado para comparar", empleados_sucursal["Nombre"].unique())
         
@@ -760,6 +760,14 @@ if password == st.secrets["acceso"]["clave"]:
         
                 st.plotly_chart(fig)
 
+                # Comparación de todos los empleados de la sucursal
+                st.subheader("Ventas por empleado en la sucursal")
+                ventas_sucursal = ventas_empleados[ventas_empleados["Sucursal"] == sucursal_seleccionada]
+                resumen_sucursal = ventas_sucursal.groupby("Nombre")["Ventas_totales"].sum().reset_index().sort_values(by="Ventas_totales", ascending=False)
+        
+                fig_all = px.bar(resumen_sucursal, x="Nombre", y="Ventas_totales", color="Nombre",
+                                 title=f"Ventas totales por empleado en {sucursal_seleccionada}")
+                st.plotly_chart(fig_all)
         
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
