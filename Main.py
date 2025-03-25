@@ -679,7 +679,7 @@ if password == st.secrets["acceso"]["clave"]:
         st.header("🗺️ Mapa de sucursales")
         
         # Carga de datos de sucursales
-        sucursales_df = pd.read_csv("Sucursales_transformado")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
+        sucursales_df = pd.read_csv("Sucursales_transformado.csv")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
         
         # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
