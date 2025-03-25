@@ -611,8 +611,31 @@ if password == st.secrets["acceso"]["clave"]:
             ax.set_xlabel("Proveedor")
             ax.tick_params(axis='x', rotation=45)
             st.pyplot(fig)
-
+            
+        elif analisis_opcion == "🔁 Tipo de gasto más frecuente por sucursal":
+            st.markdown("### 🔁 Tipo de gasto más frecuente por sucursal")
+            st.markdown("🔎 ¿Qué muestra el gráfico?\n- Muestra los tipos de gasto más comunes por cada sucursal.\n- Ayuda a entender en qué se gasta más en cada sede.\n\n💡 Útil para auditoría y reducción de gastos operativos.")
         
+            df_gastos = pd.read_csv("Gasto_transformado.csv")
+            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
+            df_tipo_gasto = pd.read_csv("TiposDeGasto_T.csv")
+        
+            # Merge para obtener nombres legibles
+            df_gastos = df_gastos.merge(df_sucursales, left_on="IdSucursal", right_on="ID", how="left")
+            df_gastos = df_gastos.merge(df_tipo_gasto, left_on="IdTipoGasto", right_on="IdTipoGasto", how="left")
+        
+            # Tabla cruzada
+            pivot = pd.crosstab(df_gastos["Sucursal"], df_gastos["Descripcion"])
+        
+            # Heatmap
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.heatmap(pivot, cmap="YlGnBu", linewidths=0.5, ax=ax)
+            ax.set_title("Frecuencia de tipos de gasto por sucursal")
+            ax.set_xlabel("Tipo de gasto")
+            ax.set_ylabel("Sucursal")
+            st.pyplot(fig)
+        
+                
 
 
     elif menu == "Modelos de ML":
