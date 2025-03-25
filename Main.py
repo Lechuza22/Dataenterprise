@@ -347,9 +347,9 @@ if password == st.secrets["acceso"]["clave"]:
         
             # Mapa de sucursales
             st.markdown("### 🌍 Mapa geográfico de sucursales")
-            mapa = folium.Map(location=[df_sucursales["Y"].mean(), df_sucursales["X"].mean()], zoom_start=5)
+            mapa = folium.Map(location=[df_sucursales["Latitud"].mean(), df_sucursales["Longitud"].mean()], zoom_start=5)
             for _, row in df_sucursales.iterrows():
-                folium.Marker(location=[row["Y"], row["X"]], popup=row["Sucursal"]).add_to(mapa)
+                folium.Marker(location=[row["Latitud"], row["Longitud"]], popup=row["Sucursal"]).add_to(mapa)
             st_folium(mapa, width=700, height=400)
 
         elif dataset_opcion == "Ventas":
