@@ -462,40 +462,4 @@ else:
     st.warning("🔒 Ingresá la clave correcta para acceder a la app")
 
 
-            # Top productos más vendidos (con nombre)
-            st.markdown("### 🏆 Top 10 productos más vendidos (por nombre)")
-            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
-            top_ventas = df_ventas["IdProducto"].value_counts().head(10).reset_index()
-            top_ventas.columns = ["IdProducto", "Total"]
-            top_ventas = top_ventas.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
-            
-            fig, ax = plt.subplots()
-            sns.barplot(data=top_ventas, x="Total", y="Concepto", ax=ax, palette="Blues_d")
-            ax.set_title("Productos más vendidos (por nombre)")
-            ax.set_xlabel("Cantidad vendida")
-            ax.set_ylabel("Producto")
-            st.pyplot(fig)
-            
-            # Estadísticas descriptivas
-            st.subheader("📋 Estadísticas descriptivas")
-            st.dataframe(df_ventas.describe())
-
-
-    elif menu == "Análisis cruzado":
-        st.header("🔀 Análisis cruzado entre áreas")
-        st.info("Próximamente: visualización de los 8 análisis clave")
-
-    elif menu == "Modelos de ML":
-        st.header("🤖 Modelos de Machine Learning")
-        st.info("Próximamente: predicción de ventas, segmentación, recomendaciones...")
-
-    elif menu == "Mapa de sucursales":
-        st.header("🗺️ Visualización geográfica")
-        st.info("Próximamente: integración del mapa interactivo de sucursales")
-
-    elif menu == "Descargas":
-        st.header("📥 Exportación de datos y resultados")
-        st.info("Próximamente: descarga de reportes, gráficos y predicciones")
-
-else:
-    st.warning("🔒 Ingresá la clave correcta para acceder a la app")
+    
