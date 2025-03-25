@@ -689,7 +689,7 @@ if password == st.secrets["acceso"]["clave"]:
         sucursales_df.columns = sucursales_df.columns.str.strip()
         empleados_df.columns = empleados_df.columns.str.strip()
         
-            # Selector de sucursales
+             # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
@@ -730,24 +730,24 @@ if password == st.secrets["acceso"]["clave"]:
         ventas_df['Fecha'] = pd.to_datetime(ventas_df['Fecha'], errors='coerce')
         ventas_desde_2015 = ventas_df[ventas_df['Fecha'] >= '2015-01-01']
         
+        # Sumar las ventas anuales por ID_empleado
+        ventas_anuales = ventas_desde_2015.groupby('IdEmpleado')['Precio'].sum().reset_index()
+        
         # Relacionar empleados con ventas (usando 'IdEmpleado')
-        ventas_desde_2015 = ventas_desde_2015.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
+        ventas_con_empleados = ventas_anuales.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
                                                     left_on='IdEmpleado', right_on='ID_empleado', how='left')
         
         # Filtrar solo las ventas del empleado seleccionado en la sucursal seleccionada
-        ventas_desde_2015_sucursal = ventas_desde_2015[(ventas_desde_2015['Sucursal'] == sucursal_seleccionada) & 
-                                                      (ventas_desde_2015['Nombre'] == empleado_seleccionado)]
+        ventas_con_empleados_sucursal = ventas_con_empleados[(ventas_con_empleados['Sucursal'] == sucursal_seleccionada) & 
+                                                            (ventas_con_empleados['Nombre'] == empleado_seleccionado)]
         
         # Mostrar las ventas de ese empleado
-        st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_desde_2015_sucursal[['Nombre', 'Apellido', 'Precio']])
-        
-        # Agrupar las ventas por sucursal y calcular la media de ventas por empleado
-        ventas_por_sucursal = ventas_desde_2015_sucursal.groupby(['Sucursal', 'Nombre'])['Precio'].mean().reset_index()
+        st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_con_empleados_sucursal[['Nombre', 'Apellido', 'Precio']])
         
         # Graficar la media de ventas por empleado en cada sucursal
-        st.subheader(f"Media de ventas de {empleado_seleccionado} en la sucursal")
-        fig_ventas_sucursal = px.bar(ventas_por_sucursal, x='Nombre', y='Precio', color='Sucursal', 
-                                     title=f"Media de ventas por empleado en la sucursal {sucursal_seleccionada}")
+        st.subheader(f"Gráfico comparativo de ventas de {empleado_seleccionado}")
+        fig_ventas_sucursal = px.bar(ventas_con_empleados_sucursal, x='Nombre', y='Precio', color='Sucursal', 
+                                     title=f"Ventas de {empleado_seleccionado} en la sucursal {sucursal_seleccionada}")
         st.plotly_chart(fig_ventas_sucursal)
 
         
