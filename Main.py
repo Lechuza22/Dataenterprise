@@ -725,9 +725,9 @@ if password == st.secrets["acceso"]["clave"]:
         canal_eficiente = ventas_df.groupby("Canal")["Ventas"].sum().idxmax()
         st.write(f"El canal de ventas más eficiente es: {canal_eficiente}")
     
-        elif menu == "Descargas":
-            st.header("📥 Exportación de datos y resultados")
-            st.info("Próximamente: descarga de reportes, gráficos y predicciones")
+    elif menu == "Descargas":
+        st.header("📥 Exportación de datos y resultados")
+        st.info("Próximamente: descarga de reportes, gráficos y predicciones")
 
 else:
     st.warning("🔒 Ingresá la clave correcta para acceder a la app")
