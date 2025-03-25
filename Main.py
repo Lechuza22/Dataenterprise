@@ -680,7 +680,12 @@ if password == st.secrets["acceso"]["clave"]:
         
         # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
-        
+        # Cargar los datos
+        sucursales_df = pd.read_csv("Sucursales_transformado.csv")  # Asegúrate de tener este archivo con columnas: Sucursal, Latitud, Longitud
+        ventas_df = pd.read_csv("Venta_transformado.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
+        empleados_df = pd.read_csv("Empleados_transformados.csv")  # Columnas: Sucursal, Cantidad
+        productos_df = pd.read_csv("PRODUCTOS_transformado.csv")  # Columnas: Producto, Ventas
+
         # Creación del mapa
         m = folium.Map(location=[sucursales_df["Latitud"].mean(), sucursales_df["Longitud"].mean()], zoom_start=5)
         
