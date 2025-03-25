@@ -689,7 +689,7 @@ if password == st.secrets["acceso"]["clave"]:
         sucursales_df.columns = sucursales_df.columns.str.strip()
         empleados_df.columns = empleados_df.columns.str.strip()
         
-             # Selector de sucursales
+        # Selector de sucursales
         sucursal_seleccionada = st.selectbox("Selecciona una sucursal", ["Todas"] + list(sucursales_df["Sucursal"].unique()))
         
         # Creación del mapa
@@ -730,8 +730,11 @@ if password == st.secrets["acceso"]["clave"]:
         ventas_df['Fecha'] = pd.to_datetime(ventas_df['Fecha'], errors='coerce')
         ventas_desde_2015 = ventas_df[ventas_df['Fecha'] >= '2015-01-01']
         
-        # Sumar las ventas anuales por ID_empleado
-        ventas_anuales = ventas_desde_2015.groupby('IdEmpleado')['Precio'].sum().reset_index()
+        # Multiplicar el precio por la cantidad para obtener el total de la venta
+        ventas_desde_2015['Ventas_totales'] = ventas_desde_2015['Precio'] * ventas_desde_2015['Cantidad']
+        
+        # Sumar las ventas totales por ID_empleado
+        ventas_anuales = ventas_desde_2015.groupby('IdEmpleado')['Ventas_totales'].sum().reset_index()
         
         # Relacionar empleados con ventas (usando 'IdEmpleado')
         ventas_con_empleados = ventas_anuales.merge(empleados_df[['ID_empleado', 'Nombre', 'Apellido', 'Sucursal']], 
@@ -742,14 +745,13 @@ if password == st.secrets["acceso"]["clave"]:
                                                             (ventas_con_empleados['Nombre'] == empleado_seleccionado)]
         
         # Mostrar las ventas de ese empleado
-        st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_con_empleados_sucursal[['Nombre', 'Apellido', 'Precio']])
+        st.write(f"Ventas de {empleado_seleccionado} desde 2015", ventas_con_empleados_sucursal[['Nombre', 'Apellido', 'Ventas_totales']])
         
         # Graficar la media de ventas por empleado en cada sucursal
         st.subheader(f"Gráfico comparativo de ventas de {empleado_seleccionado}")
-        fig_ventas_sucursal = px.bar(ventas_con_empleados_sucursal, x='Nombre', y='Precio', color='Sucursal', 
+        fig_ventas_sucursal = px.bar(ventas_con_empleados_sucursal, x='Nombre', y='Ventas_totales', color='Sucursal', 
                                      title=f"Ventas de {empleado_seleccionado} en la sucursal {sucursal_seleccionada}")
         st.plotly_chart(fig_ventas_sucursal)
-
         
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
