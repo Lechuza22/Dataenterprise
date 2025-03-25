@@ -29,7 +29,7 @@ if password == st.secrets["acceso"]["clave"]:
     ])
 
     st.sidebar.markdown("---")
-    st.sidebar.markdown("👤 Usuario: dueño")
+    st.sidebar.markdown("👤 Usuario: Admin")
 
     # -----------------------------
     # CONTENIDO POR SECCION
