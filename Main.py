@@ -457,7 +457,7 @@ if password == st.secrets["acceso"]["clave"]:
             ax.legend()
             st.pyplot(fig)
 
-        if analisis_opcion == "📍 Sucursales con más ventas vs. más gastos":
+        elif analisis_opcion == "📍 Sucursales con más ventas vs. más gastos":
             st.markdown("### 📍 Sucursales con más ventas vs. más gastos")
             st.markdown("🔎 ¿Qué observamos?\n- Las sucursales con mayor volumen de ventas no siempre son las que más gastan.\n- Algunas sucursales tienen gastos elevados en proporción a sus ventas, lo que podría indicar:\n    - Ineficiencia operativa\n    - Costos fijos altos\n    - Gasto en infraestructura/logística no rentable\n\n💡 Ideal para analizar rentabilidad por punto de venta.")
         
@@ -492,7 +492,43 @@ if password == st.secrets["acceso"]["clave"]:
             ax.legend()
             st.pyplot(fig)
 
-
+        elif analisis_opcion == "💸 Relación entre salario de empleados y volumen de ventas":
+                st.markdown("### 💸 Relación entre salario de empleados y volumen de ventas")
+                st.markdown("🔎 ¿Qué revela el gráfico?
+        - No hay una correlación directa fuerte entre salario y ventas generadas.
+        - Algunos empleados con salarios medios generan altas ventas, lo cual sugiere alto rendimiento.
+        - También hay empleados con salario alto y ventas bajas, lo cual puede indicar:
+            - Cargos administrativos
+            - Antigüedad o jerarquía sin tareas comerciales directas
+        
+        💡 Muy útil para evaluar productividad individual y tomar decisiones sobre incentivos o comisiones.")
+        
+                df_empleados = pd.read_csv("Empleados_transformados.csv")
+                df_ventas = pd.read_csv("Venta_transformado.csv")
+        
+                ventas_empleado = df_ventas.groupby("IdEmpleado").size().reset_index(name="Ventas")
+                empleados_merge = df_empleados.merge(ventas_empleado, left_on="ID_empleado", right_on="IdEmpleado", how="left").fillna(0)
+                top_20 = empleados_merge.sort_values(by="Ventas", ascending=False).head(20)
+        
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sns.scatterplot(data=top_20, x="Salario", y="Ventas", hue="Nombre", ax=ax)
+                ax.set_title("Relación entre salario y volumen de ventas (Top 20 empleados)")
+                st.pyplot(fig)
+        
+                # Comparador entre dos empleados
+                st.markdown("### 🤝 Comparador entre empleados")
+                opciones = top_20["Nombre"].tolist()
+                col1, col2 = st.columns(2)
+                with col1:
+                    emp1 = st.selectbox("Empleado 1", opciones, key="emp1")
+                with col2:
+                    emp2 = st.selectbox("Empleado 2", opciones, key="emp2")
+        
+                emp_data = top_20[top_20["Nombre"].isin([emp1, emp2])]
+                fig2, ax2 = plt.subplots()
+                sns.barplot(data=emp_data, x="Nombre", y="Ventas", ax=ax2, palette="viridis")
+                ax2.set_title("Comparación de volumen de ventas entre empleados")
+                st.pyplot(fig2)
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
