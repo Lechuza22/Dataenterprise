@@ -54,7 +54,7 @@ if password == st.secrets["acceso"]["clave"]:
 
         if dataset_opcion == "Clientes":
             st.subheader("🧍‍♂️ Exploración de Clientes")
-            st.markdown("✅ Conclusiones preliminares del análisis del dataset Clientes:- Edad promedio de los clientes es de 40 años, con una alta concentración entre los 25 y 55.- Hay una clara concentración geográfica en el AMBA, especialmente Ciudad de Buenos Aires.- El 100% de los clientes están activos (no hay marca de baja).- La diversidad de localidades es grande (527), pero unas pocas concentran la mayoría.- La base de clientes parece limpia y homogénea, con pocos outliers.")
+            st.markdown("✅ Conclusiones preliminares del análisis del dataset Clientes: - Edad promedio de los clientes es de 40 años, con una alta concentración entre los 25 y 55.\n- Hay una clara concentración geográfica en el AMBA, especialmente Ciudad de Buenos Aires.\n- El 100% de los clientes están activos (no hay marca de baja).\n- La diversidad de localidades es grande (527), pero unas pocas concentran la mayoría.\n- La base de clientes parece limpia y homogénea, con pocos outliers.")
 
             df_clientes = pd.read_csv("Clientes_transformados.csv")
 
