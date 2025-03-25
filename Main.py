@@ -522,40 +522,49 @@ if password == st.secrets["acceso"]["clave"]:
             sns.barplot(data=emp_data, x="Nombre", y="Ventas", ax=ax2, palette="viridis")
             ax2.set_title("Comparación de volumen de ventas entre empleados")
             st.pyplot(fig2)
+            
         elif analisis_opcion == "🛒 Canal de venta vs. volumen/monto de ventas":
             st.markdown("### 🛒 Canal de venta vs. volumen/monto de ventas")
-            st.markdown("🔎 ¿Qué revela el gráfico?\n- Compara el volumen y el monto de ventas por canal.\n- Permite identificar cuál canal tiene mayor actividad o ingresos.\n\n💡 Útil para ajustar estrategias comerciales y reforzar canales más rentables.")
+            st.markdown("🔎 ¿Qué revela el gráfico?\n- Compara el volumen y la distribución de ventas por canal.\n- Permite identificar cuál canal tiene mayor actividad o ingresos.\n\n💡 Útil para ajustar estrategias comerciales y reforzar canales más rentables.")
         
+            # Carga de datasets
             df_ventas = pd.read_csv("Venta_transformado.csv")
             df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+            df_canal = pd.read_csv("CanalDeVenta_Tranfor.csv")
         
-            # Asignar nombres a los canales
-            canales = {1: "Tienda Física", 2: "Online", 3: "Mayorista", 4: "Otros"}
-            df_ventas["Canal"] = df_ventas["IdCanal"].map(canales)
+            # Asegurar tipos compatibles
+            df_ventas["IdCanal"] = df_ventas["IdCanal"].astype(str).str.strip()
+            df_canal["CODIGO"] = df_canal["CODIGO"].astype(str).str.strip()
         
-            # Merge con productos para obtener el precio
+            # Merge: ventas + canal + productos (para precios)
+            df_ventas = df_ventas.merge(df_canal, left_on="IdCanal", right_on="CODIGO", how="left")
             df_ventas = df_ventas.merge(df_productos[["ID_PRODUCTO", "Precio"]], left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
-            df_ventas["Monto"] = df_ventas["Precio"]
         
-            # Volumen de ventas por canal
-            st.markdown("#### 📦 Cantidad de ventas por canal")
-            ventas_canal = df_ventas["Canal"].value_counts().reset_index()
-            ventas_canal.columns = ["Canal", "Cantidad"]
+            # Agrupar por canal
+            canal_resumen = df_ventas.groupby("DESCRIPCION").agg({
+                "Cantidad": "sum",
+                "Precio": "sum"
+            }).reset_index().rename(columns={"Cantidad": "Total_Vendido", "Precio": "Monto_Total"})
         
-            fig1, ax1 = plt.subplots()
-            sns.barplot(data=ventas_canal, x="Canal", y="Cantidad", ax=ax1, palette="Set2")
-            ax1.set_title("Cantidad de ventas por canal")
-            st.pyplot(fig1)
+            # Visualización combinada
+            fig, ax1 = plt.subplots(figsize=(10, 6))
         
-            # Monto real por canal
-            st.markdown("#### 💰 Monto total de ventas por canal (con precio real)")
-            monto_canal = df_ventas.groupby("Canal")["Monto"].sum().reset_index()
+            sns.barplot(data=canal_resumen, x="DESCRIPCION", y="Total_Vendido", ax=ax1, color="skyblue")
+            ax1.set_ylabel("Total de productos vendidos", color="skyblue")
+            ax1.set_xlabel("Canal de venta")
+            ax1.set_title("Volumen y monto de ventas por canal")
+            ax1.tick_params(axis='y', labelcolor="skyblue")
+            plt.xticks(rotation=30)
         
-            fig2, ax2 = plt.subplots()
-            sns.barplot(data=monto_canal, x="Canal", y="Monto", ax=ax2, palette="Set1")
-            ax2.set_title("Monto total por canal")
-            ax2.set_ylabel("Monto en $")
-            st.pyplot(fig2)
+            # Eje secundario para monto total
+            ax2 = ax1.twinx()
+            sns.lineplot(data=canal_resumen, x="DESCRIPCION", y="Monto_Total", ax=ax2, color="darkblue", marker="o", label="Monto Total ($)")
+            ax2.set_ylabel("Monto total ($)", color="darkblue")
+            ax2.tick_params(axis='y', labelcolor="darkblue")
+        
+            plt.tight_layout()
+            st.pyplot(fig)
+
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
