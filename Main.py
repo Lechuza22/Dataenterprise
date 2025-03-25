@@ -542,15 +542,15 @@ if password == st.secrets["acceso"]["clave"]:
         
             # Agrupar por canal
             canal_resumen = df_ventas.groupby("DESCRIPCION").agg({
-                "Cantidad": "sum",
+                "IdVenta": "count",
                 "Precio": "sum"
-            }).reset_index().rename(columns={"Cantidad": "Total_Vendido", "Precio": "Monto_Total"})
+            }).reset_index().rename(columns={"IdVenta": "Total_Vendido", "Precio": "Monto_Total"})
         
             # Visualización combinada
             fig, ax1 = plt.subplots(figsize=(10, 6))
         
             sns.barplot(data=canal_resumen, x="DESCRIPCION", y="Total_Vendido", ax=ax1, color="skyblue")
-            ax1.set_ylabel("Total de productos vendidos", color="skyblue")
+            ax1.set_ylabel("Cantidad de ventas", color="skyblue")
             ax1.set_xlabel("Canal de venta")
             ax1.set_title("Volumen y monto de ventas por canal")
             ax1.tick_params(axis='y', labelcolor="skyblue")
@@ -564,6 +564,7 @@ if password == st.secrets["acceso"]["clave"]:
         
             plt.tight_layout()
             st.pyplot(fig)
+
 
 
     elif menu == "Modelos de ML":
