@@ -327,8 +327,30 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Sucursales":
             st.subheader("🏢 Exploración de Sucursales")
-            st.markdown("- Desempeño desigual entre sedes.\n- Diferencias marcadas en volumen de ventas y gastos.\n- Conclusión: requiere gestión individualizada y auditoría local.")
-            st.image("graficos/sucursales_rendimiento.png")
+            st.markdown("✅ Conclusiones del análisis del dataset Sucursales:\n- La empresa tiene 31 sucursales distribuidas en 17 provincias argentinas.\n- La mayor presencia está en Buenos Aires (9 sucursales).\n- Varias localidades clave tienen más de una sucursal: CABA, Rosario, Mendoza, etc.\n- Las coordenadas permiten análisis espaciales y mapas.\n- Hay posibles redundancias en nombres de localidades (\"CABA\" y \"Ciudad de Buenos Aires\").")
+        
+            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
+        
+            # Conteo por provincia
+            st.markdown("### 🗺️ Cantidad de sucursales por provincia")
+            fig1, ax1 = plt.subplots()
+            df_sucursales["Provincia"].value_counts().plot(kind="bar", ax=ax1, color="lightblue")
+            ax1.set_title("Sucursales por provincia")
+            st.pyplot(fig1)
+        
+            # Conteo por localidad
+            st.markdown("### 🏙️ Top localidades con más sucursales")
+            fig2, ax2 = plt.subplots()
+            df_sucursales["Localidad"].value_counts().head(10).plot(kind="bar", ax=ax2, color="lightgreen")
+            ax2.set_title("Top localidades")
+            st.pyplot(fig2)
+        
+            # Mapa de sucursales
+            st.markdown("### 🌍 Mapa geográfico de sucursales")
+            mapa = folium.Map(location=[df_sucursales["Y"].mean(), df_sucursales["X"].mean()], zoom_start=5)
+            for _, row in df_sucursales.iterrows():
+                folium.Marker(location=[row["Y"], row["X"]], popup=row["Sucursal"]).add_to(mapa)
+            st_folium(mapa, width=700, height=400)
 
         elif dataset_opcion == "Ventas":
             st.subheader("💰 Exploración de Ventas")
