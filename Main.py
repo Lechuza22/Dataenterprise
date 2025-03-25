@@ -207,8 +207,52 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Gastos":
             st.subheader("💸 Exploración de Gastos")
-            st.markdown("- Tipos frecuentes: logística, servicios e insumos.\n- Sucursales con alto gasto relativo frente a ventas.\n- Conclusión: oportunidad de control presupuestario por sede.")
-            st.image("graficos/gastos_sucursal.png")
+            st.markdown("✅ Conclusiones preliminares del dataset Gasto:\n- El monto promedio por gasto es de $660, con un máximo de casi $1.200.\n- El gasto diario es estable, con picos regulares, lo que sugiere planificación.\n- Las sucursales 18, 1 y 2 son las de mayor gasto.\n- Los tipos de gasto 1 y 4 concentran la mayor parte del presupuesto.\n- No se observan outliers ni anomalías significativas.")
+        
+            df_gastos = pd.read_csv("Gasto_transformado.csv")
+        
+            # Histograma de montos
+            st.markdown("### 💰 Distribución de Montos de Gasto")
+            fig1, ax1 = plt.subplots()
+            sns.histplot(df_gastos["Monto"], bins=30, kde=True, color="coral", ax=ax1)
+            ax1.set_title("Distribución de montos de gasto")
+            st.pyplot(fig1)
+        
+            # Gasto por tipo
+            st.markdown("### 🧾 Gasto por Tipo")
+            fig2, ax2 = plt.subplots()
+            df_gastos["IdTipoGasto"].value_counts().plot(kind="bar", ax=ax2, color="orchid")
+            ax2.set_title("Cantidad de registros por tipo de gasto")
+            st.pyplot(fig2)
+        
+            # Gasto por sucursal
+            st.markdown("### 🏢 Gasto total por Sucursal")
+            gasto_sucursal = df_gastos.groupby("IdSucursal")["Monto"].sum().sort_values(ascending=False)
+            fig3, ax3 = plt.subplots()
+            gasto_sucursal.plot(kind="bar", ax=ax3, color="skyblue")
+            ax3.set_title("Gasto total por sucursal")
+            st.pyplot(fig3)
+        
+            # Serie temporal de gastos
+            st.markdown("### 📅 Evolución temporal de los gastos")
+            df_gastos["Fecha"] = pd.to_datetime(df_gastos["Fecha"])
+            serie = df_gastos.groupby("Fecha")["Monto"].sum()
+            fig4, ax4 = plt.subplots()
+            serie.plot(ax=ax4, color="green")
+            ax4.set_title("Gastos diarios totales")
+            st.pyplot(fig4)
+            
+            # Heatmap de correlación
+                st.markdown("### 🔥 Correlación entre variables numéricas")
+                fig5, ax5 = plt.subplots()
+                sns.heatmap(df_gastos.select_dtypes(include="number").corr(), annot=True, cmap="coolwarm", ax=ax5)
+                ax5.set_title("Matriz de correlaciones - Gastos")
+                st.pyplot(fig5)
+            
+            # Estadísticas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_gastos.describe())
+        
 
         elif dataset_opcion == "Productos":
             st.subheader("📦 Exploración de Productos")
