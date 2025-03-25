@@ -410,14 +410,14 @@ if password == st.secrets["acceso"]["clave"]:
         st.header("🔀 Análisis cruzado entre áreas")
 
         analisis_opcion = st.selectbox("Seleccioná el análisis cruzado a visualizar:", [
-    "🛍️ Productos más vendidos vs. más comprados",
-    "📍 Sucursales con más ventas vs. más gastos",
-    "💸 Relación entre salario de empleados y volumen de ventas",
-    "👥 Perfil de cliente vs. tipo de producto vendido",
-    "🛒 Canal de venta vs. volumen/monto de ventas",
-    "🔁 Tipo de gasto más frecuente por sucursal",
-    "📊 Proveedor con mayor volumen de compra",
-    "💡 Comparar precios de compra vs. venta por producto (margen)"
+    "Productos más vendidos vs. más comprados",
+    "Sucursales con más ventas vs. más gastos",
+    "Relación entre salario de empleados y volumen de ventas",
+    "Perfil de cliente vs. tipo de producto vendido",
+    "Canal de venta vs. volumen/monto de ventas",
+    "Tipo de gasto más frecuente por sucursal",
+    "Proveedor con mayor volumen de compra",
+    "Comparar precios de compra vs. venta por producto (margen)"
                 "💡 Comparar precios de compra vs. venta por producto (margen)"
                 ])
          
