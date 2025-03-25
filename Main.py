@@ -427,7 +427,7 @@ if password == st.secrets["acceso"]["clave"]:
             df_compras = pd.read_csv("Compra_transformada.csv")
         
             # Agrupamos cantidad de compras por cliente
-            compras_por_cliente = df_compras.groupby("IdCliente")["Cantidad"].sum().reset_index()
+            compras_por_cliente = df_compras.groupby("ID")["Cantidad"].sum().reset_index()
             compras_por_cliente.columns = ["ID", "Cantidad_Comprada"]
         
             # Merge con clientes
