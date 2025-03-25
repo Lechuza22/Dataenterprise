@@ -46,10 +46,23 @@ if password == st.secrets["acceso"]["clave"]:
             "Clientes", "Compras", "Empleados", "Gastos", "Productos", "Proveedores", "Sucursales", "Ventas"
         ])
 
-        if dataset_opcion == "Clientes":
+         if dataset_opcion == "Clientes":
             st.subheader("🧍‍♂️ Exploración de Clientes")
             st.markdown("- Edad promedio: 42 años.\n- Mayoría en provincias como Buenos Aires, Córdoba y Santa Fe.\n- Conclusión: los clientes se concentran en zonas urbanas con fuerte potencial de segmentación.")
-            st.image("graficos/clientes_edad.png")
+
+            df_clientes = pd.read_csv("Clientes_transformados.csv")
+
+            # Histograma de edades
+            fig, ax = plt.subplots(figsize=(8, 4))
+            sns.histplot(df_clientes["Edad"], bins=20, kde=True, ax=ax, color="skyblue")
+            ax.set_title("Distribución de edades de los clientes")
+            ax.set_xlabel("Edad")
+            ax.set_ylabel("Cantidad")
+            st.pyplot(fig)
+
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_clientes.describe())
 
         elif dataset_opcion == "Compras":
             st.subheader("🛒 Exploración de Compras")
