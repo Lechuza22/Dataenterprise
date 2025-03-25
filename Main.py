@@ -104,7 +104,9 @@ if password == st.secrets["acceso"]["clave"]:
             st.dataframe(df_clientes.describe())
 
         elif dataset_opcion == "Compras":
-            
+            st.subheader("🛒 Exploración de Compras")
+            st.markdown("✅ Conclusiones preliminares del análisis de Compras:- El volumen principal de compras se concentra en productos de bajo a mediano precio (menos de $1200).\n-Se compran en promedio 9 unidades por operación, con pocas compras mayores a 25 unidades..\n- Proveedor 8, seguido de 12 y 7, domina en volumen de compras..\n- No hay relación directa entre Precio y Cantidad, lo que sugiere que el tipo de producto define el patrón más que el monto.\n- Existen outliers en precios que podrían representar productos premium, errores de carga o compras especiales.")
+          
             df_compras = pd.read_csv("Compra_transformada.csv")
 
             # Histograma de cantidad de compras
@@ -126,6 +128,19 @@ if password == st.secrets["acceso"]["clave"]:
             ax2.set_ylabel("Número de compras")
             st.pyplot(fig2)
 
+            # Heatmap de correlaciones
+            st.markdown("### 🔥 Correlación entre variables numéricas")
+            corr_compras = df_compras.select_dtypes(include=['float64', 'int64']).corr()
+            fig4, ax4 = plt.subplots()
+            sns.heatmap(corr_compras, annot=True, cmap="coolwarm", ax=ax4)
+            ax4.set_title("Heatmap de correlaciones - Compras")
+            st.pyplot(fig4)
+
+            # Matriz de frecuencia Producto vs Proveedor
+            st.markdown("### 🧾 Matriz Producto vs Proveedor")
+            matriz = pd.crosstab(df_compras['IdProducto'], df_compras['IdProveedor'])
+            st.dataframe(matriz.head(10))
+
             # Visualización bivariada: IdProducto vs Cantidad
             st.markdown("### 📊 Relación entre Producto y Cantidad Comprada")
             fig3, ax3 = plt.subplots(figsize=(10, 4))
@@ -134,6 +149,8 @@ if password == st.secrets["acceso"]["clave"]:
                         x="IdProducto", y="Cantidad", ax=ax3, palette="pastel")
             ax3.set_title("Distribución de cantidades por producto (Top 10)")
             st.pyplot(fig3)
+
+
 
             # Estadísticas descriptivas
             st.subheader("📋 Estadísticas descriptivas")
