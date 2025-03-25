@@ -743,7 +743,7 @@ if password == st.secrets["acceso"]["clave"]:
         # Graficar las ventas de cada empleado
         st.subheader("Gráfico comparativo de ventas por empleado")
         fig_ventas_empleado = px.bar(ventas_por_empleado, x='Nombre', y='Precio', color='Apellido', title="Ventas por Empleado desde 2015")
-        st.plotly_chart(fig_ventas_empleado
+        st.plotly_chart(fig_ventas_empleado)
     
     elif menu == "Descargas":
         st.header("📥 Exportación de datos y resultados")
