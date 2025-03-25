@@ -354,8 +354,53 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Ventas":
             st.subheader("💰 Exploración de Ventas")
-            st.markdown("- Canales online y tienda física dominan.\n- Picos de venta en ciclos mensuales.\n- Conclusión: se puede predecir estacionalidad y optimizar promociones.")
-            st.image("graficos/ventas_canal.png")
+            st.markdown("✅ Conclusiones del análisis del dataset Ventas:\n- El volumen de ventas es muy alto (más de 46.000 registros).\n- La mayoría de las ventas son de 1 a 3 unidades, con pocos casos mayores a 10.\n- Las ventas diarias son constantes, con picos estacionales.\n- Los productos más vendidos incluyen:\n    - Periféricos (mouse pads)\n    - Estuchería (mochilas y fundas)\n    - Insumos (cartuchos, limpiadores)\n- Hay una coherencia importante con los productos más comprados, lo que sugiere buena planificación de stock.")
+        
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_ventas["Fecha"] = pd.to_datetime(df_ventas["Fecha"])
+        
+            # Ventas mensuales
+            st.markdown("### 📅 Ventas mensuales")
+            ventas_mensuales = df_ventas.groupby(df_ventas["Fecha"].dt.to_period("M")).size()
+            ventas_mensuales.index = ventas_mensuales.index.to_timestamp()
+            fig1, ax1 = plt.subplots()
+            ventas_mensuales.plot(ax=ax1, color="green")
+            ax1.set_title("Ventas mensuales")
+            st.pyplot(fig1)
+        
+            # Ventas por canal
+            st.markdown("### 🛍️ Ventas por canal")
+            fig2, ax2 = plt.subplots()
+            df_ventas["IdCanal"].value_counts().plot(kind="bar", ax=ax2, color="skyblue")
+            ax2.set_title("Cantidad de ventas por canal")
+            st.pyplot(fig2)
+        
+            # Ventas por sucursal
+            st.markdown("### 🏢 Ventas por sucursal")
+            fig3, ax3 = plt.subplots()
+            df_ventas["IdSucursal"].value_counts().plot(kind="bar", ax=ax3, color="orange")
+            ax3.set_title("Ventas por sucursal")
+            st.pyplot(fig3)
+
+            # Top productos más vendidos (con nombre)
+            st.markdown("### 🏆 Top 10 productos más vendidos (por nombre)")
+            df_productos = pd.read_csv("PRODUCTOS_transformado.csv")
+            top_ventas = df_ventas["IdProducto"].value_counts().head(10).reset_index()
+            top_ventas.columns = ["IdProducto", "Total"]
+            top_ventas = top_ventas.merge(df_productos[["ID_PRODUCTO", "Concepto"]], left_on="IdProducto", right_on="ID_PRODUCTO")
+            
+            fig, ax = plt.subplots()
+            sns.barplot(data=top_ventas, x="Total", y="Concepto", ax=ax, palette="Blues_d")
+            ax.set_title("Productos más vendidos (por nombre)")
+            ax.set_xlabel("Cantidad vendida")
+            ax.set_ylabel("Producto")
+            st.pyplot(fig)
+
+            
+            # Estadísticas descriptivas
+            st.subheader("📋 Estadísticas descriptivas")
+            st.dataframe(df_ventas.describe())
+
 
     elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
