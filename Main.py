@@ -639,7 +639,7 @@ if password == st.secrets["acceso"]["clave"]:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-      elif analisis_opcion == "💡 Comparar precios de compra vs. venta por producto (margen)":
+        elif analisis_opcion == "💡 Comparar precios de compra vs. venta por producto (margen)":
             st.markdown("### 💡 Comparar precios de compra vs. venta por producto (margen)")
             st.markdown("🔎 ¿Qué muestra el gráfico?\n- Compara el precio promedio de compra y venta de cada producto.\n- Muestra el margen estimado por unidad.\n\n💡 Muy útil para análisis de rentabilidad por producto y toma de decisiones comerciales.")
         
