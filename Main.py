@@ -698,8 +698,8 @@ if password == st.secrets["acceso"]["clave"]:
         st_folium(m, width=700, height=500)
         
         # Carga de datos de ventas y empleados (ejemplo)
-        ventas_df = pd.read_csv("ventas.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
-        empleados_df = pd.read_csv("empleados.csv")  # Columnas: Sucursal, Cantidad
+        ventas_df = pd.read_csv("Venta_transformado.csv")  # Columnas: Sucursal, Fecha, Ventas, Producto, Cliente, Canal
+        empleados_df = pd.read_csv("Empleados_transformados.csv")  # Columnas: Sucursal, Cantidad
         
         # Filtrar por sucursal seleccionada
         if sucursal_seleccionada != "Todas":
