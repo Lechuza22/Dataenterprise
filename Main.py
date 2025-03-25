@@ -300,8 +300,30 @@ if password == st.secrets["acceso"]["clave"]:
 
         elif dataset_opcion == "Proveedores":
             st.subheader("🏭 Exploración de Proveedores")
-            st.markdown("- Dependencia de pocos proveedores clave.\n- Variabilidad en precios y frecuencia de compra.\n- Conclusión: posible mejora en condiciones de negociación.")
-            st.image("graficos/proveedores_top.png")
+            st.markdown("✅ Conclusiones del análisis del dataset Proveedores:\n- Hay un total de 14 proveedores registrados, todos en Argentina.\n- La mayoría se encuentran en la provincia de Buenos Aires, especialmente en el departamento capital.\n- Hay 3 proveedores repetidos por nombre, lo que sugiere sucursales o registros duplicados.\n- El dataset parece limpio, sin valores nulos, aunque podría mejorarse agregando CUIT, rubros, emails o teléfonos.")
+        
+            df_proveedores = pd.read_csv("Proveedores_transformado.csv")
+        
+            # Proveedores por provincia
+            st.markdown("### 🗺️ Proveedores por Provincia")
+            fig1, ax1 = plt.subplots()
+            df_proveedores['State'].value_counts().plot(kind='bar', ax=ax1, color='skyblue')
+            ax1.set_title("Cantidad de proveedores por provincia")
+            st.pyplot(fig1)
+        
+            # Proveedores por ciudad
+            st.markdown("### 🏙️ Proveedores por Ciudad")
+            fig2, ax2 = plt.subplots()
+            df_proveedores['City'].value_counts().head(10).plot(kind='bar', ax=ax2, color='coral')
+            ax2.set_title("Top 10 ciudades con más proveedores")
+            st.pyplot(fig2)
+        
+            # Duplicados por nombre
+            st.markdown("### 🔍 Posibles Duplicados por Nombre")
+            duplicados = df_proveedores['Nombre'].value_counts()
+            duplicados = duplicados[duplicados > 1]
+            st.dataframe(duplicados)
+
 
         elif dataset_opcion == "Sucursales":
             st.subheader("🏢 Exploración de Sucursales")
