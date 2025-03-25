@@ -5,6 +5,7 @@ import seaborn as sns
 import seaborn.objects as so
 import folium
 from streamlit_folium import st_folium
+import plotly.express as px
 
 # -----------------------------
 # CONFIGURACION INICIAL
@@ -415,7 +416,7 @@ if password == st.secrets["acceso"]["clave"]:
             "💸 Relación entre salario de empleados y volumen de ventas",
             "👥 Perfil de cliente vs. tipo de producto vendido",
             "🛒 Canal de venta vs. volumen/monto de ventas",
-            "🔁 Tipo de gasto más frecuente por sucursal",
+            "📈 Evolución histórica de ventas por canal",
             "📊 Proveedor con mayor volumen de compra",
             "💡 Comparar precios de compra vs. venta por producto (margen)"
         ])
@@ -612,29 +613,32 @@ if password == st.secrets["acceso"]["clave"]:
             ax.tick_params(axis='x', rotation=45)
             st.pyplot(fig)
             
-        elif analisis_opcion == "🔁 Tipo de gasto más frecuente por sucursal":
-            st.markdown("### 🔁 Tipo de gasto más frecuente por sucursal")
-            st.markdown("🔎 ¿Qué muestra el gráfico?\n- Muestra los tipos de gasto más comunes por cada sucursal.\n- Ayuda a entender en qué se gasta más en cada sede.\n\n💡 Útil para auditoría y reducción de gastos operativos.")
+        elif analisis_opcion == "📈 Evolución histórica de ventas por canal":
+            st.markdown("### 📈 Evolución histórica de ventas por canal")
+            st.markdown("🔎 ¿Qué revela el gráfico?\n- Muestra cómo evolucionaron las ventas en el tiempo según el canal de comercialización.\n- Ayuda a detectar estacionalidades, tendencias de migración entre canales, y evaluar desempeño a largo plazo.\n\n💡 Ideal para planificación comercial y campañas estacionales.")
         
-            df_gastos = pd.read_csv("Gasto_transformado.csv")
-            df_sucursales = pd.read_csv("Sucursales_transformado.csv")
-            df_tipo_gasto = pd.read_csv("TiposDeGasto_T.csv")
+            df_ventas = pd.read_csv("Venta_transformado.csv")
+            df_canal = pd.read_csv("CanalDeVenta_Tranfor.csv")
         
-            # Merge para obtener nombres legibles
-            df_gastos = df_gastos.merge(df_sucursales, left_on="IdSucursal", right_on="ID", how="left")
-            df_gastos = df_gastos.merge(df_tipo_gasto, left_on="IdTipoGasto", right_on="IdTipoGasto", how="left")
+            df_ventas["Fecha"] = pd.to_datetime(df_ventas["Fecha"])
+            df_ventas["IdCanal"] = df_ventas["IdCanal"].astype(str).str.strip()
+            df_canal["CODIGO"] = df_canal["CODIGO"].astype(str).str.strip()
+            df_ventas = df_ventas.merge(df_canal, left_on="IdCanal", right_on="CODIGO", how="left")
         
-            # Tabla cruzada
-            pivot = pd.crosstab(df_gastos["Sucursal"], df_gastos["Descripcion"])
+            df_ventas["Mes"] = df_ventas["Fecha"].dt.to_period("M").dt.to_timestamp()
+            resumen = df_ventas.groupby(["Mes", "DESCRIPCION"]).size().reset_index(name="Cantidad")
         
-            # Heatmap
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.heatmap(pivot, cmap="YlGnBu", linewidths=0.5, ax=ax)
-            ax.set_title("Frecuencia de tipos de gasto por sucursal")
-            ax.set_xlabel("Tipo de gasto")
-            ax.set_ylabel("Sucursal")
-            st.pyplot(fig)
-        
+            fig = px.line(
+                resumen,
+                x="Mes",
+                y="Cantidad",
+                color="DESCRIPCION",
+                markers=True,
+                title="Evolución mensual de ventas por canal",
+                labels={"DESCRIPCION": "Canal de Venta", "Mes": "Fecha", "Cantidad": "Cantidad de Ventas"},
+            )
+            st.plotly_chart(fig, use_container_width=True)
+                
                 
 
 
