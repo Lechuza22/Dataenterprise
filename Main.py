@@ -408,7 +408,19 @@ if password == st.secrets["acceso"]["clave"]:
 
     elif menu == "Análisis cruzado":
         st.header("🔀 Análisis cruzado entre áreas")
-        st.info("Próximamente: visualización de los 8 análisis clave")
+
+        analisis_opcion = st.selectbox("Seleccioná el análisis cruzado a visualizar:", [
+            "Clientes vs Compras",
+            "Ventas vs Empleados",
+            "Ventas vs Productos",
+            "Gastos vs Sucursales",
+            "Compras vs Proveedores",
+            "Ventas vs Canal",
+            "Empleados vs Sucursal",
+            "Ventas vs Rentabilidad"
+        ])
+
+        st.info(f"🔎 Seleccionaste: {analisis_opcion}. Visualización disponible próximamente.")
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
