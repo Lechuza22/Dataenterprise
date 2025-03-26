@@ -708,106 +708,165 @@ if st.session_state.authenticated:
             modelo = st.selectbox("Elegí un modelo de ML:", [
                 "Regresión Lineal", "Random Forest", "ARIMA (Series Temporales)"
             ])
-
-        # Cargar dataset de compras
-        @st.cache_data
-        def load_compras():
-            return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
-        
-        df = load_compras()
     
-        if modelo in ["Regresión Lineal", "Random Forest"]:
+            @st.cache_data
+            def load_compras():
+                return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
+            
+            df = load_compras()
+    
+            if modelo in ["Regresión Lineal", "Random Forest"]:
+                df["mes"] = df["Fecha"].dt.month
+                df["año"] = df["Fecha"].dt.year
+    
+                features = ["mes", "año"]
+                if "IdProducto" in df.columns:
+                    features.append("IdProducto")
+                if "IdProveedor" in df.columns:
+                    features.append("IdProveedor")
+    
+                X = df[features]
+                y = df["Cantidad"]
+    
+                X = pd.get_dummies(X, columns=["IdProducto", "IdProveedor"], drop_first=True)
+    
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X, y, test_size=0.2, random_state=42)
+    
+                if modelo == "Regresión Lineal":
+                    model = LinearRegression()
+                    st.markdown("#### 🧠 Sobre el modelo: Regresión Lineal")
+                    st.markdown("""
+                    Modelo simple que busca predecir la cantidad comprada a partir de variables como mes, año, producto y proveedor.  
+                    Es útil para observar tendencias generales.
+                    """)
+                else:
+                    model = RandomForestRegressor(n_estimators=100, random_state=42)
+                    st.markdown("#### 🌲 Sobre el modelo: Random Forest")
+                    st.markdown("""
+                    Modelo basado en árboles de decisión, más robusto ante relaciones no lineales.  
+                    Mejora la precisión en escenarios más complejos como compras por proveedor y producto.
+                    """)
+    
+                model.fit(X_train, y_train)
+                y_pred = model.predict(X_test)
+    
+                try:
+                    rmse = np.sqrt(mean_squared_error(y_test, np.ravel(y_pred)))
+                    st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
+                except Exception as e:
+                    st.error(f"❌ Error en cálculo de RMSE: {e}")
+    
+                try:
+                    st.markdown("#### 📊 Comparación entre valores reales y predichos")
+                    chart_df = pd.DataFrame({
+                        "Real": y_test.values[:50],
+                        "Predicho": np.ravel(y_pred)[:50]
+                    })
+                    st.line_chart(chart_df)
+                except Exception as e:
+                    st.error(f"❌ Error en gráfico: {e}")
+    
+            elif modelo == "ARIMA (Series Temporales)":
+                st.info("Usando solo la serie temporal agregada total por mes.")
+                st.markdown("#### ⏳ Sobre el modelo: ARIMA")
+                st.markdown("""
+                ARIMA es un modelo estadístico para series temporales que predice la cantidad total de productos comprados mes a mes, 
+                a partir del comportamiento histórico de la demanda.
+                """)
+    
+                df_ts = df.copy()
+                df_ts = df_ts.set_index("Fecha").resample("M").sum(numeric_only=True)["Cantidad"]
+    
+                st.line_chart(df_ts)
+    
+                try:
+                    model = sm.tsa.ARIMA(df_ts, order=(1, 1, 1))
+                    results = model.fit()
+                    forecast = results.forecast(steps=6)
+    
+                    st.write("📈 Predicción para los próximos 6 meses:")
+                    st.line_chart(forecast)
+                except Exception as e:
+                    st.error(f"❌ Error en modelo ARIMA: {e}")
+    
+        # -----------------------------
+        # VENTAS
+        # -----------------------------
+        elif categoria == "🧾 Ventas":
+            st.subheader("🧾 Análisis de ventas: predicción y detección de outliers")
+    
+            tarea = st.radio("¿Qué querés hacer?", [
+                "🔮 Predicción de ventas futuras",
+                "🚨 Detección de outliers o fraudes"
+            ])
+    
+            @st.cache_data
+            def load_ventas():
+                return pd.read_csv("Venta_transformado.csv", parse_dates=["Fecha"])
+            
+            df = load_ventas()
+    
             df["mes"] = df["Fecha"].dt.month
             df["año"] = df["Fecha"].dt.year
     
-            features = ["mes", "año"]
-            if "IdProducto" in df.columns:
-                features.append("IdProducto")
-            if "IdProveedor" in df.columns:
-                features.append("IdProveedor")
-    
-            X = df[features]
-            y = df["Cantidad"]
-    
-            # Codificamos variables categóricas
-            X = pd.get_dummies(X, columns=["IdProducto", "IdProveedor"], drop_first=True)
-    
-            X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=0.2, random_state=42)
-    
-            if modelo == "Regresión Lineal":
-                model = LinearRegression()
-                st.markdown("#### 🧠 Sobre el modelo: Regresión Lineal")
+            if tarea == "🔮 Predicción de ventas futuras":
+                st.markdown("#### 🔮 Predicción de ventas con Regresión Ridge")
                 st.markdown("""
-                La **Regresión Lineal** busca modelar la relación entre variables independientes 
-                (como mes, año, producto y proveedor) y la variable dependiente (cantidad comprada) 
-                mediante una línea recta.  
-                Es un modelo simple y fácilmente interpretable, ideal para observar tendencias generales.
+                Se busca predecir la cantidad vendida usando Regresión Ridge, una técnica útil cuando hay muchas variables 
+                correlacionadas (producto, canal, mes, año).
                 """)
     
-            else:
-                model = RandomForestRegressor(n_estimators=100, random_state=42)
-                st.markdown("#### 🌲 Sobre el modelo: Random Forest")
-                st.markdown("""
-                **Random Forest** utiliza múltiples árboles de decisión para realizar predicciones más 
-                precisas y robustas.  
-                Es ideal para capturar relaciones no lineales y manejar muchas combinaciones de variables.
+                features = ["mes", "año", "IdProducto", "IdCanal"]
+                X = df[features]
+                y = df["Cantidad"]
     
-                Aunque más complejo, suele ofrecer mayor precisión que modelos simples como la regresión lineal.
+                X = pd.get_dummies(X, columns=["IdProducto", "IdCanal"], drop_first=True)
+    
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X, y, test_size=0.2, random_state=42)
+    
+                model = Ridge(alpha=1.0)
+                model.fit(X_train, y_train)
+                y_pred = model.predict(X_test)
+    
+                try:
+                    rmse = np.sqrt(mean_squared_error(y_test, np.ravel(y_pred)))
+                    st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
+                except Exception as e:
+                    st.error(f"❌ Error en cálculo de RMSE: {e}")
+    
+                try:
+                    st.markdown("#### 📊 Comparación entre valores reales y predichos")
+                    chart_df = pd.DataFrame({
+                        "Real": y_test.values[:50],
+                        "Predicho": np.ravel(y_pred)[:50]
+                    })
+                    st.line_chart(chart_df)
+                except Exception as e:
+                    st.error(f"❌ Error en gráfico: {e}")
+    
+            elif tarea == "🚨 Detección de outliers o fraudes":
+                st.markdown("#### 🚨 Detección de outliers con Isolation Forest")
+                st.markdown("""
+                Isolation Forest detecta ventas inusuales en función de precio y cantidad.  
+                Los puntos anómalos podrían ser errores de carga, promociones extremas o fraudes.
                 """)
     
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
+                df_filtrado = df[["Cantidad", "Precio"]].dropna()
+                modelo_iso = IsolationForest(contamination=0.02, random_state=42)
+                df_filtrado["anomaly"] = modelo_iso.fit_predict(df_filtrado)
+                df_filtrado["color"] = df_filtrado["anomaly"].map({1: "Normal", -1: "Outlier"})
     
-            try:
-                rmse = np.sqrt(mean_squared_error(y_test, np.ravel(y_pred)))
-                st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
-            except Exception as e:
-                st.error(f"❌ Error en cálculo de RMSE: {e}")
+                st.markdown("#### 📌 Resultados de detección")
+                st.write(df_filtrado["color"].value_counts())
     
-            # Mostrar gráfico comparativo (máximo 50 datos)
-            try:
-                st.markdown("#### 📊 Comparación entre valores reales y predichos")
-                st.markdown("""
-                Este gráfico muestra las primeras 50 observaciones del conjunto de prueba, 
-                comparando la **cantidad real comprada** con la **cantidad predicha** por el modelo.  
-                Cuanto más cercanas estén las curvas, mejor el modelo está captando la demanda.
-                """)
-                chart_df = pd.DataFrame({
-                    "Real": y_test.values[:50],
-                    "Predicho": np.ravel(y_pred)[:50]
-                })
-                st.line_chart(chart_df)
-            except Exception as e:
-                st.error(f"❌ Error en gráfico: {e}")
-    
-        elif modelo == "ARIMA (Series Temporales)":
-            st.info("Usando solo la serie temporal agregada total por mes.")
-    
-            st.markdown("#### ⏳ Sobre el modelo: ARIMA (Series Temporales)")
-            st.markdown("""
-            **ARIMA** es un modelo estadístico para series temporales que predice valores futuros
-            basándose únicamente en los datos históricos de una variable.  
-            Es útil para detectar tendencias y estacionalidades en el tiempo.
-    
-            El siguiente gráfico muestra la evolución mensual histórica de la demanda total. 
-            A continuación, se visualiza la predicción para los próximos 6 meses.
-            """)
-    
-            df_ts = df.copy()
-            df_ts = df_ts.set_index("Fecha").resample("M").sum(numeric_only=True)["Cantidad"]
-    
-            st.line_chart(df_ts)
-    
-            try:
-                model = sm.tsa.ARIMA(df_ts, order=(1, 1, 1))
-                results = model.fit()
-                forecast = results.forecast(steps=6)
-    
-                st.write("📈 Predicción para los próximos 6 meses:")
-                st.line_chart(forecast)
-            except Exception as e:
-                st.error(f"❌ Error en modelo ARIMA: {e}")
+                try:
+                    fig = px.scatter(df_filtrado, x="Precio", y="Cantidad", color="color",
+                                     title="Detección de outliers en ventas")
+                    st.plotly_chart(fig)
+                except Exception as e:
+                    st.error(f"❌ Error en visualización: {e}")
                             
 
 ################
