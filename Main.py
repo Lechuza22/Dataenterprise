@@ -686,18 +686,18 @@ if st.session_state.authenticated:
 ####  ML  ####
 ##############
     elif menu == "Modelos de ML":
-    st.header("🤖 Modelos de Machine Learning")
-
-    categoria = st.selectbox("📊 Elegí una categoría de datos:", [
-        "🛍️ Compras",
-        "🧾 Ventas",
-        "👥 Empleados",
-        "🧩 Sucursales",
-        "💸 Gastos",
-        "📦 Productos",
-        "🚚 Proveedores",
-        "🌐 Canal de ventas"
-    ])
+        st.header("🤖 Modelos de Machine Learning")
+    
+        categoria = st.selectbox("📊 Elegí una categoría de datos:", [
+            "🛍️ Compras",
+            "🧾 Ventas",
+            "👥 Empleados",
+            "🧩 Sucursales",
+            "💸 Gastos",
+            "📦 Productos",
+            "🚚 Proveedores",
+            "🌐 Canal de ventas"
+        ])
 # Cargar dataset de compras
 @st.cache_data
 def load_compras():
