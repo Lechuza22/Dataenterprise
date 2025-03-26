@@ -706,62 +706,77 @@ if st.session_state.authenticated:
         modelo = st.selectbox("Elegí un modelo de ML:", [
             "Regresión Lineal", "Random Forest", "ARIMA (Series Temporales)"
         ])
+    
         # Cargar dataset de compras
         @st.cache_data
         def load_compras():
             return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
+        
         df = load_compras()
-
+    
         if modelo in ["Regresión Lineal", "Random Forest"]:
             df["mes"] = df["Fecha"].dt.month
             df["año"] = df["Fecha"].dt.year
-
+    
             features = ["mes", "año"]
             if "IdProducto" in df.columns:
                 features.append("IdProducto")
             if "IdProveedor" in df.columns:
                 features.append("IdProveedor")
-
+    
             X = df[features]
             y = df["Cantidad"]
-
+    
             # Codificamos variables categóricas
             X = pd.get_dummies(X, columns=["IdProducto", "IdProveedor"], drop_first=True)
-
+    
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=0.2, random_state=42)
-
+    
             if modelo == "Regresión Lineal":
                 model = LinearRegression()
             else:
                 model = RandomForestRegressor(n_estimators=100, random_state=42)
-
+    
             model.fit(X_train, y_train)
             y_pred = model.predict(X_test)
-            rmse = mean_squared_error(y_test, y_pred, squared=False)
-
-            st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
-            st.line_chart(pd.DataFrame({
-                "Real": y_test.values[:50],
-                "Predicho": y_pred[:50]
-            }))
-
+    
+            # Seguridad ante errores de estructura
+            try:
+                rmse = mean_squared_error(y_test, np.ravel(y_pred), squared=False)
+                st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
+            except Exception as e:
+                st.error(f"❌ Error en cálculo de RMSE: {e}")
+    
+            # Mostrar gráfico comparativo (máximo 50 datos)
+            try:
+                chart_df = pd.DataFrame({
+                    "Real": y_test.values[:50],
+                    "Predicho": np.ravel(y_pred)[:50]
+                })
+                st.line_chart(chart_df)
+            except Exception as e:
+                st.error(f"❌ Error en gráfico: {e}")
+    
         elif modelo == "ARIMA (Series Temporales)":
             st.info("Usando solo la serie temporal agregada total por mes.")
-
+    
             df_ts = df.copy()
             df_ts = df_ts.set_index("Fecha").resample("M").sum(numeric_only=True)["Cantidad"]
-
+    
             st.line_chart(df_ts)
-
-            model = sm.tsa.ARIMA(df_ts, order=(1, 1, 1))
-            results = model.fit()
-            forecast = results.forecast(steps=6)
-
-            st.write("📈 Predicción para los próximos 6 meses:")
-            st.line_chart(forecast)
-
-
+    
+            try:
+                model = sm.tsa.ARIMA(df_ts, order=(1, 1, 1))
+                results = model.fit()
+                forecast = results.forecast(steps=6)
+    
+                st.write("📈 Predicción para los próximos 6 meses:")
+                st.line_chart(forecast)
+            except Exception as e:
+                st.error(f"❌ Error en modelo ARIMA: {e}")
+    
+    
 
 ################
 #### MAPA ######
