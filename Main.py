@@ -32,8 +32,7 @@ if password == st.secrets["acceso"]["clave"]:
         "Análisis exploratorio",
         "Análisis cruzado",
         "Modelos de ML",
-        "Mapa de sucursales y empleados",
-        "Descargas"
+        "Mapa de sucursales y empleados"
     ])
 
     st.sidebar.markdown("---")
@@ -674,8 +673,22 @@ if password == st.secrets["acceso"]["clave"]:
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
-        st.info("Próximamente: predicción de ventas, segmentación, recomendaciones...")
+        st.markdown("Seleccioná una categoría para aplicar modelos de predicción o clasificación.")
+    
+        categoria_ml = st.selectbox("🧠 Categoría de análisis ML", [
+            "📦 Productos",
+            "🛍️ Compras",
+            "🧾 Ventas",
+            "👥 Empleados",
+            "🏢 Sucursales",
+            "💸 Gastos",
+            "🚚 Proveedores",
+            "🌐 Canales de Venta"
+        ])
 
+        if categoria_ml:
+            st.success(f"Seleccionaste la categoría: {categoria_ml}")
+            st.info("📌 En la próxima sesión desarrollaremos los modelos específicos para esta categoría.")
 
     elif menu == "Mapa de sucursales y empleados":
         st.header("🗺️ Mapa de sucursales y empleados")
@@ -769,9 +782,6 @@ if password == st.secrets["acceso"]["clave"]:
                                  title=f"Ventas totales por empleado en {sucursal_seleccionada}")
                 st.plotly_chart(fig_all)
         
-    elif menu == "Descargas":
-        st.header("📥 Exportación de datos y resultados")
-        st.info("Próximamente: descarga de reportes, gráficos y predicciones")
 
     else:
         st.warning("🔒 Ingresá la clave correcta para acceder a la app")
