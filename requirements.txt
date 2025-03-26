@@ -16,3 +16,4 @@ prophet
 tensorflow
 keras
 joblib
+arima
