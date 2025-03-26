@@ -16,9 +16,9 @@ st.set_page_config(page_title="📊 DataEnterprise", page_icon="🏢", layout="w
 # -----------------------------
 # LOGIN SIMPLE
 # -----------------------------
-st.title("🔐 Acceso privado")
+st.title("📊 DataEnterprise")
 
-password = st.text_input("Ingresá la clave para acceder a la app:", type="password")
+password = st.text_input("🔐 Ingresá la clave para acceder a la app:", type="password")
 
 # Verificamos clave contra secrets
 if password == st.secrets["acceso"]["clave"]:
