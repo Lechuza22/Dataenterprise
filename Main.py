@@ -16,28 +16,28 @@ st.set_page_config(page_title="📊 DataEnterprise", page_icon="🏢", layout="w
 # -----------------------------
 # LOGIN SIMPLE
 # -----------------------------
-    st.title("📊 DataEnterprise")
-    
-    password = st.text_input("🔐 Ingresá la clave para acceder a la app:", type="password")
-    
-    # Verificamos clave contra secrets
-    if password == st.secrets["acceso"]["clave"]:
-        st.success("Acceso concedido ✅")
-    
-        # -----------------------------
-        # MENU PRINCIPAL
-        # -----------------------------
-        menu = st.sidebar.selectbox("📂 Secciones", [
-            "Inicio",
-            "Análisis exploratorio",
-            "Análisis cruzado",
-            "Modelos de ML",
-            "Mapa de sucursales y empleados"
-        ])
-    
-        st.sidebar.markdown("---")
-        st.sidebar.markdown("👤 Usuario: Admin")
-    
+st.title("📊 DataEnterprise")
+
+password = st.text_input("🔐 Ingresá la clave para acceder a la app:", type="password")
+
+# Verificamos clave contra secrets
+if password == st.secrets["acceso"]["clave"]:
+    st.success("Acceso concedido ✅")
+
+    # -----------------------------
+    # MENU PRINCIPAL
+    # -----------------------------
+    menu = st.sidebar.selectbox("📂 Secciones", [
+        "Inicio",
+        "Análisis exploratorio",
+        "Análisis cruzado",
+        "Modelos de ML",
+        "Mapa de sucursales y empleados"
+    ])
+
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("👤 Usuario: Admin")
+
     # -----------------------------
     # CONTENIDO POR SECCION
     # -----------------------------
