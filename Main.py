@@ -698,11 +698,6 @@ if st.session_state.authenticated:
             "🚚 Proveedores",
             "🌐 Canal de ventas"
         ])
-# Cargar dataset de compras
-@st.cache_data
-def load_compras():
-    return pd.read_csv("Compra_transformada.csv", parse_dates=["fecha"])
-
     # -----------------------------
     # COMPRAS
     # -----------------------------
@@ -711,7 +706,10 @@ def load_compras():
         modelo = st.selectbox("Elegí un modelo de ML:", [
             "Regresión Lineal", "Random Forest", "ARIMA (Series Temporales)"
         ])
-
+        # Cargar dataset de compras
+        @st.cache_data
+        def load_compras():
+            return pd.read_csv("Compra_transformada.csv", parse_dates=["fecha"])
         df = load_compras()
 
         if modelo in ["Regresión Lineal", "Random Forest"]:
