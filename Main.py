@@ -744,7 +744,7 @@ if st.session_state.authenticated:
     
             # Seguridad ante errores de estructura
             try:
-                rmse = mean_squared_error(y_test, np.ravel(y_pred), squared=False)
+                rmse = np.sqrt(mean_squared_error(y_test, np.ravel(y_pred)))
                 st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
             except Exception as e:
                 st.error(f"❌ Error en cálculo de RMSE: {e}")
