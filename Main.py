@@ -717,16 +717,16 @@ if st.session_state.authenticated:
             df["año"] = df["Fecha"].dt.year
 
             features = ["mes", "año"]
-            if "producto_id" in df.columns:
+            if "IdProducto" in df.columns:
                 features.append("producto_id")
-            if "sucursal_id" in df.columns:
-                features.append("sucursal_id")
+            if "IdProveedor" in df.columns:
+                features.append("Id_Proveedor")
 
             X = df[features]
             y = df["Cantidad"]
 
             # Codificamos variables categóricas
-            X = pd.get_dummies(X, columns=["producto_id", "sucursal_id"], drop_first=True)
+            X = pd.get_dummies(X, columns=["producto_id", "Id_Proveedor"], drop_first=True)
 
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=0.2, random_state=42)
