@@ -7,7 +7,11 @@ import folium
 from streamlit_folium import st_folium
 import plotly.express as px
 from datetime import datetime
-
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import statsmodels.api as sm
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
@@ -678,14 +682,94 @@ if st.session_state.authenticated:
             plt.xticks(rotation=45, ha="right")
             st.pyplot(fig)
 
-                        
-
-
+##############                       
+####  ML  ####
+##############
     elif menu == "Modelos de ML":
-        st.header("🤖 Modelos de Machine Learning")
-        st.info("Próximamente: predicción de ventas, segmentación, recomendaciones...")
+    st.header("🤖 Modelos de Machine Learning")
+
+    categoria = st.selectbox("📊 Elegí una categoría de datos:", [
+        "🛍️ Compras",
+        "🧾 Ventas",
+        "👥 Empleados",
+        "🧩 Sucursales",
+        "💸 Gastos",
+        "📦 Productos",
+        "🚚 Proveedores",
+        "🌐 Canal de ventas"
+    ])
+# Cargar dataset de compras
+@st.cache_data
+def load_compras():
+    return pd.read_csv("Compra_transformada.csv", parse_dates=["fecha"])
+
+    # -----------------------------
+    # COMPRAS
+    # -----------------------------
+    if categoria == "🛍️ Compras":
+        st.subheader("🛍️ Predicción de demanda de productos")
+        modelo = st.selectbox("Elegí un modelo de ML:", [
+            "Regresión Lineal", "Random Forest", "ARIMA (Series Temporales)"
+        ])
+
+        df = load_compras()
+
+        if modelo in ["Regresión Lineal", "Random Forest"]:
+            df["mes"] = df["fecha"].dt.month
+            df["año"] = df["fecha"].dt.year
+
+            features = ["mes", "año"]
+            if "producto_id" in df.columns:
+                features.append("producto_id")
+            if "sucursal_id" in df.columns:
+                features.append("sucursal_id")
+
+            X = df[features]
+            y = df["cantidad"]
+
+            # Codificamos variables categóricas
+            X = pd.get_dummies(X, columns=["producto_id", "sucursal_id"], drop_first=True)
+
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=0.2, random_state=42)
+
+            if modelo == "Regresión Lineal":
+                model = LinearRegression()
+            else:
+                model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+            rmse = mean_squared_error(y_test, y_pred, squared=False)
+
+            st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
+            st.line_chart(pd.DataFrame({
+                "Real": y_test.values[:50],
+                "Predicho": y_pred[:50]
+            }))
+
+        elif modelo == "ARIMA (Series Temporales)":
+            st.info("Usando solo la serie temporal agregada total por mes.")
+
+            df_ts = df.copy()
+            df_ts = df_ts.set_index("fecha").resample("M").sum(numeric_only=True)["cantidad"]
+
+            st.line_chart(df_ts)
+
+            model = sm.tsa.ARIMA(df_ts, order=(1, 1, 1))
+            results = model.fit()
+            forecast = results.forecast(steps=6)
+
+            st.write("📈 Predicción para los próximos 6 meses:")
+            st.line_chart(forecast)
 
 
+
+################
+#### MAPA ######
+################
+
+    
     elif menu == "Mapa de sucursales y empleados":
         st.header("🗺️ Mapa de sucursales y empleados")
     
@@ -778,9 +862,5 @@ if st.session_state.authenticated:
                                  title=f"Ventas totales por empleado en {sucursal_seleccionada}")
                 st.plotly_chart(fig_all)
         
-    elif menu == "Descargas":
-        st.header("📥 Exportación de datos y resultados")
-        st.info("Próximamente: descarga de reportes, gráficos y predicciones")
-
     else:
         st.warning("🔒 Ingresá la clave correcta para acceder a la app")
