@@ -678,7 +678,9 @@ if st.session_state.authenticated:
             st.pyplot(fig)
 
                         
-
+##################
+##    ML    ######
+##################
 
     elif menu == "Modelos de ML":
         st.header("🤖 Modelos de Machine Learning")
@@ -695,10 +697,76 @@ if st.session_state.authenticated:
             "🌐 Canales de Venta"
         ])
 
-        if categoria_ml:
-            st.success(f"Seleccionaste la categoría: {categoria_ml}")
-            st.info("📌 En la próxima sesión desarrollaremos los modelos específicos para esta categoría.")
+        if categoria_ml == "🛍️ Compras":
+            st.subheader("🛍️ Predicción de demanda de productos")
 
+            compras_df = pd.read_csv("Compra_transformada.csv")
+            productos_df = pd.read_csv("PRODUCTOS_transformado.csv")
+            proveedores_df = pd.read_csv("Proveedores_transformado.csv")
+            sucursales_df = pd.read_csv("Sucursales_transformado.csv")
+
+            compras_df = compras_df.merge(productos_df, left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
+            compras_df = compras_df.merge(proveedores_df, left_on="IdProveedor", right_on="IDProveedor", how="left")
+            compras_df = compras_df.merge(sucursales_df, left_on="IdSucursal", right_on="ID", how="left")
+
+            modo = st.radio("Seleccionar predicción por:", ["Sucursal", "Proveedor"])
+
+            if modo == "Sucursal":
+                sucursal_opcion = st.selectbox("Selecciona la sucursal", ["Todas"] + sorted(compras_df["Sucursal"].dropna().unique()))
+                if sucursal_opcion != "Todas":
+                    compras_filtradas = compras_df[compras_df["Sucursal"] == sucursal_opcion]
+                else:
+                    compras_filtradas = compras_df.copy()
+
+            elif modo == "Proveedor":
+                proveedor_opcion = st.selectbox("Selecciona el proveedor", ["Todos"] + sorted(compras_df["Nombre"].dropna().unique()))
+                if proveedor_opcion != "Todos":
+                    compras_filtradas = compras_df[compras_df["Nombre"] == proveedor_opcion]
+                else:
+                    compras_filtradas = compras_df.copy()
+
+            compras_filtradas["Fecha"] = pd.to_datetime(compras_filtradas["Fecha"], errors="coerce")
+            demanda_temporal = compras_filtradas.groupby(compras_filtradas["Fecha"].dt.to_period("M"))["Cantidad"].sum().reset_index()
+            demanda_temporal["Fecha"] = demanda_temporal["Fecha"].dt.to_timestamp()
+            demanda_temporal = demanda_temporal.sort_values("Fecha")
+
+            if len(demanda_temporal) > 5:
+                from sklearn.linear_model import LinearRegression
+                from sklearn.ensemble import RandomForestRegressor
+                import numpy as np
+                from statsmodels.tsa.arima.model import ARIMA
+                import warnings
+                warnings.filterwarnings("ignore")
+
+                demanda_temporal["Mes_ordinal"] = np.arange(len(demanda_temporal))
+                X = demanda_temporal[["Mes_ordinal"]]
+                y = demanda_temporal["Cantidad"]
+
+                # Regresión lineal
+                modelo_lr = LinearRegression()
+                modelo_lr.fit(X, y)
+                demanda_temporal["Regresion"] = modelo_lr.predict(X)
+
+                # Random Forest
+                modelo_rf = RandomForestRegressor()
+                modelo_rf.fit(X, y)
+                demanda_temporal["RandomForest"] = modelo_rf.predict(X)
+
+                # ARIMA
+                try:
+                    arima_model = ARIMA(y, order=(1, 1, 1))
+                    arima_result = arima_model.fit()
+                    forecast = arima_result.predict(start=0, end=len(y)-1, typ="levels")
+                    demanda_temporal["ARIMA"] = forecast
+                except:
+                    demanda_temporal["ARIMA"] = np.nan
+
+                fig_pred = px.line(demanda_temporal, x="Fecha", y=["Cantidad", "Regresion", "RandomForest", "ARIMA"],
+                                   labels={"value": "Cantidad", "variable": "Serie"},
+                                   title="Demanda histórica vs. predicción (Lineal, RF, ARIMA)")
+                st.plotly_chart(fig_pred)
+            else:
+                st.warning("⚠️ No hay suficientes datos temporales para hacer una predicción confiable.")
     elif menu == "Mapa de sucursales y empleados":
         st.header("🗺️ Mapa de sucursales y empleados")
     
