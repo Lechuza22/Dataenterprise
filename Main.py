@@ -723,7 +723,7 @@ if st.session_state.authenticated:
                 features.append("sucursal_id")
 
             X = df[features]
-            y = df["cantidad"]
+            y = df["Cantidad"]
 
             # Codificamos variables categóricas
             X = pd.get_dummies(X, columns=["producto_id", "sucursal_id"], drop_first=True)
@@ -750,7 +750,7 @@ if st.session_state.authenticated:
             st.info("Usando solo la serie temporal agregada total por mes.")
 
             df_ts = df.copy()
-            df_ts = df_ts.set_index("Fecha").resample("M").sum(numeric_only=True)["cantidad"]
+            df_ts = df_ts.set_index("Fecha").resample("M").sum(numeric_only=True)["Cantidad"]
 
             st.line_chart(df_ts)
 
