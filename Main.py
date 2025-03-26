@@ -700,9 +700,9 @@ if st.session_state.authenticated:
             "🚚 Proveedores",
             "🌐 Canal de ventas"
         ])
-    # -----------------------------
-    # COMPRAS
-    # -----------------------------
+        # -----------------------------
+        # COMPRAS
+        # -----------------------------
         if categoria == "🛍️ Compras":
             st.subheader("🛍️ Predicción de demanda de productos")
             modelo = st.selectbox("Elegí un modelo de ML:", [
@@ -809,53 +809,58 @@ if st.session_state.authenticated:
             except Exception as e:
                 st.error(f"❌ Error en modelo ARIMA: {e}")
         # -----------------------------
-    # VENTAS
-    # -----------------------------
+        # VENTAS
+        # -----------------------------
         elif categoria == "🧾 Ventas":
             st.subheader("🧾 Análisis de ventas: predicción y detección de outliers")
-    
+        
             tarea = st.radio("¿Qué querés hacer?", [
                 "🔮 Predicción de ventas futuras",
                 "🚨 Detección de outliers o fraudes"
             ])
-    
+        
             @st.cache_data
             def load_ventas():
                 return pd.read_csv("Venta_transformado.csv", parse_dates=["Fecha"])
             
             df = load_ventas()
-    
+        
             df["mes"] = df["Fecha"].dt.month
             df["año"] = df["Fecha"].dt.year
-    
+        
             if tarea == "🔮 Predicción de ventas futuras":
                 st.markdown("#### 🔮 Predicción de ventas con Regresión Ridge")
                 st.markdown("""
-                Se busca predecir la cantidad vendida usando Regresión Ridge, una técnica útil cuando hay muchas variables 
-                correlacionadas (producto, canal, mes, año).
+                Se busca predecir la cantidad vendida usando **Regresión Ridge**, una técnica útil cuando hay muchas variables 
+                correlacionadas (producto, canal, mes, año).  
+                Ayuda a reducir el sobreajuste y mejora la estabilidad del modelo.
                 """)
-    
+        
                 features = ["mes", "año", "IdProducto", "IdCanal"]
                 X = df[features]
                 y = df["Cantidad"]
-    
+        
                 X = pd.get_dummies(X, columns=["IdProducto", "IdCanal"], drop_first=True)
-    
+        
                 X_train, X_test, y_train, y_test = train_test_split(
                     X, y, test_size=0.2, random_state=42)
-    
+        
                 model = Ridge(alpha=1.0)
                 model.fit(X_train, y_train)
                 y_pred = model.predict(X_test)
-    
+        
                 try:
                     rmse = np.sqrt(mean_squared_error(y_test, np.ravel(y_pred)))
                     st.write(f"🔍 Error cuadrático medio (RMSE): {rmse:.2f}")
                 except Exception as e:
                     st.error(f"❌ Error en cálculo de RMSE: {e}")
-    
+        
                 try:
                     st.markdown("#### 📊 Comparación entre valores reales y predichos")
+                    st.markdown("""
+                    Este gráfico muestra cómo se comportan las predicciones del modelo frente a los valores reales
+                    para las primeras 50 observaciones del conjunto de prueba.
+                    """)
                     chart_df = pd.DataFrame({
                         "Real": y_test.values[:50],
                         "Predicho": np.ravel(y_pred)[:50]
@@ -863,29 +868,32 @@ if st.session_state.authenticated:
                     st.line_chart(chart_df)
                 except Exception as e:
                     st.error(f"❌ Error en gráfico: {e}")
-    
+        
             elif tarea == "🚨 Detección de outliers o fraudes":
                 st.markdown("#### 🚨 Detección de outliers con Isolation Forest")
                 st.markdown("""
-                Isolation Forest detecta ventas inusuales en función de precio y cantidad.  
-                Los puntos anómalos podrían ser errores de carga, promociones extremas o fraudes.
+                En esta sección aplicamos **Isolation Forest**, un algoritmo no supervisado que detecta datos atípicos.  
+                Es útil para encontrar posibles errores de carga, fraudes o comportamientos inusuales en las ventas.
+        
+                El gráfico mostrará los valores normales en azul y los potenciales outliers en rojo.
                 """)
-    
+        
                 df_filtrado = df[["Cantidad", "Precio"]].dropna()
                 modelo_iso = IsolationForest(contamination=0.02, random_state=42)
                 df_filtrado["anomaly"] = modelo_iso.fit_predict(df_filtrado)
+        
                 df_filtrado["color"] = df_filtrado["anomaly"].map({1: "Normal", -1: "Outlier"})
-    
+        
                 st.markdown("#### 📌 Resultados de detección")
                 st.write(df_filtrado["color"].value_counts())
-    
+        
                 try:
                     fig = px.scatter(df_filtrado, x="Precio", y="Cantidad", color="color",
                                      title="Detección de outliers en ventas")
                     st.plotly_chart(fig)
                 except Exception as e:
                     st.error(f"❌ Error en visualización: {e}")
-        
+                
 
 ################
 #### MAPA ######
