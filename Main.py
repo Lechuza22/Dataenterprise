@@ -14,15 +14,25 @@ from datetime import datetime
 st.set_page_config(page_title="📊 DataEnterprise", page_icon="🏢", layout="wide")
 
 # -----------------------------
-# LOGIN SIMPLE
+# LOGIN SIMPLE CON SESSION_STATE
 # -----------------------------
-st.title("📊 DataEnterprise")
+# Inicializamos el estado de autenticación si no existe
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
 
-password = st.text_input("🔐 Ingresá la clave para acceder a la app:", type="password")
+# Si no está autenticado, mostrar input de contraseña
+if not st.session_state.authenticated:
+    st.title("📊 DataEnterprise")
+    password = st.text_input("🔐 Ingresá la clave para acceder a la app:", type="password")
+    if password == st.secrets["acceso"]["clave"]:
+        st.session_state.authenticated = True
+        st.success("Acceso concedido ✅")
+    elif password != "":
+        st.error("Clave incorrecta ❌")
 
-# Verificamos clave contra secrets
-if password == st.secrets["acceso"]["clave"]:
-    st.success("Acceso concedido ✅")
+# Si está autenticado, mostrar la app completa
+if st.session_state.authenticated:
+    st.title("📊 DataEnterprise")
 
     # -----------------------------
     # MENU PRINCIPAL
@@ -37,7 +47,6 @@ if password == st.secrets["acceso"]["clave"]:
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("👤 Usuario: Admin")
-
     # -----------------------------
     # CONTENIDO POR SECCION
     # -----------------------------
