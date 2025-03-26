@@ -709,12 +709,12 @@ if st.session_state.authenticated:
         # Cargar dataset de compras
         @st.cache_data
         def load_compras():
-            return pd.read_csv("Compra_transformada.csv", parse_dates=["fecha"])
+            return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
         df = load_compras()
 
         if modelo in ["Regresión Lineal", "Random Forest"]:
-            df["mes"] = df["fecha"].dt.month
-            df["año"] = df["fecha"].dt.year
+            df["mes"] = df["Fecha"].dt.month
+            df["año"] = df["Fecha"].dt.year
 
             features = ["mes", "año"]
             if "producto_id" in df.columns:
@@ -750,7 +750,7 @@ if st.session_state.authenticated:
             st.info("Usando solo la serie temporal agregada total por mes.")
 
             df_ts = df.copy()
-            df_ts = df_ts.set_index("fecha").resample("M").sum(numeric_only=True)["cantidad"]
+            df_ts = df_ts.set_index("Fecha").resample("M").sum(numeric_only=True)["cantidad"]
 
             st.line_chart(df_ts)
 
