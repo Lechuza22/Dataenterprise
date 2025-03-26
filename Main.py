@@ -808,9 +808,13 @@ if st.session_state.authenticated:
                 st.line_chart(forecast)
             except Exception as e:
                 st.error(f"❌ Error en modelo ARIMA: {e}")
+        
+        
         # -----------------------------
         # VENTAS
         # -----------------------------
+
+        
         elif categoria == "🧾 Ventas":
             st.subheader("🧾 Análisis de ventas: predicción y detección de outliers")
         
@@ -828,7 +832,7 @@ if st.session_state.authenticated:
             df["mes"] = df["Fecha"].dt.month
             df["año"] = df["Fecha"].dt.year
         
-            if tarea == "🔮 Predicción de ventas futuras":
+            if modelo == "🔮 Predicción de ventas futuras":
                 st.markdown("#### 🔮 Predicción de ventas con Regresión Ridge")
                 st.markdown("""
                 Se busca predecir la cantidad vendida usando **Regresión Ridge**, una técnica útil cuando hay muchas variables 
@@ -869,7 +873,7 @@ if st.session_state.authenticated:
                 except Exception as e:
                     st.error(f"❌ Error en gráfico: {e}")
         
-            elif tarea == "🚨 Detección de outliers o fraudes":
+            elif modelo == "🚨 Detección de outliers o fraudes":
                 st.markdown("#### 🚨 Detección de outliers con Isolation Forest")
                 st.markdown("""
                 En esta sección aplicamos **Isolation Forest**, un algoritmo no supervisado que detecta datos atípicos.  
