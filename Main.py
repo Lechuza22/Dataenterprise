@@ -868,7 +868,89 @@ if st.session_state.authenticated:
                     st.plotly_chart(fig)
                 except Exception as e:
                     st.error(f"❌ Error en visualización: {e}")
-                            
+
+        # -----------------------------
+        # EMPLEADOS
+        # -----------------------------
+        elif categoria == "👥 Empleados":
+            st.subheader("👥 Análisis de productividad y rendimiento")
+        
+            analisis = st.radio("Seleccioná el tipo de análisis:", [
+                "🔍 Clusterización por rendimiento (K-means)",
+                "🧠 Clasificación de alto rendimiento (Regresión logística)"
+            ])
+        
+            @st.cache_data
+            def load_empleados():
+                return pd.read_csv("Empleados_transformados.csv")
+        
+            df = load_empleados()
+        
+            if analisis == "🔍 Clusterización por rendimiento (K-means)":
+                st.markdown("#### 🔍 Agrupamiento de empleados según patrones comunes")
+                st.markdown("""
+                Usamos **K-means**, un algoritmo de clustering no supervisado, para identificar grupos de empleados con patrones similares
+                según variables como **salario**, **sector**, **cargo** y **sucursal**. Esto permite detectar posibles desequilibrios,
+                como empleados con sueldos altos en sectores menos productivos.
+                """)
+        
+                from sklearn.preprocessing import StandardScaler
+                from sklearn.cluster import KMeans
+        
+                # Codificar variables categóricas
+                df_encoded = pd.get_dummies(df[["Salario", "Sucursal", "Sector", "Cargo"]], drop_first=True)
+                scaler = StandardScaler()
+                X_scaled = scaler.fit_transform(df_encoded)
+        
+                k = st.slider("Elegí el número de clusters", 2, 6, 3)
+                kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+                clusters = kmeans.fit_predict(X_scaled)
+                df["Cluster"] = clusters
+        
+                st.write("### Distribución de empleados por cluster")
+                st.write(df["Cluster"].value_counts().sort_index())
+        
+                try:
+                    fig = px.scatter(df, x="Salario", y="Cluster", color="Sector", hover_data=["Cargo", "Sucursal"],
+                                     title="Empleados agrupados por rendimiento relativo")
+                    st.plotly_chart(fig)
+                except Exception as e:
+                    st.error(f"\u274c Error en visualización: {e}")
+        
+            elif analisis == "🧠 Clasificación de alto rendimiento (Regresión logística)":
+                st.markdown("#### 🧠 Clasificación de empleados con alto rendimiento")
+                st.markdown("""
+                En este modelo simulamos una clasificación de empleados como **alto rendimiento** si están en el percentil superior
+                de salario. Se entrena una **Regresión Logística** para predecir esta condición a partir de sector, sucursal y cargo.
+                """)
+        
+                from sklearn.linear_model import LogisticRegression
+                from sklearn.metrics import classification_report, confusion_matrix
+        
+                # Crear variable binaria de alto rendimiento
+                salario_limite = df["Salario"].quantile(0.75)
+                df["alto_rendimiento"] = (df["Salario"] > salario_limite).astype(int)
+        
+                X = pd.get_dummies(df[["Sucursal", "Sector", "Cargo"]], drop_first=True)
+                y = df["alto_rendimiento"]
+        
+                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+                model = LogisticRegression(max_iter=500)
+                model.fit(X_train, y_train)
+        
+                y_pred = model.predict(X_test)
+                report = classification_report(y_test, y_pred, output_dict=True)
+                cm = confusion_matrix(y_test, y_pred)
+        
+                st.write("### Matriz de confusión")
+                st.write(pd.DataFrame(cm, index=["No Alto", "Alto"], columns=["Predicho No", "Predicho Alto"]))
+        
+                st.write("### Métricas de clasificación")
+                st.json({
+                    "Precisión (Clase Alta)": f"{report['1']['precision']:.2f}",
+                    "Recall (Clase Alta)": f"{report['1']['recall']:.2f}",
+                    "F1-score (Clase Alta)": f"{report['1']['f1-score']:.2f}"
+                })
 
 ################
 #### MAPA ######
