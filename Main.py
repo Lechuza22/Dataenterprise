@@ -1526,7 +1526,7 @@ if st.session_state.authenticated:
             if submenu == "📊 Comparativo de efectividad por canal":
                 st.markdown("#### 📊 Comparativo de métricas por canal de venta")
         
-                resumen = df.groupby("Nombre").agg({
+                resumen = df.groupby("DESCRIPCION").agg({
                     "Cantidad": "sum",
                     "IdCliente": "nunique",
                     "IdVenta": "count"
@@ -1542,9 +1542,9 @@ if st.session_state.authenticated:
                 import plotly.express as px
                 fig = px.bar(
                     resumen,
-                    x="Nombre", y="Total Vendido", color="Nombre",
+                    x="DESCRIPCION", y="Total Vendido", color="DESCRIPCION",
                     title="Total de productos vendidos por canal",
-                    labels={"Nombre": "Canal", "Total Vendido": "Cantidad"}
+                    labels={"DESCRIPCION": "Canal", "Total Vendido": "Cantidad"}
                 )
                 fig.update_layout(showlegend=False)
                 st.plotly_chart(fig)
@@ -1552,7 +1552,7 @@ if st.session_state.authenticated:
             elif submenu == "📈 Segmentación de canales por rendimiento":
                 st.markdown("#### 📈 Clusterización de canales según métricas de desempeño")
         
-                df_cluster = df.groupby("Nombre").agg({
+                df_cluster = df.groupby("DESCRIPCION").agg({
                     "Cantidad": "sum",
                     "IdCliente": "nunique",
                     "IdVenta": "count"
@@ -1564,8 +1564,6 @@ if st.session_state.authenticated:
         
                 df_cluster["Promedio por cliente"] = df_cluster["Total Vendido"] / df_cluster["Clientes únicos"]
         
-                from sklearn.preprocessing import StandardScaler
-                from sklearn.cluster import KMeans
         
                 features = ["Total Vendido", "Clientes únicos", "Transacciones", "Promedio por cliente"]
                 X = df_cluster[features]
@@ -1583,9 +1581,9 @@ if st.session_state.authenticated:
                 fig = px.scatter(
                     df_cluster_reset,
                     x="Total Vendido", y="Promedio por cliente",
-                    size="Transacciones", color="Cluster", hover_name="Nombre",
+                    size="Transacciones", color="Cluster", hover_name="DESCRIPCION",
                     title="Segmentación de canales de venta (KMeans)",
-                    labels={"Nombre": "Canal"}
+                    labels={"DESCRIPCION": "Canal"}
                 )
                 st.plotly_chart(fig)
 
