@@ -1230,7 +1230,8 @@ if st.session_state.authenticated:
         
             submenu = st.radio("Seleccioná el tipo de análisis:", [
                 "🤝 Recomendación de productos",
-                "📈 Predicción temporal de ventas"
+                "📈 Predicción temporal de ventas",
+                 "🔝 Top 10 productos por mes"
             ])
         
             @st.cache_data
@@ -1303,6 +1304,50 @@ if st.session_state.authenticated:
                 except Exception as e:
                     st.error(f"❌ Error al generar el modelo ARIMA: {e}")
 
+            elif submenu == "🔝 Top 10 productos por mes":
+                st.markdown("#### 🔝 Top 10 productos más vendidos por mes")
+            
+                df_ventas = df_ventas.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
+            
+                df_ventas["Año"] = df_ventas["Fecha"].dt.year
+                df_ventas["Mes"] = df_ventas["Fecha"].dt.month
+            
+                años_disponibles = sorted(df_ventas["Año"].dropna().unique())
+                año_sel = st.selectbox("Seleccioná un año:", años_disponibles)
+            
+                meses_disponibles = sorted(df_ventas[df_ventas["Año"] == año_sel]["Mes"].dropna().unique())
+                mes_sel = st.selectbox("Seleccioná un mes:", meses_disponibles)
+            
+                # Filtrar por año y mes
+                df_filtrado = df_ventas[(df_ventas["Año"] == año_sel) & (df_ventas["Mes"] == mes_sel)]
+            
+                top10 = df_filtrado.groupby("Concepto")["Cantidad"].sum().sort_values(ascending=False).head(10).reset_index()
+            
+                st.markdown("##### 📊 Top 10 productos más vendidos")
+                st.dataframe(top10)
+            
+                # Gráfico de dispersión
+                st.markdown("##### 📈 Dispersión de productos (clasificados por cantidad vendida)")
+            
+                resumen = df_filtrado.groupby("Concepto")["Cantidad"].sum().reset_index()
+                promedio = resumen["Cantidad"].mean()
+            
+                def clasificar(cantidad):
+                    if cantidad > promedio:
+                        return "Más vendidos"
+                    elif cantidad < promedio:
+                        return "Menos vendidos"
+                    else:
+                        return "Promedio"
+            
+                resumen["Clasificación"] = resumen["Cantidad"].apply(clasificar)
+            
+                import plotly.express as px
+                fig = px.scatter(resumen, x="Concepto", y="Cantidad", color="Clasificación",
+                                 title=f"Dispersión de ventas por producto - {mes_sel}/{año_sel}",
+                                 labels={"Cantidad": "Cantidad Vendida", "Concepto": "Producto"})
+            
+                st.plotly_chart(fig)
    
 ################
 #### MAPA ######
