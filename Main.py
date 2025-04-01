@@ -1367,11 +1367,11 @@ if st.session_state.authenticated:
         ## Proveedores
         ##############
         elif categoria == "🚚 Proveedores":
-                    st.subheader("🚚 Proveedores")
-                
-                    submenu = st.radio("Seleccioná el tipo de análisis:", [
-                        "💰 Top 10 proveedores por gasto",
-                    ])
+            st.subheader("🚚 Proveedores")
+        
+            submenu = st.radio("Seleccioná el tipo de análisis:", [
+                "💰 Top 10 proveedores por gasto",
+            ])
             
             if submenu == "💰 Top 10 proveedores por gasto":
                 st.markdown("#### 💰 Top 10 proveedores por monto total de compra")
