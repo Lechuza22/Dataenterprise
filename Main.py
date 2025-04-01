@@ -1374,51 +1374,51 @@ if st.session_state.authenticated:
                     ])
             
         elif submenu == "💰 Top 10 proveedores por gasto":
-        st.markdown("#### 💰 Top 10 proveedores por monto total de compra")
-    
-        @st.cache_data
-        def load_compras():
-            return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
-    
-        @st.cache_data
-        def load_proveedores():
-            return pd.read_csv("Proveedores_transformado.csv")
-    
-        df_compras = load_compras()
-        df_prov = load_proveedores()
-    
-        # 🔧 Unir el nombre del proveedor correctamente
-        df = df_compras.merge(df_prov, left_on="IdProveedor", right_on="IDProveedor", how="left")
-    
-        # 🧮 Calcular top 10 por monto total
-        top10_prov = df.groupby("Nombre")["Monto"].sum().sort_values(ascending=False).head(10).reset_index()
-        st.markdown("##### 📋 Tabla: Top 10 proveedores por monto total")
-        st.dataframe(top10_prov)
-    
-        st.markdown("##### 📈 Evolución mensual del gasto por proveedor")
-    
-        # 📅 Agrupar por mes
-        df["Mes"] = df["Fecha"].dt.to_period("M").dt.to_timestamp()
-        gasto_mensual = df.groupby(["Mes", "Nombre"])["Monto"].sum().reset_index()
-    
-        # 🔍 Filtro de selección múltiple
-        proveedores_disp = top10_prov["Nombre"].tolist()
-        proveedores_sel = st.multiselect(
-            "Seleccioná uno o más proveedores:",
-            options=proveedores_disp,
-            default=proveedores_disp[:3]
-        )
-    
-        # 📊 Gráfico
-        import plotly.express as px
-        fig = px.line(
-            gasto_mensual[gasto_mensual["Nombre"].isin(proveedores_sel)],
-            x="Mes", y="Monto", color="Nombre",
-            labels={"Monto": "Monto de compra", "Mes": "Mes", "Nombre": "Proveedor"},
-            title="Evolución mensual del gasto por proveedor"
-        )
-        fig.update_layout(xaxis_title="Mes", yaxis_title="Monto total")
-        st.plotly_chart(fig)
+            st.markdown("#### 💰 Top 10 proveedores por monto total de compra")
+        
+            @st.cache_data
+            def load_compras():
+                return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
+        
+            @st.cache_data
+            def load_proveedores():
+                return pd.read_csv("Proveedores_transformado.csv")
+        
+            df_compras = load_compras()
+            df_prov = load_proveedores()
+        
+            # 🔧 Unir el nombre del proveedor correctamente
+            df = df_compras.merge(df_prov, left_on="IdProveedor", right_on="IDProveedor", how="left")
+        
+            # 🧮 Calcular top 10 por monto total
+            top10_prov = df.groupby("Nombre")["Monto"].sum().sort_values(ascending=False).head(10).reset_index()
+            st.markdown("##### 📋 Tabla: Top 10 proveedores por monto total")
+            st.dataframe(top10_prov)
+        
+            st.markdown("##### 📈 Evolución mensual del gasto por proveedor")
+        
+            # 📅 Agrupar por mes
+            df["Mes"] = df["Fecha"].dt.to_period("M").dt.to_timestamp()
+            gasto_mensual = df.groupby(["Mes", "Nombre"])["Monto"].sum().reset_index()
+        
+            # 🔍 Filtro de selección múltiple
+            proveedores_disp = top10_prov["Nombre"].tolist()
+            proveedores_sel = st.multiselect(
+                "Seleccioná uno o más proveedores:",
+                options=proveedores_disp,
+                default=proveedores_disp[:3]
+            )
+        
+            # 📊 Gráfico
+            import plotly.express as px
+            fig = px.line(
+                gasto_mensual[gasto_mensual["Nombre"].isin(proveedores_sel)],
+                x="Mes", y="Monto", color="Nombre",
+                labels={"Monto": "Monto de compra", "Mes": "Mes", "Nombre": "Proveedor"},
+                title="Evolución mensual del gasto por proveedor"
+            )
+            fig.update_layout(xaxis_title="Mes", yaxis_title="Monto total")
+            st.plotly_chart(fig)
 
         
 
