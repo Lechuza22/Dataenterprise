@@ -1226,7 +1226,7 @@ if st.session_state.authenticated:
         # PRODUCTOS
         # -----------------------------
         elif categoria == "📦 Productos":
-            st.subheader("📦 Análisis de productos")
+            st.subheader("📦 Productos")
         
             submenu = st.radio("Seleccioná el tipo de análisis:", [
                 "🤝 Recomendación de productos",
