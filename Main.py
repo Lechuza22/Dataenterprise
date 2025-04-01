@@ -1391,7 +1391,7 @@ if st.session_state.authenticated:
                 df = df_compras.merge(df_prov, left_on="IdProveedor", right_on="IDProveedor", how="left")
             
                 # 🧮 Calcular top 10 por monto total
-                top10_prov = df.groupby("Nombre")["Monto"].sum().sort_values(ascending=False).head(10).reset_index()
+                top10_prov = df.groupby("Nombre")["Precio"].sum().sort_values(ascending=False).head(10).reset_index()
                 st.markdown("##### 📋 Tabla: Top 10 proveedores por monto total")
                 st.dataframe(top10_prov)
             
@@ -1399,7 +1399,7 @@ if st.session_state.authenticated:
             
                 # 📅 Agrupar por mes
                 df["Mes"] = df["Fecha"].dt.to_period("M").dt.to_timestamp()
-                gasto_mensual = df.groupby(["Mes", "Nombre"])["Monto"].sum().reset_index()
+                gasto_mensual = df.groupby(["Mes", "Nombre"])["Precio"].sum().reset_index()
             
                 # 🔍 Filtro de selección múltiple
                 proveedores_disp = top10_prov["Nombre"].tolist()
@@ -1412,8 +1412,8 @@ if st.session_state.authenticated:
                 # 📊 Gráfico
                 fig = px.line(
                     gasto_mensual[gasto_mensual["Nombre"].isin(proveedores_sel)],
-                    x="Mes", y="Monto", color="Nombre",
-                    labels={"Monto": "Monto de compra", "Mes": "Mes", "Nombre": "Proveedor"},
+                    x="Mes", y="Precio", color="Nombre",
+                    labels={"Precio": "Monto de compra", "Mes": "Mes", "Nombre": "Proveedor"},
                     title="Evolución mensual del gasto por proveedor"
                 )
                 fig.update_layout(xaxis_title="Mes", yaxis_title="Monto total")
