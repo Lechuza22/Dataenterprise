@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import seaborn.objects as so
 import folium
-from streamlit_folium import st_folium
+import statsmodels.api as sm
 import plotly.express as px
+from streamlit_folium import st_folium
 from datetime import datetime
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
@@ -14,7 +15,6 @@ from sklearn.ensemble import RandomForestRegressor, IsolationForest
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import Ridge
-import statsmodels.api as sm
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -22,7 +22,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 from sklearn.linear_model import HuberRegressor
-
+from sklearn.neighbors import NearestNeighbors
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
@@ -1222,7 +1222,82 @@ if st.session_state.authenticated:
                 except Exception as e:
                     st.error(f"❌ Error al generar el gráfico: {e}")
 
+        # -----------------------------
+        # PRODUCTOS
+        # -----------------------------
+        elif categoria == "📦 Productos":
+            st.subheader("📦 Análisis de productos")
+        
+            submenu = st.radio("Seleccioná el tipo de análisis:", [
+                "🤝 Recomendación de productos",
+                "📈 Predicción temporal de ventas"
+            ])
+        
+            @st.cache_data
+            def load_ventas():
+                return pd.read_csv("Venta_transformado.csv", parse_dates=["Fecha"])
+        
+            @st.cache_data
+            def load_productos():
+                return pd.read_csv("PRODUCTOS_transformado.csv")
+        
+            df_ventas = load_ventas()
+            df_productos = load_productos()
+        
+            if submenu == "🤝 Recomendación de productos":
+                st.markdown("#### 🤝 Sistema de recomendación basado en volumen de compra")
+                st.markdown("""
+                Este sistema utiliza KNN (vecinos más cercanos) para encontrar productos relacionados 
+                según los patrones de compra de los clientes. 
+                Recomendamos productos similares al seleccionado, basándonos en clientes que compraron ambos.
+                """)
+        
+                top_clientes = df_ventas.groupby(["IdProducto", "IdCliente"])["Cantidad"].sum().reset_index()
+                tabla_recom = top_clientes.pivot(index="IdCliente", columns="IdProducto", values="Cantidad").fillna(0)
+        
+                producto_ids = tabla_recom.columns.tolist()
+                producto_seleccionado = st.selectbox("Seleccioná un producto para ver productos relacionados:", producto_ids)
+        
+                model_knn = NearestNeighbors(metric="cosine", algorithm="brute")
+                model_knn.fit(tabla_recom.T.values)
+        
+                index = producto_ids.index(producto_seleccionado)
+                distancias, indices = model_knn.kneighbors([tabla_recom.T.values[index]], n_neighbors=6)
+        
+                st.write("### Productos recomendados:")
+                for i in range(1, len(indices[0])):
+                    prod_id = producto_ids[indices[0][i]]
+                    descripcion = df_productos[df_productos["IdProducto"] == prod_id]["Nombre"].values
+                    st.markdown(f"- {descripcion[0] if len(descripcion) else prod_id} (similaridad: {1 - distancias[0][i]:.2f})")
+        
+            elif submenu == "📈 Predicción temporal de ventas":
+                st.markdown("#### 📈 Predicción de ventas futuras por producto (ARIMA)")
+                st.markdown("""
+                Este análisis muestra la evolución histórica de las ventas de un producto y proyecta su comportamiento
+                para los próximos 6 meses utilizando un modelo ARIMA.
+                """)
+        
+                productos_disp = df_ventas["IdProducto"].dropna().unique().tolist()
+                producto = st.selectbox("Seleccioná un producto:", productos_disp)
+        
+                df_producto = df_ventas[df_ventas["IdProducto"] == producto]
+                df_ts = df_producto.groupby("Fecha")["Cantidad"].sum().resample("M").sum().dropna()
+        
+                st.line_chart(df_ts)
+        
+                try:
+                    model = sm.tsa.ARIMA(df_ts, order=(1, 1, 1))
+                    results = model.fit()
+                    forecast = results.forecast(steps=6)
+        
+                    st.markdown("#### 📊 Predicción para los próximos 6 meses")
+                    st.line_chart(forecast)
+                except Exception as e:
+                    st.error(f"❌ Error al generar el modelo ARIMA: {e}")
+        
 
+
+    
 ################
 #### MAPA ######
 ################
