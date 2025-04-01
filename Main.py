@@ -1174,14 +1174,12 @@ if st.session_state.authenticated:
                 df_tipo = df[df["Descripcion"] == tipo_seleccionado]
                 df_tipo = df_tipo[["Monto"]].dropna()
         
-                from sklearn.ensemble import IsolationForest
                 modelo_tipo = IsolationForest(contamination=0.05, random_state=42)
                 df_tipo["anomaly"] = modelo_tipo.fit_predict(df_tipo)
                 df_tipo["color"] = df_tipo["anomaly"].map({1: "Normal", -1: "Atípico"})
         
                 st.markdown(f"#### 📊 Detección de outliers en {tipo_seleccionado}")
                 try:
-                    import plotly.express as px
                     fig = px.histogram(df_tipo, x="Monto", color="color",
                                        title=f"Distribución de montos detectados como outliers en {tipo_seleccionado}")
                     st.plotly_chart(fig)
