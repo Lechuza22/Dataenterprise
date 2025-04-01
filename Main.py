@@ -1165,8 +1165,10 @@ if st.session_state.authenticated:
                 permitiendo identificar desvíos particulares como un gasto muy elevado en servicios o insumos.
                 """)
         
-                # Unir descripción a los datos de gasto
-                df = df.merge(df_tipos, left_on="TipoGasto", right_on="IdTipoGasto", how="left")
+                # Detectar nombre correcto de columna de tipo de gasto
+                columna_tipo = "IdTipoGasto" if "IdTipoGasto" in df.columns else "TipoGasto"
+        
+                df = df.merge(df_tipos, left_on=columna_tipo, right_on="IdTipoGasto", how="left")
         
                 tipos = df["Descripcion"].dropna().unique()
                 tipo_seleccionado = st.selectbox("Seleccioná un tipo de gasto:", tipos)
@@ -1180,6 +1182,7 @@ if st.session_state.authenticated:
         
                 st.markdown(f"#### 📊 Detección de outliers en {tipo_seleccionado}")
                 try:
+                    import plotly.express as px
                     fig = px.histogram(df_tipo, x="Monto", color="color",
                                        title=f"Distribución de montos detectados como outliers en {tipo_seleccionado}")
                     st.plotly_chart(fig)
@@ -1191,6 +1194,7 @@ if st.session_state.authenticated:
                 Este enfoque permite hacer foco sobre cada tipo de gasto para detectar registros inusuales o gastos potencialmente excesivos
                 en una categoría específica. Es ideal para auditoría interna o control financiero segmentado.
                 """)
+
 
 
 ################
