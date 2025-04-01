@@ -1520,7 +1520,7 @@ if st.session_state.authenticated:
             df_ventas = load_ventas()
             df_canal = load_canal()
         
-            # Merge para unir nombre del canal
+            # ✅ Usamos CODIGO como ID del canal
             df = df_ventas.merge(df_canal, left_on="IdCanal", right_on="CODIGO", how="left")
         
             if submenu == "📊 Comparativo de efectividad por canal":
@@ -1538,7 +1538,8 @@ if st.session_state.authenticated:
         
                 resumen["Promedio por cliente"] = resumen["Total Vendido"] / resumen["Clientes únicos"]
                 st.dataframe(resumen)
-                
+        
+                import plotly.express as px
                 fig = px.bar(
                     resumen,
                     x="Nombre", y="Total Vendido", color="Nombre",
@@ -1563,7 +1564,8 @@ if st.session_state.authenticated:
         
                 df_cluster["Promedio por cliente"] = df_cluster["Total Vendido"] / df_cluster["Clientes únicos"]
         
-                # Aplicar clustering (KMeans)
+                from sklearn.preprocessing import StandardScaler
+                from sklearn.cluster import KMeans
         
                 features = ["Total Vendido", "Clientes únicos", "Transacciones", "Promedio por cliente"]
                 X = df_cluster[features]
@@ -1586,6 +1588,7 @@ if st.session_state.authenticated:
                     labels={"Nombre": "Canal"}
                 )
                 st.plotly_chart(fig)
+
 
 
     
