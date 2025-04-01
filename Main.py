@@ -1377,36 +1377,36 @@ if st.session_state.authenticated:
             st.markdown("#### 💰 Top 10 proveedores por monto total de gasto")
             
             @st.cache_data
-            def load_gastos():
-                return pd.read_csv("Gasto_transformado.csv", parse_dates=["Fecha"])
+            def load_compras():
+                return pd.read_csv("Compra_transformada.csv", parse_dates=["Fecha"])
             
             @st.cache_data
             def load_proveedores():
                 return pd.read_csv("Proveedores_transformado.csv")
             
-            df_gastos = load_gastos()
+            df_compras = load_compras()
             df_prov = load_proveedores()
             
             # Unir descripción de proveedor
-            df = df_gastos.merge(df_prov, left_on="IdProveedor", right_on="ID_PROVEEDOR", how="left")
+            df = df_compras.merge(df_prov, left_on="IdProveedor", right_on="IdProveedor", how="left")
         
             # Calcular gasto total por proveedor
-            top10_prov = df.groupby("NOMBRE")["Monto"].sum().sort_values(ascending=False).head(10).reset_index()
+            top10_prov = df.groupby("IdProducto")["Precio"].sum().sort_values(ascending=False).head(10).reset_index()
             st.dataframe(top10_prov)
         
             st.markdown("##### 📈 Evolución mensual del gasto por proveedor")
         
             df["Mes"] = df["Fecha"].dt.to_period("M").dt.to_timestamp()
         
-            gasto_mensual = df.groupby(["Mes", "NOMBRE"])["Monto"].sum().reset_index()
+            gasto_mensual = df.groupby(["Mes", "IdProducto"])["Precio"].sum().reset_index()
         
             # Filtro: seleccionar proveedores
-            proveedores_disp = top10_prov["NOMBRE"].tolist()
+            proveedores_disp = top10_prov["IdProducto"].tolist()
             proveedores_sel = st.multiselect("Seleccioná uno o más proveedores:", proveedores_disp, default=proveedores_disp[:3])
         
             fig = px.line(
-                gasto_mensual[gasto_mensual["NOMBRE"].isin(proveedores_sel)],
-                x="Mes", y="Monto", color="NOMBRE",
+                gasto_mensual[gasto_mensual["IdProducto"].isin(proveedores_sel)],
+                x="Mes", y="Precio", color="IdProducto",
                 labels={"Monto": "Monto gastado", "Mes": "Mes", "NOMBRE": "Proveedor"},
                 title="Evolución mensual del gasto por proveedor"
             )
