@@ -1521,7 +1521,7 @@ if st.session_state.authenticated:
             df_canal = load_canal()
         
             # Merge para unir nombre del canal
-            df = df_ventas.merge(df_canal, left_on="IdCanal", right_on="IDCanal", how="left")
+            df = df_ventas.merge(df_canal, left_on="IdCanal", right_on="CODIGO", how="left")
         
             if submenu == "📊 Comparativo de efectividad por canal":
                 st.markdown("#### 📊 Comparativo de métricas por canal de venta")
