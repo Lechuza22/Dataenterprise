@@ -1366,14 +1366,13 @@ if st.session_state.authenticated:
 ####################
         ## Proveedores
         ##############
-
         elif categoria == "🚚 Proveedores":
                     st.subheader("🚚 Proveedores")
                 
                     submenu = st.radio("Seleccioná el tipo de análisis:", [
                         "💰 Top 10 proveedores por gasto",
                     ])
-
+            
             if submenu == "💰 Top 10 proveedores por gasto":
                 st.markdown("#### 💰 Top 10 proveedores por monto total de gasto")
                 
@@ -1405,7 +1404,6 @@ if st.session_state.authenticated:
                 proveedores_disp = top10_prov["NOMBRE"].tolist()
                 proveedores_sel = st.multiselect("Seleccioná uno o más proveedores:", proveedores_disp, default=proveedores_disp[:3])
             
-                import plotly.express as px
                 fig = px.line(
                     gasto_mensual[gasto_mensual["NOMBRE"].isin(proveedores_sel)],
                     x="Mes", y="Monto", color="NOMBRE",
