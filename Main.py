@@ -1285,7 +1285,7 @@ if st.session_state.authenticated:
                 df_ventas = df_ventas.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
                 productos_disp = df_ventas[["IdProducto", "Concepto"]].drop_duplicates()
         
-                producto_nombre = st.selectbox("Seleccioná un producto:", productos_disp["Nombre"].tolist())
+                producto_nombre = st.selectbox("Seleccioná un producto:", productos_disp["Concepto"].tolist())
                 producto_id = productos_disp[productos_disp["Concepto"] == producto_nombre]["IdProducto"].values[0]
         
                 df_producto = df_ventas[df_ventas["IdProducto"] == producto_id]
