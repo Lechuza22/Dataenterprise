@@ -1373,44 +1373,44 @@ if st.session_state.authenticated:
                         "💰 Top 10 proveedores por gasto",
                     ])
             
-            if submenu == "💰 Top 10 proveedores por gasto":
-                st.markdown("#### 💰 Top 10 proveedores por monto total de gasto")
-                
-                @st.cache_data
-                def load_gastos():
-                    return pd.read_csv("Gasto_transformado.csv", parse_dates=["Fecha"])
-                
-                @st.cache_data
-                def load_proveedores():
-                    return pd.read_csv("Proveedores_transformado.csv")
-                
-                df_gastos = load_gastos()
-                df_prov = load_proveedores()
-                
-                # Unir descripción de proveedor
-                df = df_gastos.merge(df_prov, left_on="IdProveedor", right_on="ID_PROVEEDOR", how="left")
+        if submenu == "💰 Top 10 proveedores por gasto":
+            st.markdown("#### 💰 Top 10 proveedores por monto total de gasto")
             
-                # Calcular gasto total por proveedor
-                top10_prov = df.groupby("NOMBRE")["Monto"].sum().sort_values(ascending=False).head(10).reset_index()
-                st.dataframe(top10_prov)
+            @st.cache_data
+            def load_gastos():
+                return pd.read_csv("Gasto_transformado.csv", parse_dates=["Fecha"])
             
-                st.markdown("##### 📈 Evolución mensual del gasto por proveedor")
+            @st.cache_data
+            def load_proveedores():
+                return pd.read_csv("Proveedores_transformado.csv")
             
-                df["Mes"] = df["Fecha"].dt.to_period("M").dt.to_timestamp()
+            df_gastos = load_gastos()
+            df_prov = load_proveedores()
             
-                gasto_mensual = df.groupby(["Mes", "NOMBRE"])["Monto"].sum().reset_index()
-            
-                # Filtro: seleccionar proveedores
-                proveedores_disp = top10_prov["NOMBRE"].tolist()
-                proveedores_sel = st.multiselect("Seleccioná uno o más proveedores:", proveedores_disp, default=proveedores_disp[:3])
-            
-                fig = px.line(
-                    gasto_mensual[gasto_mensual["NOMBRE"].isin(proveedores_sel)],
-                    x="Mes", y="Monto", color="NOMBRE",
-                    labels={"Monto": "Monto gastado", "Mes": "Mes", "NOMBRE": "Proveedor"},
-                    title="Evolución mensual del gasto por proveedor"
-                )
-                st.plotly_chart(fig)
+            # Unir descripción de proveedor
+            df = df_gastos.merge(df_prov, left_on="IdProveedor", right_on="ID_PROVEEDOR", how="left")
+        
+            # Calcular gasto total por proveedor
+            top10_prov = df.groupby("NOMBRE")["Monto"].sum().sort_values(ascending=False).head(10).reset_index()
+            st.dataframe(top10_prov)
+        
+            st.markdown("##### 📈 Evolución mensual del gasto por proveedor")
+        
+            df["Mes"] = df["Fecha"].dt.to_period("M").dt.to_timestamp()
+        
+            gasto_mensual = df.groupby(["Mes", "NOMBRE"])["Monto"].sum().reset_index()
+        
+            # Filtro: seleccionar proveedores
+            proveedores_disp = top10_prov["NOMBRE"].tolist()
+            proveedores_sel = st.multiselect("Seleccioná uno o más proveedores:", proveedores_disp, default=proveedores_disp[:3])
+        
+            fig = px.line(
+                gasto_mensual[gasto_mensual["NOMBRE"].isin(proveedores_sel)],
+                x="Mes", y="Monto", color="NOMBRE",
+                labels={"Monto": "Monto gastado", "Mes": "Mes", "NOMBRE": "Proveedor"},
+                title="Evolución mensual del gasto por proveedor"
+            )
+            st.plotly_chart(fig)
 
 
     
