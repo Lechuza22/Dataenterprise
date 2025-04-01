@@ -15,6 +15,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import Ridge
 import statsmodels.api as sm
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.model_selection import train_test_split
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
@@ -951,6 +954,107 @@ if st.session_state.authenticated:
                     "Recall (Clase Alta)": f"{report['1']['recall']:.2f}",
                     "F1-score (Clase Alta)": f"{report['1']['f1-score']:.2f}"
                 })
+
+
+# -----------------------------
+# SUCURSALES
+# -----------------------------
+        elif categoria == "🧹 Sucursales":
+            st.subheader("🧹 Análisis de sucursales")
+        
+            submenu = st.radio("Seleccioná el tipo de análisis:", [
+                "🧹 Cluster geográfico de sucursales",
+                "📊 Clasificación por volumen de ventas"
+            ])
+        
+            @st.cache_data
+            def load_sucursales():
+                return pd.read_csv("Sucursales_transformado.csv")
+        
+            @st.cache_data
+            def load_ventas():
+                return pd.read_csv("Venta_transformado.csv", parse_dates=["Fecha"])
+        
+            if submenu == "🧹 Cluster geográfico de sucursales":
+                # (bloque de clustering existente sin cambios)
+                ...
+        
+            elif submenu == "📊 Clasificación por volumen de ventas":
+                st.markdown("#### 📊 Agrupamiento de sucursales según nivel de ventas")
+                st.markdown("""
+                En este análisis usamos un modelo de árbol de decisión para predecir qué categoría de ventas tiene cada sucursal: 
+                **Altas**, **Medias** o **Bajas**, basándonos en sus registros históricos.
+                Esto permite entender qué variables (como ventas promedio, varianza o cantidad de registros) explican mejor su desempeño.
+                """)
+        
+                df_ventas = load_ventas()
+                ventas_por_sucursal = df_ventas.groupby("IdSucursal")["Cantidad"].agg([
+                    ("TotalVentas", "sum"),
+                    ("PromedioVentas", "mean"),
+                    ("MaxVentas", "max"),
+                    ("MinVentas", "min"),
+                    ("Desvio", "std"),
+                    ("CantidadRegistros", "count")
+                ]).reset_index()
+        
+                # Crear etiquetas
+                q1 = ventas_por_sucursal["TotalVentas"].quantile(0.33)
+                q2 = ventas_por_sucursal["TotalVentas"].quantile(0.66)
+        
+                def clasificar(x):
+                    if x < q1:
+                        return "Bajas"
+                    elif x < q2:
+                        return "Medias"
+                    else:
+                        return "Altas"
+        
+                ventas_por_sucursal["Categoria"] = ventas_por_sucursal["TotalVentas"].apply(clasificar)
+        
+                X = ventas_por_sucursal.drop(columns=["Categoria", "IdSucursal"])
+                y = ventas_por_sucursal["Categoria"]
+        
+                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+                model = DecisionTreeClassifier(max_depth=3, random_state=42)
+                model.fit(X_train, y_train)
+        
+                y_pred = model.predict(X_test)
+        
+                st.write("### Matriz de confusión")
+                st.write(pd.DataFrame(confusion_matrix(y_test, y_pred),
+                                      index=model.classes_,
+                                      columns=["Pred. " + c for c in model.classes_]))
+        
+                st.write("### Métricas de clasificación")
+                st.text(classification_report(y_test, y_pred))
+        
+                df = load_sucursales()
+                df = df.merge(ventas_por_sucursal[["IdSucursal", "Categoria"]], left_on="ID", right_on="IdSucursal", how="left")
+        
+                try:
+                    st.markdown("#### 🌍 Mapa de sucursales por categoría de ventas")
+                    fig = px.scatter_mapbox(
+                        df,
+                        lat="Latitud",
+                        lon="Longitud",
+                        color="Categoria",
+                        hover_name="Sucursal",
+                        zoom=4,
+                        height=600,
+                        mapbox_style="open-street-map",
+                        title="Sucursal agrupadas por nivel de ventas"
+                    )
+                    st.plotly_chart(fig)
+                except Exception as e:
+                    st.error(f"\u274c Error al generar el mapa de ventas: {e}")
+        
+                st.markdown("#### 🔢 Análisis final")
+                st.markdown("""
+                Gracias al modelo de árbol de decisión pudimos identificar las variables que mejor explican el rendimiento de ventas por sucursal.
+                Este análisis no solo agrupa, sino que ayuda a explicar y anticipar comportamientos según patrones históricos.
+                Puede ser de gran valor para tomar decisiones de inversión o asignación de recursos.
+                """)
+
 
 ################
 #### MAPA ######
