@@ -18,6 +18,8 @@ import statsmodels.api as sm
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
@@ -976,8 +978,74 @@ if st.session_state.authenticated:
                 return pd.read_csv("Venta_transformado.csv", parse_dates=["Fecha"])
         
             if submenu == "🧹 Cluster geográfico de sucursales":
-                # (bloque de clustering existente sin cambios)
-                ...
+                algoritmo = st.selectbox("Elegí el algoritmo de clusterización:", ["KMeans", "DBSCAN"])
+                df = load_sucursales()
+                coords = df[["Latitud", "Longitud"]].dropna()
+        
+                st.markdown("#### 📅 Objetivo del análisis")
+                st.markdown("""
+                Este análisis agrupa sucursales según su ubicación geográfica. 
+                Se busca identificar áreas de concentración o zonas con comportamiento similar, 
+                lo cual puede ser útil para tomar decisiones logísticas, comerciales o de expansión.
+                """)
+        
+                if algoritmo == "KMeans":
+        
+                    st.markdown("#### 🔍 Clustering con KMeans")
+                    st.markdown("""
+                    KMeans divide las sucursales en un número fijo de grupos, buscando minimizar la distancia dentro de cada cluster. 
+                    Es útil para ver agrupamientos específicos según cercanía.
+                    """)
+        
+                    k = st.slider("Seleccioná la cantidad de clusters", 2, 6, 3)
+                    scaler = StandardScaler()
+                    coords_scaled = scaler.fit_transform(coords)
+                    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+                    df["Cluster"] = kmeans.fit_predict(coords_scaled)
+        
+                elif algoritmo == "DBSCAN":
+                    from sklearn.cluster import DBSCAN
+                    from sklearn.preprocessing import StandardScaler
+        
+                    st.markdown("#### 🔎 Clustering con DBSCAN")
+                    st.markdown("""
+                    DBSCAN encuentra agrupamientos naturales basados en la densidad de puntos, sin necesidad de indicar la cantidad de clusters. 
+                    Es útil para detectar zonas aisladas o con concentración geográfica alta.
+                    """)
+        
+                    eps = st.slider("Seleccioná el radio de agrupamiento (eps)", 0.01, 1.0, 0.2, step=0.01)
+                    min_samples = st.slider("Cantidad mínima de sucursales por grupo", 2, 10, 3)
+        
+                    scaler = StandardScaler()
+                    coords_scaled = scaler.fit_transform(coords)
+                    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+                    df["Cluster"] = dbscan.fit_predict(coords_scaled)
+        
+                st.markdown("#### 🌍 Mapa de clusters geográficos")
+                try:
+                    fig = px.scatter_mapbox(
+                        df,
+                        lat="Latitud",
+                        lon="Longitud",
+                        color="Cluster",
+                        hover_name="Sucursal",
+                        zoom=4,
+                        height=600,
+                        mapbox_style="open-street-map",
+                        title="Distribución de sucursales por cluster geográfico"
+                    )
+                    st.plotly_chart(fig)
+                except Exception as e:
+                    st.error(f"❌ Error al generar el mapa: {e}")
+        
+                st.markdown("#### 🔢 Análisis final")
+                st.markdown("""
+                El resultado de la clusterización permite observar patrones de agrupamiento espacial entre sucursales.
+                - Si las sucursales están bien agrupadas, podrían compartirse logística, recursos o estrategias regionales.
+                - Las sucursales aisladas o con comportamiento atípico podrían requerir un análisis individualizado o mejoras específicas.
+                - Con DBSCAN, la detección de outliers espaciales puede ayudar a identificar sucursales que no pertenecen a ningún cluster estable,
+                  lo que podría indicar una oportunidad de mejora o una estrategia personalizada.
+                """)
         
             elif submenu == "📊 Clasificación por volumen de ventas":
                 st.markdown("#### 📊 Agrupamiento de sucursales según nivel de ventas")
