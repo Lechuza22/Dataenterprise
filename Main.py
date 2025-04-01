@@ -1373,6 +1373,7 @@ if st.session_state.authenticated:
         
             submenu = st.radio("Seleccioná el tipo de análisis:", [
                 "💰 Top 10 proveedores por gasto",
+                "📦 Productos por proveedor",
             ])
             
             if submenu == "💰 Top 10 proveedores por gasto":
