@@ -1256,8 +1256,8 @@ if st.session_state.authenticated:
                 tabla_recom = top_clientes.pivot(index="IdCliente", columns="IdProducto", values="Cantidad").fillna(0)
         
                 producto_ids = tabla_recom.columns.tolist()
-                producto_nombres = df_productos[df_productos["ID_PRODUCTO"].isin(producto_ids)][["ID_PRODUCTO", "Nombre"]].drop_duplicates()
-                producto_opciones = producto_nombres.set_index("Nombre").to_dict()["ID_PRODUCTO"]
+                producto_nombres = df_productos[df_productos["ID_PRODUCTO"].isin(producto_ids)][["ID_PRODUCTO", "Concepto"]].drop_duplicates()
+                producto_opciones = producto_nombres.set_index("Concepto").to_dict()["ID_PRODUCTO"]
         
                 producto_nombre_sel = st.selectbox("Seleccioná un producto:", list(producto_opciones.keys()))
                 producto_id_sel = producto_opciones[producto_nombre_sel]
@@ -1271,7 +1271,7 @@ if st.session_state.authenticated:
                 st.write("### Productos recomendados:")
                 for i in range(1, len(indices[0])):
                     prod_id = producto_ids[indices[0][i]]
-                    descripcion = df_productos[df_productos["ID_PRODUCTO"] == prod_id]["Nombre"].values
+                    descripcion = df_productos[df_productos["ID_PRODUCTO"] == prod_id]["Concepto"].values
                     st.markdown(f"- {descripcion[0] if len(descripcion) else prod_id} (similaridad: {1 - distancias[0][i]:.2f})")
         
             elif submenu == "📈 Predicción temporal de ventas":
@@ -1283,10 +1283,10 @@ if st.session_state.authenticated:
         
                 # Merge para traer nombres de productos
                 df_ventas = df_ventas.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
-                productos_disp = df_ventas[["IdProducto", "Nombre"]].drop_duplicates()
+                productos_disp = df_ventas[["IdProducto", "Concepto"]].drop_duplicates()
         
                 producto_nombre = st.selectbox("Seleccioná un producto:", productos_disp["Nombre"].tolist())
-                producto_id = productos_disp[productos_disp["Nombre"] == producto_nombre]["IdProducto"].values[0]
+                producto_id = productos_disp[productos_disp["Concepto"] == producto_nombre]["IdProducto"].values[0]
         
                 df_producto = df_ventas[df_ventas["IdProducto"] == producto_id]
                 df_ts = df_producto.groupby("Fecha")["Cantidad"].sum().resample("M").sum().dropna()
