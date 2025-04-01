@@ -7,6 +7,7 @@ import seaborn.objects as so
 import folium
 import statsmodels.api as sm
 import plotly.express as px
+import calendar
 from streamlit_folium import st_folium
 from datetime import datetime
 from sklearn.linear_model import LinearRegression
@@ -23,6 +24,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 from sklearn.linear_model import HuberRegressor
 from sklearn.neighbors import NearestNeighbors
+
 # -----------------------------
 # CONFIGURACION INICIAL
 # -----------------------------
@@ -1307,26 +1309,32 @@ if st.session_state.authenticated:
             elif submenu == "🔝 Top 10 productos por mes":
                 st.markdown("#### 🔝 Top 10 productos más vendidos por mes")
             
+                # Unimos productos para obtener sus nombres
                 df_ventas = df_ventas.merge(df_productos, left_on="IdProducto", right_on="ID_PRODUCTO", how="left")
             
+                # Extraemos año y mes
                 df_ventas["Año"] = df_ventas["Fecha"].dt.year
                 df_ventas["Mes"] = df_ventas["Fecha"].dt.month
+                df_ventas["MesNombre"] = df_ventas["Mes"].apply(lambda x: calendar.month_name[int(x)])
             
+                # Filtros año y mes
                 años_disponibles = sorted(df_ventas["Año"].dropna().unique())
                 año_sel = st.selectbox("Seleccioná un año:", años_disponibles)
             
-                meses_disponibles = sorted(df_ventas[df_ventas["Año"] == año_sel]["Mes"].dropna().unique())
-                mes_sel = st.selectbox("Seleccioná un mes:", meses_disponibles)
+                meses_disponibles = df_ventas[df_ventas["Año"] == año_sel]["MesNombre"].dropna().unique().tolist()
+                mes_nombre_sel = st.selectbox("Seleccioná un mes:", sorted(meses_disponibles, key=lambda x: list(calendar.month_name).index(x)))
+                mes_sel = list(calendar.month_name).index(mes_nombre_sel)
             
                 # Filtrar por año y mes
                 df_filtrado = df_ventas[(df_ventas["Año"] == año_sel) & (df_ventas["Mes"] == mes_sel)]
             
+                # TOP 10 productos más vendidos
                 top10 = df_filtrado.groupby("Concepto")["Cantidad"].sum().sort_values(ascending=False).head(10).reset_index()
             
                 st.markdown("##### 📊 Top 10 productos más vendidos")
                 st.dataframe(top10)
             
-                # Gráfico de dispersión
+                # Dispersión de todos los productos clasificados
                 st.markdown("##### 📈 Dispersión de productos (clasificados por cantidad vendida)")
             
                 resumen = df_filtrado.groupby("Concepto")["Cantidad"].sum().reset_index()
@@ -1342,11 +1350,18 @@ if st.session_state.authenticated:
             
                 resumen["Clasificación"] = resumen["Cantidad"].apply(clasificar)
             
-                fig = px.scatter(resumen, x="Concepto", y="Cantidad", color="Clasificación",
-                                 title=f"Dispersión de ventas por producto - {mes_sel}/{año_sel}",
-                                 labels={"Cantidad": "Cantidad Vendida", "Concepto": "Producto"})
-            
+                import plotly.express as px
+                fig = px.scatter(
+                    resumen,
+                    x="Concepto",
+                    y="Cantidad",
+                    color="Clasificación",
+                    title=f"Dispersión de ventas por producto - {mes_nombre_sel} {año_sel}",
+                    labels={"Cantidad": "Cantidad Vendida", "Concepto": "Producto"}
+                )
+                fig.update_layout(xaxis_tickangle=-45)
                 st.plotly_chart(fig)
+
    
 ################
 #### MAPA ######
