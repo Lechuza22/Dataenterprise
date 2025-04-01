@@ -24,8 +24,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 from sklearn.linear_model import HuberRegressor
 from sklearn.neighbors import NearestNeighbors
-from mlxtend.frequent_patterns import apriori, association_rules
-from mlxtend.preprocessing import TransactionEncoder
 
 # -----------------------------
 # CONFIGURACION INICIAL
@@ -1498,6 +1496,96 @@ if st.session_state.authenticated:
                     else:
                         st.info("Este proveedor ya ofrece los mismos productos que sus vecinos.")
 
+
+###########
+    # Canal de ventas####
+        ##########
+        
+        elif categoria == "🌐 Canal de ventas":
+            st.subheader("🌐 Análisis del canal de ventas")
+        
+            submenu = st.radio("Seleccioná el tipo de análisis:", [
+                "📊 Comparativo de efectividad por canal",
+                "📈 Segmentación de canales por rendimiento"
+            ])
+        
+            @st.cache_data
+            def load_ventas():
+                return pd.read_csv("Venta_transformado.csv", parse_dates=["Fecha"])
+        
+            @st.cache_data
+            def load_canal():
+                return pd.read_csv("CanalDeVenta_Tranfor.csv")
+        
+            df_ventas = load_ventas()
+            df_canal = load_canal()
+        
+            # Merge para unir nombre del canal
+            df = df_ventas.merge(df_canal, left_on="IdCanal", right_on="IDCanal", how="left")
+        
+            if submenu == "📊 Comparativo de efectividad por canal":
+                st.markdown("#### 📊 Comparativo de métricas por canal de venta")
+        
+                resumen = df.groupby("Nombre").agg({
+                    "Cantidad": "sum",
+                    "IdCliente": "nunique",
+                    "IdVenta": "count"
+                }).reset_index().rename(columns={
+                    "Cantidad": "Total Vendido",
+                    "IdCliente": "Clientes únicos",
+                    "IdVenta": "Transacciones"
+                })
+        
+                resumen["Promedio por cliente"] = resumen["Total Vendido"] / resumen["Clientes únicos"]
+                st.dataframe(resumen)
+                
+                fig = px.bar(
+                    resumen,
+                    x="Nombre", y="Total Vendido", color="Nombre",
+                    title="Total de productos vendidos por canal",
+                    labels={"Nombre": "Canal", "Total Vendido": "Cantidad"}
+                )
+                fig.update_layout(showlegend=False)
+                st.plotly_chart(fig)
+        
+            elif submenu == "📈 Segmentación de canales por rendimiento":
+                st.markdown("#### 📈 Clusterización de canales según métricas de desempeño")
+        
+                df_cluster = df.groupby("Nombre").agg({
+                    "Cantidad": "sum",
+                    "IdCliente": "nunique",
+                    "IdVenta": "count"
+                }).rename(columns={
+                    "Cantidad": "Total Vendido",
+                    "IdCliente": "Clientes únicos",
+                    "IdVenta": "Transacciones"
+                })
+        
+                df_cluster["Promedio por cliente"] = df_cluster["Total Vendido"] / df_cluster["Clientes únicos"]
+        
+                # Aplicar clustering (KMeans)
+        
+                features = ["Total Vendido", "Clientes únicos", "Transacciones", "Promedio por cliente"]
+                X = df_cluster[features]
+        
+                scaler = StandardScaler()
+                X_scaled = scaler.fit_transform(X)
+        
+                kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+                df_cluster["Cluster"] = kmeans.fit_predict(X_scaled)
+        
+                df_cluster_reset = df_cluster.reset_index()
+        
+                st.dataframe(df_cluster_reset)
+        
+                fig = px.scatter(
+                    df_cluster_reset,
+                    x="Total Vendido", y="Promedio por cliente",
+                    size="Transacciones", color="Cluster", hover_name="Nombre",
+                    title="Segmentación de canales de venta (KMeans)",
+                    labels={"Nombre": "Canal"}
+                )
+                st.plotly_chart(fig)
 
 
     
