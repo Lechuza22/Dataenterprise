@@ -1231,7 +1231,7 @@ if st.session_state.authenticated:
             submenu = st.radio("Seleccioná el tipo de análisis:", [
                 "🤝 Recomendación de productos",
                 "📈 Predicción temporal de ventas",
-                 "🔝 Top 10 productos por mes"
+                "🔝 Top 10 productos por mes"
             ])
         
             @st.cache_data
@@ -1342,7 +1342,6 @@ if st.session_state.authenticated:
             
                 resumen["Clasificación"] = resumen["Cantidad"].apply(clasificar)
             
-                import plotly.express as px
                 fig = px.scatter(resumen, x="Concepto", y="Cantidad", color="Clasificación",
                                  title=f"Dispersión de ventas por producto - {mes_sel}/{año_sel}",
                                  labels={"Cantidad": "Cantidad Vendida", "Concepto": "Producto"})
