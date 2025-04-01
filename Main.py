@@ -959,8 +959,8 @@ if st.session_state.authenticated:
 # -----------------------------
 # SUCURSALES
 # -----------------------------
-        elif categoria == "🧹 Sucursales":
-            st.subheader("🧹 Análisis de sucursales")
+        elif categoria == "🧩 Sucursales":
+            st.subheader("🧩 Sucursales")
         
             submenu = st.radio("Seleccioná el tipo de análisis:", [
                 "🧹 Cluster geográfico de sucursales",
