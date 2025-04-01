@@ -1125,7 +1125,7 @@ if st.session_state.authenticated:
                 Este análisis no solo agrupa, sino que ayuda a explicar y anticipar comportamientos según patrones históricos.
                 Puede ser de gran valor para tomar decisiones de inversión o asignación de recursos.
                 """)
-        # -----------------------------
+       # -----------------------------
         # GASTOS
         # -----------------------------
         elif categoria == "💸 Gastos":
@@ -1145,107 +1145,78 @@ if st.session_state.authenticated:
             def load_tipos_gasto():
                 return pd.read_csv("TiposDeGasto_T.csv")
         
+            @st.cache_data
+            def load_sucursales():
+                return pd.read_csv("Sucursales_transformado.csv")
+        
             df = load_gastos()
             df_tipos = load_tipos_gasto()
+            df_suc = load_sucursales()
         
             if submenu == "📊 Análisis general de gastos":
-                st.markdown("#### 📊 Detección de gastos atípicos con Isolation Forest")
-                st.markdown("""
-                Utilizamos **Isolation Forest** para detectar gastos fuera de lo común a partir del monto y la fecha. 
-                Esta técnica permite identificar anomalías que podrían representar errores, fraudes o comportamientos inusuales.
-                """)
+                st.markdown("#### 📊 Detección general de outliers con Isolation Forest")
         
-                df_filtrado = df[["Monto"]].dropna()
+                df = df.merge(df_tipos, left_on="IdTipoGasto", right_on="IdTipoGasto", how="left")
+                df = df.merge(df_suc, left_on="IdSucursal", right_on="ID", how="left")
+        
+                df_filtrado = df[["Monto", "Descripcion", "Sucursal"]].dropna()
                 modelo_iso = IsolationForest(contamination=0.05, random_state=42)
-                df_filtrado["anomaly"] = modelo_iso.fit_predict(df_filtrado)
+                df_filtrado["anomaly"] = modelo_iso.fit_predict(df_filtrado[["Monto"]])
                 df_filtrado["color"] = df_filtrado["anomaly"].map({1: "Normal", -1: "Atípico"})
         
-                st.markdown("#### 📌 Distribución de gastos detectados")
-                st.write(df_filtrado["color"].value_counts())
+                st.markdown("#### 📌 Resumen de detecciones")
+                st.dataframe(df_filtrado[df_filtrado["color"] == "Atípico"].sort_values(by="Monto", ascending=False))
         
                 try:
-                    fig = px.histogram(df_filtrado, x="Monto", color="color",
-                                       title="Distribución de montos con detección de outliers")
+                    fig = px.scatter(df_filtrado, x="Descripcion", y="Monto", color="color", 
+                                     hover_data=["Sucursal"], title="Gastos detectados como atípicos por tipo")
                     st.plotly_chart(fig)
                 except Exception as e:
                     st.error(f"❌ Error al generar el gráfico: {e}")
         
-                st.markdown("#### 🔍 Análisis final")
-                st.markdown("""
-                Los gastos detectados como atípicos pueden investigarse para confirmar si corresponden a situaciones reales
-                o si son errores o comportamientos fuera del presupuesto esperado.
-                """)
-        
             elif submenu == "🏢 Análisis por sucursal":
-                st.markdown("#### 🏢 Regresión robusta para control de gastos por sucursal")
-                st.markdown("""
-                Este análisis utiliza una regresión robusta para entender cómo se comportan los gastos en cada sucursal
-                y detectar aquellas que se desvían significativamente del patrón general.
-                """)
+                st.markdown("#### 🏢 Historial de gastos por sucursal con media general")
         
-                gastos_por_sucursal = df.groupby("IdSucursal")["Monto"].agg(["mean", "std", "count"]).reset_index()
-                gastos_por_sucursal = gastos_por_sucursal.dropna()
+                df = df.merge(df_suc, left_on="IdSucursal", right_on="ID", how="left")
+                df_grouped = df.groupby(["Fecha", "Sucursal"]).agg({"Monto": "sum"}).reset_index()
         
-                X = gastos_por_sucursal[["count"]]
-                y = gastos_por_sucursal["mean"]
-        
-                model = HuberRegressor().fit(X, y)
-                gastos_por_sucursal["pred"] = model.predict(X)
-                gastos_por_sucursal["residuo"] = gastos_por_sucursal["mean"] - gastos_por_sucursal["pred"]
+                promedio = df_grouped.groupby("Fecha")["Monto"].mean().reset_index(name="MediaGeneral")
+                df_plot = df_grouped.merge(promedio, on="Fecha")
         
                 try:
-                    fig = px.scatter(gastos_por_sucursal, x="count", y="mean",
-                                     trendline="ols", hover_data=["residuo"],
-                                     title="Gastos promedio vs cantidad de registros por sucursal")
+                    fig = px.line(df_plot, x="Fecha", y="Monto", color="Sucursal",
+                                  title="Evolución de gastos por sucursal", labels={"Monto": "Monto gastado"})
+                    fig.add_scatter(x=df_plot["Fecha"], y=df_plot["MediaGeneral"], mode="lines",
+                                    name="Media General", line=dict(color="black", dash="dash"))
                     st.plotly_chart(fig)
                 except Exception as e:
-                    st.error(f"❌ Error en gráfico: {e}")
-        
-                st.markdown("#### 📌 Análisis final")
-                st.markdown("""
-                Las sucursales con mayores residuos (positivos o negativos) podrían estar gastando muy por encima o por debajo de lo esperado,
-                lo cual es útil para auditoría y control presupuestario.
-                """)
+                    st.error(f"❌ Error en gráfico histórico: {e}")
         
             elif submenu == "🧾 Análisis por tipo de gasto":
                 st.markdown("#### 🧾 Outliers dentro de cada tipo de gasto")
-                st.markdown("""
-                Este análisis utiliza **Isolation Forest** por tipo de gasto para detectar anomalías dentro de cada categoría,
-                permitiendo identificar desvíos particulares como un gasto muy elevado en servicios o insumos.
-                """)
         
-                # Verificar existencia de columna de tipo de gasto
-                if "IdTipoGasto" not in df.columns:
-                    st.error("❌ La columna 'TipoGasto' no está disponible en el dataset de gastos. Verificá el archivo.")
-                else:
-                    df = df.merge(df_tipos, left_on="IdTipoGasto", right_on="IdTipoGasto", how="left")
+                df = df.merge(df_tipos, left_on="IdTipoGasto", right_on="IdTipoGasto", how="left")
+                df = df.merge(df_suc, left_on="IdSucursal", right_on="ID", how="left")
         
-                    tipos = df["Descripcion"].dropna().unique()
-                    tipo_seleccionado = st.selectbox("Seleccioná un tipo de gasto:", tipos)
+                tipos = df["Descripcion"].dropna().unique()
+                tipo_seleccionado = st.selectbox("Seleccioná un tipo de gasto:", tipos)
         
-                    df_tipo = df[df["Descripcion"] == tipo_seleccionado]
-                    df_tipo = df_tipo[["Monto"]].dropna()
-        
-                    from sklearn.ensemble import IsolationForest
-                    modelo_tipo = IsolationForest(contamination=0.05, random_state=42)
-                    df_tipo["anomaly"] = modelo_tipo.fit_predict(df_tipo)
-                    df_tipo["color"] = df_tipo["anomaly"].map({1: "Normal", -1: "Atípico"})
-        
-                    st.markdown(f"#### 📊 Detección de outliers en {tipo_seleccionado}")
-                    try:
-                        import plotly.express as px
-                        fig = px.histogram(df_tipo, x="Monto", color="color",
-                                           title=f"Distribución de montos detectados como outliers en {tipo_seleccionado}")
-                        st.plotly_chart(fig)
-                    except Exception as e:
-                        st.error(f"❌ Error al generar el gráfico: {e}")
-        
-                    st.markdown("#### 🔍 Análisis final")
-                    st.markdown("""
-                    Este enfoque permite hacer foco sobre cada tipo de gasto para detectar registros inusuales o gastos potencialmente excesivos
-                    en una categoría específica. Es ideal para auditoría interna o control financiero segmentado.
-                    """)
+                df_tipo = df[df["Descripcion"] == tipo_seleccionado]
+                df_tipo = df_tipo[["Monto", "Sucursal"]].dropna()
 
+                modelo_tipo = IsolationForest(contamination=0.05, random_state=42)
+                df_tipo["anomaly"] = modelo_tipo.fit_predict(df_tipo[["Monto"]])
+                df_tipo["color"] = df_tipo["anomaly"].map({1: "Normal", -1: "Atípico"})
+        
+                st.markdown(f"#### 📊 Detección de outliers en {tipo_seleccionado}")
+                st.dataframe(df_tipo[df_tipo["color"] == "Atípico"])  # Mostrar detalle con sucursal
+        
+                try:
+                    fig = px.scatter(df_tipo, x="Sucursal", y="Monto", color="color",
+                                     title=f"Outliers detectados en {tipo_seleccionado}")
+                    st.plotly_chart(fig)
+                except Exception as e:
+                    st.error(f"❌ Error al generar el gráfico: {e}")
 
 
 ################
