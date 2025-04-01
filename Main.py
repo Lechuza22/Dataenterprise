@@ -1180,6 +1180,10 @@ if st.session_state.authenticated:
                 df = df.merge(df_suc, left_on="IdSucursal", right_on="ID", how="left")
                 df_grouped = df.groupby(["Fecha", "Sucursal"]).agg({"Monto": "sum"}).reset_index()
         
+                sucursales_disp = df_grouped["Sucursal"].dropna().unique().tolist()
+                sucursales_seleccionadas = st.multiselect("Seleccioná una o más sucursales:", sucursales_disp, default=sucursales_disp)
+                df_grouped = df_grouped[df_grouped["Sucursal"].isin(sucursales_seleccionadas)]
+        
                 promedio = df_grouped.groupby("Fecha")["Monto"].mean().reset_index(name="MediaGeneral")
                 df_plot = df_grouped.merge(promedio, on="Fecha")
         
