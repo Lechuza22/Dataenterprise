@@ -17,3 +17,4 @@ prophet
 tensorflow
 keras
 joblib
+mlxtend
