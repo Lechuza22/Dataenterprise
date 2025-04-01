@@ -1215,10 +1215,10 @@ if st.session_state.authenticated:
                 """)
         
                 # Verificar existencia de columna de tipo de gasto
-                if "TipoGasto" not in df.columns:
+                if "IdTipoGasto" not in df.columns:
                     st.error("❌ La columna 'TipoGasto' no está disponible en el dataset de gastos. Verificá el archivo.")
                 else:
-                    df = df.merge(df_tipos, left_on="TipoGasto", right_on="IdTipoGasto", how="left")
+                    df = df.merge(df_tipos, left_on="IdTipoGasto", right_on="IdTipoGasto", how="left")
         
                     tipos = df["Descripcion"].dropna().unique()
                     tipo_seleccionado = st.selectbox("Seleccioná un tipo de gasto:", tipos)
