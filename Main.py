@@ -1427,8 +1427,7 @@ if st.session_state.authenticated:
             
                 sub_opcion = st.radio("Seleccioná una opción de análisis:", [
                     "🛠️ Productos por proveedor",
-                    "🤝 Recomendación de productos a proveedores similares",
-                    "🔗 Reglas de asociación entre productos"
+                    "🤝 Recomendación de productos a proveedores similares"
                 ])
             
                 @st.cache_data
@@ -1456,6 +1455,7 @@ if st.session_state.authenticated:
                     st.markdown("##### 📋 Tabla: Productos por proveedor")
                     st.dataframe(resumen)
             
+                    import plotly.express as px
                     st.markdown("##### 📊 Gráfico: Cantidad total de productos por proveedor")
                     fig = px.bar(
                         resumen,
@@ -1468,23 +1468,27 @@ if st.session_state.authenticated:
             
                 elif sub_opcion == "🤝 Recomendación de productos a proveedores similares":
                     st.markdown("##### 🤝 Recomendación de productos a proveedores similares (KNN)")
-                    tabla = df.groupby(["IDProveedor", "ID_PRODUCTO"])["Cantidad"].sum().unstack().fillna(0)
-           
+            
+                    # Crear tabla proveedor-producto
+                    tabla = df.groupby(["Nombre", "Concepto"])["Cantidad"].sum().unstack().fillna(0)
+                    proveedor_nombres = tabla.index.tolist()
+            
+                    from sklearn.neighbors import NearestNeighbors
                     model_knn = NearestNeighbors(metric='cosine', algorithm='brute')
                     model_knn.fit(tabla.values)
             
-                    proveedor_ids = tabla.index.tolist()
-                    proveedor_seleccionado = st.selectbox("Seleccioná un proveedor:", proveedor_ids)
-                    index = proveedor_ids.index(proveedor_seleccionado)
+                    proveedor_seleccionado = st.selectbox("Seleccioná un proveedor:", proveedor_nombres)
+                    index = proveedor_nombres.index(proveedor_seleccionado)
             
                     distancias, indices = model_knn.kneighbors([tabla.iloc[index].values], n_neighbors=4)
+            
                     st.markdown("#### Proveedores similares:")
                     for i in range(1, len(indices[0])):
-                        st.write(f"- ID: {proveedor_ids[indices[0][i]]} (similaridad: {1 - distancias[0][i]:.2f})")
+                        st.write(f"- {proveedor_nombres[indices[0][i]]} (similaridad: {1 - distancias[0][i]:.2f})")
             
-                    productos_actuales = set(df[df["IDProveedor"] == proveedor_seleccionado]["Concepto"])
-                    vecinos = [proveedor_ids[i] for i in indices[0][1:]]
-                    productos_vecinos = df[df["IDProveedor"].isin(vecinos)]["Concepto"].value_counts().head(10)
+                    productos_actuales = set(df[df["Nombre"] == proveedor_seleccionado]["Concepto"])
+                    vecinos = [proveedor_nombres[i] for i in indices[0][1:]]
+                    productos_vecinos = df[df["Nombre"].isin(vecinos)]["Concepto"].value_counts().head(10)
             
                     recomendados = [p for p in productos_vecinos.index if p not in productos_actuales]
                     st.markdown("#### 📦 Productos recomendados:")
@@ -1493,28 +1497,7 @@ if st.session_state.authenticated:
                             st.markdown(f"- {p}")
                     else:
                         st.info("Este proveedor ya ofrece los mismos productos que sus vecinos.")
-            
-                elif sub_opcion == "🔗 Reglas de asociación entre productos":
-                    st.markdown("##### 🔗 Reglas de asociación entre productos ofrecidos por proveedor")
-            
-                    # Transacciones = lista de productos por proveedor
-                    transacciones = df.groupby("IDProveedor")["Concepto"].apply(list).tolist()
-            
-                    te = TransactionEncoder()
-                    te_ary = te.fit(transacciones).transform(transacciones)
-                    df_trans = pd.DataFrame(te_ary, columns=te.columns_)
-            
-                    # Apriori
-                    freq_items = apriori(df_trans, min_support=0.2, use_colnames=True)
-                    reglas = association_rules(freq_items, metric="confidence", min_threshold=0.6)
-            
-                    if not reglas.empty:
-                        reglas = reglas.sort_values(by="lift", ascending=False)[["antecedents", "consequents", "support", "confidence", "lift"]]
-                        reglas["antecedents"] = reglas["antecedents"].apply(lambda x: ", ".join(list(x)))
-                        reglas["consequents"] = reglas["consequents"].apply(lambda x: ", ".join(list(x)))
-                        st.dataframe(reglas.reset_index(drop=True))
-                    else:
-                        st.warning("No se encontraron reglas con los parámetros actuales.")
+
 
 
     
