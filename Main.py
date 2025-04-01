@@ -1373,7 +1373,7 @@ if st.session_state.authenticated:
                         "💰 Top 10 proveedores por gasto",
                     ])
             
-            elif submenu == "💰 Top 10 proveedores por gasto":
+            if submenu == "💰 Top 10 proveedores por gasto":
                 st.markdown("#### 💰 Top 10 proveedores por monto total de compra")
             
                 @st.cache_data
